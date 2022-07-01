@@ -1,0 +1,5 @@
+C:\work\NxpCup\RaceCar_P2\drivers/fsl_clock.h:889:20:CLOCK_SetSimSafeDivs	4	static
+C:\work\NxpCup\RaceCar_P2\drivers/fsl_clock.h:1229:20:CLOCK_SetXtal0Freq	16	static
+../board/clock_config.c:70:13:CLOCK_CONFIG_SetFllExtRefDiv	16	static
+../board/clock_config.c:78:6:BOARD_InitBootClocks	8	static
+../board/clock_config.c:159:6:BOARD_BootClockRUN	8	static

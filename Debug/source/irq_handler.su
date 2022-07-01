@@ -1,0 +1,2 @@
+C:\work\NxpCup\RaceCar_P2\drivers/fsl_adc16.h:491:24:uint32_t ADC16_GetChannelConversionValue(ADC_Type*, uint32_t)	16	static
+../source/irq_handler.cpp:9:6:void ADC0_IRQHandler()	24	static
