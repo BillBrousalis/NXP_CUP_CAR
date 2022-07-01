@@ -16,7 +16,6 @@ status_t FTM_SetPpm(FTM_Type *base, ftm_chnl_t chnlNumber, ftm_pwm_mode_t pwm_mo
 	return kStatus_Success;
 }
 
-int map(float in, float in_low, float in_high, float out_low, float out_high) {
-	float out = out_low + ((out_high - out_low) / (in_high - in_low)) * (in - in_low);
-	return out;
+float map(float in, float in_low, float in_high, float out_low, float out_high) {
+	return out_low + ((out_high - out_low) / (in_high - in_low)) * (in - in_low);
 }

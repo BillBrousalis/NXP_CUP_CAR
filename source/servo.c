@@ -8,8 +8,10 @@
 
 #include "servo.h"
 
-#define SERVO_CENTER 0.0f
+#define SERVO_CENTER -0.3f
 #define SERVO_STEP 0.01f;
+
+float watchme;
 
 /*
  * Use this function to set steering servo to desired angle
@@ -23,11 +25,12 @@ void servo_set(float steer) {
 }
 
 void servo_step(float target) {
-	int perc;
+	float perc;
 	float i = car_state->steering;
 	if(i < target) {
 		while(i < target) {
 			perc = map(i, -1.0f, 1.0f, 50.0f, 100.0f);
+			watchme = perc;
 			// set compare register to appropriate value
 			FTM_SetPpm(FTM2_PERIPHERAL, kFTM_Chnl_0, kFTM_EdgeAlignedPwm, perc);
 			FTM_SetSoftwareTrigger(FTM2_PERIPHERAL, 1);
@@ -38,6 +41,7 @@ void servo_step(float target) {
 	else if(i > target) {
 		while(i > target) {
 			perc = map(i, -1.0f, 1.0f, 50.0f, 100.0f);
+			watchme = perc;
 			// set compare register to appropriate value
 			FTM_SetPpm(FTM2_PERIPHERAL, kFTM_Chnl_0, kFTM_EdgeAlignedPwm, perc);
 			FTM_SetSoftwareTrigger(FTM2_PERIPHERAL, 1);
@@ -49,7 +53,7 @@ void servo_step(float target) {
 
 void servo_center() {
 	// steer = (-1, 1) -> map to (0, 100)
-	int perc = map(SERVO_CENTER, -1.0f, 1.0f, 50.0f, 100.0f);
+	float perc = map(SERVO_CENTER, -1.0f, 1.0f, 50.0f, 100.0f);
 	// set compare register to appropriate value
 	FTM_SetPpm(FTM2_PERIPHERAL, kFTM_Chnl_0, kFTM_EdgeAlignedPwm, perc);
 	FTM_SetSoftwareTrigger(FTM2_PERIPHERAL, 1);

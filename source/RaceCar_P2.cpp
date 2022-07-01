@@ -45,12 +45,22 @@ extern "C"
 #include "MK64F12.h"
 #include "fsl_debug_console.h"
 
+/* FreeRTOS */
+#include "FreeRTOS.h"
+#include "task.h"
+#include "queue.h"
+#include "timers.h"
+
 /* TODO: insert other include files here. */
 #include "drive_tracking.h"
 #include "servo.h"
 }
 
 /* TODO: insert other definitions and declarations here. */
+#define DEFAULT_TASK_PRIO (configMAX_PRIORITIES - 2)
+
+void default_task(void *pvParameters);
+TaskHandle_t default_handle;
 
 /*
  * @brief   Application entry point.
@@ -65,11 +75,11 @@ int main(void) {
     BOARD_InitDebugConsole();
 #endif
 
-    init_tracking();
+    //init_tracking();
 
-    servo_center();
-    servo_set(0.5f);
-    servo_set(-0.5f);
+    //Initialize the default task
+    xTaskCreate(default_task, "Default task", configMINIMAL_STACK_SIZE, NULL, DEFAULT_TASK_PRIO, NULL); //&default_handle);
+    vTaskStartScheduler();
 
     for(;;);
 
@@ -83,4 +93,15 @@ int main(void) {
         __asm volatile ("nop");
     }
     return 0 ;
+}
+
+void default_task(void *pvParameters) {
+	for (;;) {
+        servo_center();
+        vTaskDelay(pdMS_TO_TICKS(2000));
+        servo_set(0.6f);
+        vTaskDelay(pdMS_TO_TICKS(2000));
+        servo_set(-0.6f);
+        vTaskDelay(pdMS_TO_TICKS(2000));
+	}
 }

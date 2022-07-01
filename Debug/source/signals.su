@@ -1,2 +1,2 @@
 ../source/signals.c:10:10:FTM_SetPpm	32	static
-../source/signals.c:19:5:map	40	static
+../source/signals.c:19:7:map	32	static

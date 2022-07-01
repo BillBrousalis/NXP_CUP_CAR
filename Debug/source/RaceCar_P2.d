@@ -32,6 +32,11 @@ source/RaceCar_P2.o source/RaceCar_P2.d: ../source/RaceCar_P2.cpp \
  C:\work\NxpCup\RaceCar_P2\freertos\freertos_kernel\include/deprecated_definitions.h \
  C:\work\NxpCup\RaceCar_P2\freertos\freertos_kernel\portable\GCC\ARM_CM4F/portmacro.h \
  C:\work\NxpCup\RaceCar_P2\freertos\freertos_kernel\include/mpu_wrappers.h \
+ C:\work\NxpCup\RaceCar_P2\freertos\freertos_kernel\include/task.h \
+ C:\work\NxpCup\RaceCar_P2\freertos\freertos_kernel\include/list.h \
+ C:\work\NxpCup\RaceCar_P2\freertos\freertos_kernel\include/queue.h \
+ C:\work\NxpCup\RaceCar_P2\freertos\freertos_kernel\include/task.h \
+ C:\work\NxpCup\RaceCar_P2\freertos\freertos_kernel\include/timers.h \
  ../source/drive_tracking.h ../source/servo.h
 C:\work\NxpCup\RaceCar_P2\board/board.h:
 C:\work\NxpCup\RaceCar_P2\board/clock_config.h:
@@ -66,5 +71,10 @@ C:\work\NxpCup\RaceCar_P2\freertos\freertos_kernel\include/portable.h:
 C:\work\NxpCup\RaceCar_P2\freertos\freertos_kernel\include/deprecated_definitions.h:
 C:\work\NxpCup\RaceCar_P2\freertos\freertos_kernel\portable\GCC\ARM_CM4F/portmacro.h:
 C:\work\NxpCup\RaceCar_P2\freertos\freertos_kernel\include/mpu_wrappers.h:
+C:\work\NxpCup\RaceCar_P2\freertos\freertos_kernel\include/task.h:
+C:\work\NxpCup\RaceCar_P2\freertos\freertos_kernel\include/list.h:
+C:\work\NxpCup\RaceCar_P2\freertos\freertos_kernel\include/queue.h:
+C:\work\NxpCup\RaceCar_P2\freertos\freertos_kernel\include/task.h:
+C:\work\NxpCup\RaceCar_P2\freertos\freertos_kernel\include/timers.h:
 ../source/drive_tracking.h:
 ../source/servo.h:
