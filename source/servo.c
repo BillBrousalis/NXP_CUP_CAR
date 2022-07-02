@@ -8,7 +8,7 @@
 
 #include "servo.h"
 
-#define SERVO_CENTER -0.3f
+#define SERVO_CENTER -0.2f
 #define SERVO_STEP 0.01f;
 
 float watchme;

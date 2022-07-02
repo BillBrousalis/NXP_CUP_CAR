@@ -4,4 +4,4 @@ typedef struct {
 	float error;
 } TrackingState;
 
-//void init_tracking();
+extern TrackingState *car_state;
