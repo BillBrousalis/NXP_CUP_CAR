@@ -52,6 +52,16 @@ extern "C" {
 #define ADC0_IRQHANDLER ADC0_IRQHandler
 /* Channel 0 (SE.3) conversion control group. */
 #define ADC0_CH0_CONTROL_GROUP 0
+/* Alias for ADC1 peripheral */
+#define ADC1_PERIPHERAL ADC1
+/* ADC1 interrupt vector ID (number). */
+#define ADC1_IRQN ADC1_IRQn
+/* ADC1 interrupt handler identifier. */
+#define ADC1_IRQHANDLER ADC1_IRQHandler
+/* Channel 0 (SE.3) conversion control group. */
+#define ADC1_CH0_CONTROL_GROUP 0
+/* Channel 1 (SE.1) conversion control group. */
+#define ADC1_CH1_CONTROL_GROUP 0
 
 /***********************************************************************************************************************
  * Global variables
@@ -61,6 +71,9 @@ extern const ftm_config_t FTM1_config;
 extern adc16_channel_config_t ADC0_channelsConfig[1];
 extern const adc16_config_t ADC0_config;
 extern const adc16_channel_mux_mode_t ADC0_muxMode;
+extern adc16_channel_config_t ADC1_channelsConfig[2];
+extern const adc16_config_t ADC1_config;
+extern const adc16_channel_mux_mode_t ADC1_muxMode;
 
 /***********************************************************************************************************************
  * Initialization functions
