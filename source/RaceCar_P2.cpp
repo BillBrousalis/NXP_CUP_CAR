@@ -80,7 +80,7 @@ int main(void) {
 
     servo_center();
     //xTaskCreate(default_task, "Default task", configMINIMAL_STACK_SIZE, NULL, DEFAULT_TASK_PRIO, NULL); //&default_handle);
-    xTaskCreate(test_motors, "Default task", configMINIMAL_STACK_SIZE, NULL, DEFAULT_TASK_PRIO, NULL); //&default_handle);
+    xTaskCreate(test_steer, "Default task", configMINIMAL_STACK_SIZE, NULL, DEFAULT_TASK_PRIO, NULL); //&default_handle);
     vTaskStartScheduler();
     for(;;);
 

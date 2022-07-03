@@ -13,11 +13,10 @@
 #include "pot_testing.h"
 
 /* Servo control with pot */
-void test_servo(void *pvParameters) {
+void test_steer(void *pvParameters) {
 	/* Make sure POT ADC (ADC1) is initialized */
 	for (;;) {
 		servo_set(car_state->pot1);
-        vTaskDelay(pdMS_TO_TICKS(10));
 	}
 }
 
@@ -29,6 +28,5 @@ void test_motors(void *pvParameters) {
 		speed = car_state->pot1;
 		throttle_control(&speed);
 		motors_set(speed, speed);
-		vTaskDelay(pdMS_TO_TICKS(10));
 	}
 }
