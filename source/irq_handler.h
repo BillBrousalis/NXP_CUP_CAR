@@ -1,7 +1,4 @@
 #pragma once
 
-
-extern "C"
-{
-  void ADC0_IRQHANDLER(void);
-}
+void ADC0_IRQHANDLER(void);
+void ADC1_IRQHANDLER(void);

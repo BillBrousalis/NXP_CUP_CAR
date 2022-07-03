@@ -2,7 +2,7 @@
 #include "fsl_adc16.h"
 #include "peripherals.h"
 
-#include "drive_tracking.h"
+#include "base_drivers/pot.h"
 
 #include "irq_handler.h"
 
@@ -41,7 +41,7 @@ void ADC1_IRQHANDLER(void) {
   	}
   }
   /* Place your code here */
-  car_state->pot1 = (float)result_values[0];
+  pot_update(result_values[0], result_values[1]);
 
   /* Add for ARM errata 838869, affects Cortex-M4, Cortex-M4F
      Store immediate overlapping exception return operation might vector to incorrect interrupt. */

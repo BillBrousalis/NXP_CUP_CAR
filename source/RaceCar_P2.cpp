@@ -53,8 +53,11 @@ extern "C"
 
 /* TODO: insert other include files here. */
 #include "drive_tracking.h"
-#include "servo.h"
+#include "base_drivers/servo.h"
+#include "tests/pot_testing.h"
 }
+
+#include "irq_handler.h"
 
 /* TODO: insert other definitions and declarations here. */
 #define DEFAULT_TASK_PRIO (configMAX_PRIORITIES - 2)
@@ -75,12 +78,10 @@ int main(void) {
     BOARD_InitDebugConsole();
 #endif
 
-    //init_tracking();
-
-    //Initialize the default task
-    xTaskCreate(default_task, "Default task", configMINIMAL_STACK_SIZE, NULL, DEFAULT_TASK_PRIO, NULL); //&default_handle);
+    servo_center();
+    //xTaskCreate(default_task, "Default task", configMINIMAL_STACK_SIZE, NULL, DEFAULT_TASK_PRIO, NULL); //&default_handle);
+    xTaskCreate(test_motors, "Default task", configMINIMAL_STACK_SIZE, NULL, DEFAULT_TASK_PRIO, NULL); //&default_handle);
     vTaskStartScheduler();
-
     for(;;);
 
     /* Force the counter to be placed into memory. */
@@ -97,11 +98,7 @@ int main(void) {
 
 void default_task(void *pvParameters) {
 	for (;;) {
-        servo_center();
-        vTaskDelay(pdMS_TO_TICKS(2000));
-        servo_set(0.6f);
-        vTaskDelay(pdMS_TO_TICKS(2000));
-        servo_set(-0.6f);
-        vTaskDelay(pdMS_TO_TICKS(2000));
+		servo_set(car_state->pot1);
+        vTaskDelay(pdMS_TO_TICKS(10));
 	}
 }

@@ -2,9 +2,10 @@ typedef struct {
 	/* driving */
 	float steering;
 	float speed;
+	/* camera */
 	float error;
-
-	/* generic */
+	float preverror;
+	/* generic board */
 	float pot1;
 	float pot2;
 } TrackingState;

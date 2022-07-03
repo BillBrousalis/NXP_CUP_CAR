@@ -41,6 +41,9 @@ sdmmc/host \
 sdmmc/osa \
 sdmmc/src \
 source \
+source/base_drivers \
+source/safety \
+source/tests \
 startup \
 usb/host/class \
 usb/host \

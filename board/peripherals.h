@@ -40,8 +40,8 @@ extern "C" {
 #define FTM1_TIMER_MODULO_VALUE (((FTM1_CLOCK_SOURCE/ (1U << (FTM1_PERIPHERAL->SC & FTM_SC_PS_MASK))) / 50) - 1)
 /* Definition of FTM1 channel/pair number 0 on Edge-aligned PWM */
 #define FTM1_PWM_MOT_A_CHANNEL kFTM_Chnl_0
-/* Definition of FTM1 channel/pair number 0 on Edge-aligned PWM */
-#define FTM1_PWM_MOT_B_CHANNEL kFTM_Chnl_0
+/* Definition of FTM1 channel/pair number 1 on Edge-aligned PWM */
+#define FTM1_PWM_MOT_B_CHANNEL kFTM_Chnl_1
 /* Alias for ADC0 peripheral */
 #define ADC0_PERIPHERAL ADC0
 /* ADC0 interrupt vector ID (number). */
@@ -62,6 +62,16 @@ extern "C" {
 #define ADC1_CH0_CONTROL_GROUP 0
 /* Channel 1 (SE.1) conversion control group. */
 #define ADC1_CH1_CONTROL_GROUP 0
+/* Definition of peripheral ID */
+#define FTM0_PERIPHERAL FTM0
+/* Definition of the clock source frequency */
+#define FTM0_CLOCK_SOURCE 60000000UL
+/* Definition of the clock source frequency */
+#define FTM0_TIMER_MODULO_VALUE 37499
+/* Definition of FTM0 channel/pair number 0 on Edge-aligned PWM */
+#define FTM0_PWM_MOT_A_CHANNEL kFTM_Chnl_0
+/* Definition of FTM0 channel/pair number 1 on Edge-aligned PWM */
+#define FTM0_PWM_MOT_B_CHANNEL kFTM_Chnl_1
 
 /***********************************************************************************************************************
  * Global variables
@@ -74,6 +84,7 @@ extern const adc16_channel_mux_mode_t ADC0_muxMode;
 extern adc16_channel_config_t ADC1_channelsConfig[2];
 extern const adc16_config_t ADC1_config;
 extern const adc16_channel_mux_mode_t ADC1_muxMode;
+extern const ftm_config_t FTM0_config;
 
 /***********************************************************************************************************************
  * Initialization functions

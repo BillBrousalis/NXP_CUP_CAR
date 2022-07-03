@@ -11,8 +11,6 @@
 #define SERVO_CENTER -0.2f
 #define SERVO_STEP 0.01f;
 
-float watchme;
-
 /*
  * Use this function to set steering servo to desired angle
  * Input: float value range (-1, 1)
@@ -30,7 +28,6 @@ void servo_step(float target) {
 	if(i < target) {
 		while(i < target) {
 			perc = map(i, -1.0f, 1.0f, 50.0f, 100.0f);
-			watchme = perc;
 			// set compare register to appropriate value
 			FTM_SetPpm(FTM2_PERIPHERAL, kFTM_Chnl_0, kFTM_EdgeAlignedPwm, perc);
 			FTM_SetSoftwareTrigger(FTM2_PERIPHERAL, 1);
@@ -41,7 +38,6 @@ void servo_step(float target) {
 	else if(i > target) {
 		while(i > target) {
 			perc = map(i, -1.0f, 1.0f, 50.0f, 100.0f);
-			watchme = perc;
 			// set compare register to appropriate value
 			FTM_SetPpm(FTM2_PERIPHERAL, kFTM_Chnl_0, kFTM_EdgeAlignedPwm, perc);
 			FTM_SetSoftwareTrigger(FTM2_PERIPHERAL, 1);
