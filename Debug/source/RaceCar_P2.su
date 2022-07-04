@@ -1,2 +1,2 @@
-../source/RaceCar_P2.cpp:71:5:int main()	16	static
-../source/RaceCar_P2.cpp:99:6:void default_task(void*)	16	static
+../source/RaceCar_P2.cpp:41:5:int main()	16	static
+../source/RaceCar_P2.cpp:69:6:void default_task(void*)	16	static

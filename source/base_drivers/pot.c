@@ -15,6 +15,7 @@ float pot1 = 0.0f;
 void pot_update(int32_t val1, int32_t val2) {
 	/* Normalize to (-1, 1) - no need for map function */
 	pot1 = -(float)(-1.0f + ((float)val1 / POT_MID));
-	car_state->pot1 = -(float)(-1.0f + ((float)val1 / POT_MID));
+	pot1 /= 2.0f;
+	car_state->pot1 = -(float)(-1.0f + ((float)val1 / POT_MID)) / 2.0f;
 	//car_state->pot2 = (float)(-1.0f + ((float)val2 / POT_MID));
 }

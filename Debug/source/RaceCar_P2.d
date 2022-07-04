@@ -38,7 +38,8 @@ source/RaceCar_P2.o source/RaceCar_P2.d: ../source/RaceCar_P2.cpp \
  C\:\work\NXP\NXP_CUP_CAR\freertos\freertos_kernel\include/task.h \
  C\:\work\NXP\NXP_CUP_CAR\freertos\freertos_kernel\include/timers.h \
  ../source/drive_tracking.h ../source/base_drivers/servo.h \
- ../source/tests/pot_testing.h ../source/irq_handler.h
+ ../source/base_drivers/motors.h ../source/tests/pot_testing.h \
+ ../source/irq_handler.h
 C\:\work\NXP\NXP_CUP_CAR\board/board.h:
 C\:\work\NXP\NXP_CUP_CAR\board/clock_config.h:
 C\:\work\NXP\NXP_CUP_CAR\drivers/fsl_common.h:
@@ -79,5 +80,6 @@ C\:\work\NXP\NXP_CUP_CAR\freertos\freertos_kernel\include/task.h:
 C\:\work\NXP\NXP_CUP_CAR\freertos\freertos_kernel\include/timers.h:
 ../source/drive_tracking.h:
 ../source/base_drivers/servo.h:
+../source/base_drivers/motors.h:
 ../source/tests/pot_testing.h:
 ../source/irq_handler.h:
