@@ -6,7 +6,7 @@
  * Generated linker script file for MK64FN1M0xxx12
  * Created from linkscript.ldt by FMCreateLinkLibraries
  * Using Freemarker v2.3.30
- * MCUXpresso IDE v11.4.1 [Build 6260] [2021-09-15] on Jul 3, 2022, 7:11:39 AM
+ * MCUXpresso IDE v11.5.0 [Build 7232] [2022-01-11] on Jul 5, 2022, 5:39:28 PM
  */
 
 INCLUDE "RaceCar_P2_Debug_library.ld"
@@ -57,10 +57,6 @@ SECTIONS
         ASSERT(!(__FLASH_CONFIG_START__ == __FLASH_CONFIG_END__), "Linker Flash Config Support Enabled, but no .FlashConfig section provided within application");
         /* End of Kinetis Flash Configuration data */
         
-    } > PROGRAM_FLASH
-
-    .text : ALIGN(8)
-    {
        *(.text*)
        KEEP(*freertos*/tasks.o(.rodata*)) /* FreeRTOS Debug Config */
        *(.rodata .rodata.* .constdata .constdata.*)

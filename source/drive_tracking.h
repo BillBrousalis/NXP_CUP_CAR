@@ -6,8 +6,8 @@ typedef struct {
 	float error;
 	float preverror;
 	/* generic board */
-	float pot1;
-	float pot2;
+	float pot[2];
 } TrackingState;
 
+void init_tracking();
 extern TrackingState *car_state;

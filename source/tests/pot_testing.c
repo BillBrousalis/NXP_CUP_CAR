@@ -13,22 +13,56 @@
 #include "pot_testing.h"
 
 /* Servo control with pot */
-void test_servo(void *pvParameters) {
+void test_steer(void *pvParameters) {
+    /* INITIALIZATION FUNCTIONS HERE */
+    init_tracking();
+	/*
+	motors_init();
+    servo_center();
+    motors_stop();
+    */
+
 	/* Make sure POT ADC (ADC1) is initialized */
 	for (;;) {
-		servo_set(car_state->pot1);
-        vTaskDelay(pdMS_TO_TICKS(10));
+		steer_set(car_state->pot[0]);
+		vTaskDelay(pdMS_TO_TICKS(5));
 	}
+
 }
 
 /* Motor control with pot */
 void test_motors(void *pvParameters) {
+    /* INITIALIZATION FUNCTIONS HERE */
+    init_tracking();
 	motors_init();
+    servo_center();
+    motors_stop();
+
+	vTaskDelay(pdMS_TO_TICKS(1000));
+	servo_set(0.5f);
 	float speed = 0.0f;
 	for (;;) {
-		speed = car_state->pot1;
-		throttle_control(&speed);
-		motors_set(speed, speed);
-		vTaskDelay(pdMS_TO_TICKS(10));
+		speed = car_state->pot[0];
+		speed_set(speed);
+		vTaskDelay(pdMS_TO_TICKS(5));
+	}
+}
+
+void test_all(void *pvParameters) {
+    /* INITIALIZATION FUNCTIONS HERE */
+    init_tracking();
+	motors_init();
+    servo_center();
+    motors_stop();
+
+	vTaskDelay(pdMS_TO_TICKS(1000));
+	float speed = 0.0f;
+	float steer = 0.0f;
+	for (;;) {
+		speed = car_state->pot[0];
+		steer = car_state->pot[1];
+		speed_set(speed);
+		steer_set(steer);
+		vTaskDelay(pdMS_TO_TICKS(5));
 	}
 }
