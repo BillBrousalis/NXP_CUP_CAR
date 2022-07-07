@@ -1,3 +1,0 @@
-C:\work\NXP\NXP_CUP_CAR\drivers/fsl_adc16.h:491:24:ADC16_GetChannelConversionValue	16	static
-../source/irq_handler.c:14:6:ADC1_IRQHandler	24	static
-../source/irq_handler.c:44:6:FTM3_IRQHandler	16	static

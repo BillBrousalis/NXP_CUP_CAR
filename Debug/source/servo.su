@@ -1,4 +1,0 @@
-C:\work\NXP\NXP_CUP_CAR\drivers/fsl_ftm.h:1027:20:FTM_SetSoftwareTrigger	16	static
-../source/servo.c:18:6:servo_set	16	static
-../source/servo.c:25:6:servo_step	24	static
-../source/servo.c:50:6:servo_center	16	static

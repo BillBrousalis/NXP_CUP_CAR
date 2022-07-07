@@ -1,5 +1,0 @@
-../source/misc.c:3:7:fabs	16	static
-../source/misc.c:7:7:max	16	static
-../source/misc.c:11:7:min	16	static
-../source/misc.c:15:7:map	32	static
-../source/misc.c:19:5:same_sign	16	static

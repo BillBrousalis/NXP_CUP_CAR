@@ -1,4 +1,0 @@
-C:\work\NXP\NXP_CUP_CAR\drivers/fsl_clock.h:668:20:CLOCK_EnableClock	24	static
-C:\work\NXP\NXP_CUP_CAR\drivers/fsl_port.h:374:20:PORT_SetPinMux	24	static
-../board/pin_mux.c:32:6:BOARD_InitBootPins	8	static
-../board/pin_mux.c:66:6:BOARD_InitPins	16	static
