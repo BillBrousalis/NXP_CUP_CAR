@@ -24,10 +24,12 @@ extern "C"
 #include "drive_tracking.h"
 #include "base_drivers/servo.h"
 #include "base_drivers/motors.h"
+#include "base_drivers/gpio.h"
+#include "base_drivers/linescan.h"
 #include "tests/pot_testing.h"
+#include "irq_handler.h"
 }
 
-#include "irq_handler.h"
 
 /* TODO: insert other definitions and declarations here. */
 #define DEFAULT_TASK_PRIO (configMAX_PRIORITIES - 2)
@@ -48,8 +50,8 @@ int main(void) {
     BOARD_InitDebugConsole();
 #endif
 
-    //xTaskCreate(default_task, "Default task", configMINIMAL_STACK_SIZE, NULL, DEFAULT_TASK_PRIO, &default_handle);
-    xTaskCreate(test_all, "Default task", configMINIMAL_STACK_SIZE, NULL, DEFAULT_TASK_PRIO, NULL);
+    xTaskCreate(default_task, "Default task", configMINIMAL_STACK_SIZE, NULL, DEFAULT_TASK_PRIO, &default_handle);
+    //xTaskCreate(test_all, "Default task", configMINIMAL_STACK_SIZE, NULL, DEFAULT_TASK_PRIO, NULL);
     vTaskStartScheduler();
     for(;;);
 
@@ -66,11 +68,8 @@ int main(void) {
 }
 
 
-/*
 void default_task(void *pvParameters) {
 	for (;;) {
-		steer_set(car_state->pot1);
         vTaskDelay(pdMS_TO_TICKS(10));
 	}
 }
-*/

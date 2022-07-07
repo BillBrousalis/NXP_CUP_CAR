@@ -41,4 +41,6 @@ safety.c:
 
 write initialization function for motors
 
-
+TODO:
+	speed reduction with steering angle
+	move from float to ints for better performance

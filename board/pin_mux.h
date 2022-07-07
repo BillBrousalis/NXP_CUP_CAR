@@ -29,6 +29,19 @@ void BOARD_InitBootPins(void);
 #define SOPT4_FTM1CH0SRC_FTM 0x00u /*!<@brief FTM1 channel 0 input capture source select: FTM1_CH0 signal */
 #define SOPT4_FTM2CH0SRC_FTM 0x00u /*!<@brief FTM2 channel 0 input capture source select: FTM2_CH0 signal */
 
+/*! @name PORTC5 (number 77), SPI0_SCLK
+  @{ */
+
+/* Symbols to be used with GPIO driver */
+#define BOARD_INITPINS_SPI0_SCLK_GPIO GPIOC               /*!<@brief GPIO peripheral base pointer */
+#define BOARD_INITPINS_SPI0_SCLK_GPIO_PIN_MASK (1U << 5U) /*!<@brief GPIO pin mask */
+
+/* Symbols to be used with PORT driver */
+#define BOARD_INITPINS_SPI0_SCLK_PORT PORTC               /*!<@brief PORT peripheral base pointer */
+#define BOARD_INITPINS_SPI0_SCLK_PIN 5U                   /*!<@brief PORT pin number */
+#define BOARD_INITPINS_SPI0_SCLK_PIN_MASK (1U << 5U)      /*!<@brief PORT pin mask */
+                                                          /* @} */
+
 /*!
  * @brief Configures pin routing and optionally pin electrical features.
  *

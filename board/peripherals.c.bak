@@ -6,11 +6,11 @@
 /* clang-format off */
 /* TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
 !!GlobalInfo
-product: Peripherals v10.0
+product: Peripherals v11.0
 processor: MK64FN1M0xxx12
 package_id: MK64FN1M0VLL12
 mcu_data: ksdk2_0
-processor_version: 10.0.0
+processor_version: 11.0.1
 functionalGroups:
 - name: BOARD_InitPeripherals
   UUID: 5106ec8a-bf57-4099-b5e0-fe6130e159f6
@@ -32,6 +32,14 @@ component:
 - type: 'uart_cmsis_common'
 - type_id: 'uart_cmsis_common_9cb8e302497aa696fdbb5a4fd622c2a8'
 - global_USART_CMSIS_common:
+  - quick_selection: 'default'
+ * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
+
+/* TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
+component:
+- type: 'gpio_adapter_common'
+- type_id: 'gpio_adapter_common_57579b9ac814fe26bf95df0a384c36b6'
+- global_gpio_adapter_common:
   - quick_selection: 'default'
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
 /* clang-format on */
@@ -62,6 +70,7 @@ instance:
     - interrupt_table:
       - 0: []
       - 1: []
+      - 2: []
     - interrupts: []
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
 /* clang-format on */
@@ -407,7 +416,7 @@ instance:
       - clockDivider: 'kADC16_ClockDivider8'
       - resolution: 'kADC16_ResolutionSE12Bit'
       - longSampleMode: 'kADC16_LongSampleDisabled'
-      - hardwareAverageMode: 'kADC16_HardwareAverageCount32'
+      - hardwareAverageMode: 'kADC16_HardwareAverageCount8'
       - enableHighSpeed: 'false'
       - enableLowPower: 'false'
       - enableContinuousConversion: 'true'
@@ -461,7 +470,7 @@ const adc16_config_t ADC1_config = {
   .clockDivider = kADC16_ClockDivider8,
   .resolution = kADC16_ResolutionSE12Bit,
   .longSampleMode = kADC16_LongSampleDisabled,
-  .hardwareAverageMode = kADC16_HardwareAverageCount32,
+  .hardwareAverageMode = kADC16_HardwareAverageCount8,
   .enableHighSpeed = false,
   .enableLowPower = false,
   .enableContinuousConversion = true
@@ -498,7 +507,7 @@ instance:
   - ftm_main_config:
     - ftm_config:
       - clockSource: 'kFTM_SystemClock'
-      - clockSourceFreq: 'GetFreq'
+      - clockSourceFreq: 'BOARD_BootClockRUN'
       - timerPrescaler: '32'
       - timerOutputFrequency: '50 Hz'
       - systemClockSource: 'BusInterfaceClock'
@@ -596,6 +605,95 @@ static void FTM0_init(void) {
 }
 
 /***********************************************************************************************************************
+ * FTM3 initialization code
+ **********************************************************************************************************************/
+/* clang-format off */
+/* TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
+instance:
+- name: 'FTM3'
+- type: 'ftm'
+- mode: 'EdgeAligned'
+- custom_name_enabled: 'false'
+- type_id: 'ftm_a206ca22312775f3c8a462078188c129'
+- functional_group: 'BOARD_InitPeripherals'
+- peripheral: 'FTM3'
+- config_sets:
+  - ftm_main_config:
+    - ftm_config:
+      - clockSource: 'kFTM_SystemClock'
+      - clockSourceFreq: 'BOARD_BootClockRUN'
+      - timerPrescaler: '2'
+      - timerOutputFrequency: '50 kHz'
+      - systemClockSource: 'BusInterfaceClock'
+      - systemClockSourceFreq: 'mirrored_value'
+      - faultMode: 'kFTM_Fault_Disable'
+      - inputFilterPeriod: '1'
+      - faultInputs:
+        - 0:
+          - enableFaultInput: 'false'
+          - faultLevelVal: 'low'
+          - useFaultFilter: 'false'
+        - 1:
+          - enableFaultInput: 'false'
+          - faultLevelVal: 'low'
+          - useFaultFilter: 'false'
+        - 2:
+          - enableFaultInput: 'false'
+          - faultLevelVal: 'low'
+          - useFaultFilter: 'false'
+        - 3:
+          - enableFaultInput: 'false'
+          - faultLevelVal: 'low'
+          - useFaultFilter: 'false'
+      - deadTimePrescale: 'kFTM_Deadtime_Prescale_1'
+      - deadTimePeriod: '0'
+      - pwmSyncMode: 'kFTM_SoftwareTrigger'
+      - reloadPoints: ''
+      - extTriggers: ''
+      - chnlInitState: ''
+      - chnlPolarity: ''
+      - bdmMode: 'kFTM_BdmMode_0'
+      - useGlobalTimeBase: 'false'
+    - timer_interrupts: ''
+    - enable_irq: 'true'
+    - ftm_interrupt:
+      - IRQn: 'FTM3_IRQn'
+      - enable_interrrupt: 'enabled'
+      - enable_priority: 'true'
+      - priority: '4'
+      - enable_custom_name: 'false'
+    - EnableTimerInInit: 'true'
+  - ftm_edge_aligned_mode:
+    - ftm_edge_aligned_channels_config: []
+    - quick_selection: 'default'
+ * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
+/* clang-format on */
+const ftm_config_t FTM3_config = {
+  .prescale = kFTM_Prescale_Divide_2,
+  .faultMode = kFTM_Fault_Disable,
+  .faultFilterValue = 0,
+  .deadTimePrescale = kFTM_Deadtime_Prescale_1,
+  .deadTimeValue = 0,
+  .pwmSyncMode = kFTM_SoftwareTrigger,
+  .reloadPoints = 0,
+  .extTriggers = 0,
+  .chnlInitState = 0,
+  .chnlPolarity = 0,
+  .bdmMode = kFTM_BdmMode_0,
+  .useGlobalTimeBase = false
+};
+
+static void FTM3_init(void) {
+  FTM_Init(FTM3_PERIPHERAL, &FTM3_config);
+  FTM_SetTimerPeriod(FTM3_PERIPHERAL, FTM3_TIMER_MODULO_VALUE);
+  /* Interrupt vector FTM3_IRQn priority settings in the NVIC. */
+  NVIC_SetPriority(FTM3_IRQN, FTM3_IRQ_PRIORITY);
+  /* Enable interrupt FTM3_IRQn request in the NVIC. */
+  EnableIRQ(FTM3_IRQN);
+  FTM_StartTimer(FTM3_PERIPHERAL, kFTM_SystemClock);
+}
+
+/***********************************************************************************************************************
  * Initialization functions
  **********************************************************************************************************************/
 void BOARD_InitPeripherals(void)
@@ -606,6 +704,7 @@ void BOARD_InitPeripherals(void)
   ADC0_init();
   ADC1_init();
   FTM0_init();
+  FTM3_init();
 }
 
 /***********************************************************************************************************************

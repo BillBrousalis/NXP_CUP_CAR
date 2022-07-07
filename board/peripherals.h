@@ -13,6 +13,8 @@
 #include "fsl_clock.h"
 #include "fsl_ftm.h"
 #include "fsl_adc16.h"
+#include "fsl_gpio.h"
+#include "fsl_port.h"
 
 #if defined(__cplusplus)
 extern "C" {
@@ -32,22 +34,10 @@ extern "C" {
 #define FTM2_PWM_SERVO_1_CHANNEL kFTM_Chnl_0
 /* Definition of FTM2 channel/pair number 1 on Edge-aligned PWM */
 #define FTM2_PWM_SERVO_2_CHANNEL kFTM_Chnl_1
-/* Definition of peripheral ID */
-#define FTM1_PERIPHERAL FTM1
-/* Definition of the clock source frequency */
-#define FTM1_CLOCK_SOURCE CLOCK_GetFreq(kCLOCK_BusClk)
-/* Definition of the clock source frequency */
-#define FTM1_TIMER_MODULO_VALUE (((FTM1_CLOCK_SOURCE/ (1U << (FTM1_PERIPHERAL->SC & FTM_SC_PS_MASK))) / 50) - 1)
-/* Definition of FTM1 channel/pair number 0 on Edge-aligned PWM */
-#define FTM1_PWM_MOT_A_CHANNEL kFTM_Chnl_0
-/* Definition of FTM1 channel/pair number 1 on Edge-aligned PWM */
-#define FTM1_PWM_MOT_B_CHANNEL kFTM_Chnl_1
 /* Alias for ADC0 peripheral */
 #define ADC0_PERIPHERAL ADC0
 /* ADC0 interrupt vector ID (number). */
 #define ADC0_IRQN ADC0_IRQn
-/* ADC0 interrupt vector priority. */
-#define ADC0_IRQ_PRIORITY 4
 /* ADC0 interrupt handler identifier. */
 #define ADC0_IRQHANDLER ADC0_IRQHandler
 /* Channel 0 (SE.3) conversion control group. */
@@ -56,6 +46,8 @@ extern "C" {
 #define ADC1_PERIPHERAL ADC1
 /* ADC1 interrupt vector ID (number). */
 #define ADC1_IRQN ADC1_IRQn
+/* ADC1 interrupt vector priority. */
+#define ADC1_IRQ_PRIORITY 4
 /* ADC1 interrupt handler identifier. */
 #define ADC1_IRQHANDLER ADC1_IRQHandler
 /* Channel 0 (SE.3) conversion control group. */
@@ -72,12 +64,25 @@ extern "C" {
 #define FTM0_PWM_MOT_A_CHANNEL kFTM_Chnl_0
 /* Definition of FTM0 channel/pair number 1 on Edge-aligned PWM */
 #define FTM0_PWM_MOT_B_CHANNEL kFTM_Chnl_1
+/* Definition of peripheral ID */
+#define FTM3_PERIPHERAL FTM3
+/* Definition of the clock source frequency */
+#define FTM3_CLOCK_SOURCE 60000000UL
+/* Definition of the clock source frequency */
+#define FTM3_TIMER_MODULO_VALUE 1499
+/* FTM3 interrupt vector ID (number). */
+#define FTM3_IRQN FTM3_IRQn
+/* FTM3 interrupt vector priority. */
+#define FTM3_IRQ_PRIORITY 4
+/* FTM3 interrupt handler identifier. */
+#define FTM3_IRQHANDLER FTM3_IRQHandler
+/* Alias for GPIOC peripheral */
+#define GPIOC_GPIO GPIOC
 
 /***********************************************************************************************************************
  * Global variables
  **********************************************************************************************************************/
 extern const ftm_config_t FTM2_config;
-extern const ftm_config_t FTM1_config;
 extern adc16_channel_config_t ADC0_channelsConfig[1];
 extern const adc16_config_t ADC0_config;
 extern const adc16_channel_mux_mode_t ADC0_muxMode;
@@ -85,6 +90,7 @@ extern adc16_channel_config_t ADC1_channelsConfig[2];
 extern const adc16_config_t ADC1_config;
 extern const adc16_channel_mux_mode_t ADC1_muxMode;
 extern const ftm_config_t FTM0_config;
+extern const ftm_config_t FTM3_config;
 
 /***********************************************************************************************************************
  * Initialization functions
