@@ -25,6 +25,7 @@
             <processor_version>10.0.0</processor_version>
             <pin_labels>
                <pin_label pin_num="77" pin_signal="PTC5/LLWU_P9/SPI0_SCK/LPTMR0_ALT2/I2S0_RXD0/FB_AD10/CMP0_OUT/FTM0_CH2" label="SPI0_SCLK" identifier="SPI0_SCLK"/>
+               <pin_label pin_num="70" pin_signal="ADC0_SE14/PTC0/SPI0_PCS4/PDB0_EXTRG/USB_SOF_OUT/FB_AD14/I2S0_TXD1" label="LSC2_CSn" identifier="LSC2_CSn"/>
             </pin_labels>
          </pins_profile>
          <functions_list>
@@ -111,6 +112,7 @@
                      </pin_features>
                   </pin>
                   <pin peripheral="ADC0" signal="DP, 3" pin_num="20" pin_signal="ADC1_DP0/ADC0_DP3"/>
+                  <pin peripheral="GPIOC" signal="GPIO, 0" pin_num="70" pin_signal="ADC0_SE14/PTC0/SPI0_PCS4/PDB0_EXTRG/USB_SOF_OUT/FB_AD14/I2S0_TXD1"/>
                </pins>
             </function>
          </functions_list>

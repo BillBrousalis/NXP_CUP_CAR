@@ -14,6 +14,7 @@ mcu_data: ksdk2_0
 processor_version: 10.0.0
 pin_labels:
 - {pin_num: '77', pin_signal: PTC5/LLWU_P9/SPI0_SCK/LPTMR0_ALT2/I2S0_RXD0/FB_AD10/CMP0_OUT/FTM0_CH2, label: SPI0_SCLK, identifier: SPI0_SCLK}
+- {pin_num: '70', pin_signal: ADC0_SE14/PTC0/SPI0_PCS4/PDB0_EXTRG/USB_SOF_OUT/FB_AD14/I2S0_TXD1, label: LSC2_CSn, identifier: LSC2_CSn}
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********
  */
 /* clang-format on */
@@ -53,6 +54,7 @@ BOARD_InitPins:
   - {pin_num: '72', peripheral: FTM0, signal: 'CH, 1', pin_signal: ADC0_SE4b/CMP1_IN0/PTC2/SPI0_PCS2/UART1_CTS_b/FTM0_CH1/FB_AD12/I2S0_TX_FS}
   - {pin_num: '77', peripheral: GPIOC, signal: 'GPIO, 5', pin_signal: PTC5/LLWU_P9/SPI0_SCK/LPTMR0_ALT2/I2S0_RXD0/FB_AD10/CMP0_OUT/FTM0_CH2, direction: OUTPUT, slew_rate: fast}
   - {pin_num: '20', peripheral: ADC0, signal: 'DP, 3', pin_signal: ADC1_DP0/ADC0_DP3}
+  - {pin_num: '70', peripheral: GPIOC, signal: 'GPIO, 0', pin_signal: ADC0_SE14/PTC0/SPI0_PCS4/PDB0_EXTRG/USB_SOF_OUT/FB_AD14/I2S0_TXD1}
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********
  */
 /* clang-format on */
@@ -96,6 +98,9 @@ void BOARD_InitPins(void)
 
     /* PORTB19 (pin 65) is configured as FTM2_CH1 */
     PORT_SetPinMux(PORTB, 19U, kPORT_MuxAlt3);
+
+    /* PORTC0 (pin 70) is configured as PTC0 */
+    PORT_SetPinMux(BOARD_INITPINS_LSC2_CSn_PORT, BOARD_INITPINS_LSC2_CSn_PIN, kPORT_MuxAsGpio);
 
     /* PORTC1 (pin 71) is configured as FTM0_CH0 */
     PORT_SetPinMux(PORTC, 1U, kPORT_MuxAlt4);

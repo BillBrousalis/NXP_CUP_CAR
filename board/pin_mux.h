@@ -42,6 +42,19 @@ void BOARD_InitBootPins(void);
 #define BOARD_INITPINS_SPI0_SCLK_PIN_MASK (1U << 5U)      /*!<@brief PORT pin mask */
                                                           /* @} */
 
+/*! @name PORTC0 (number 70), LSC2_CSn
+  @{ */
+
+/* Symbols to be used with GPIO driver */
+#define BOARD_INITPINS_LSC2_CSn_GPIO GPIOC               /*!<@brief GPIO peripheral base pointer */
+#define BOARD_INITPINS_LSC2_CSn_GPIO_PIN_MASK (1U << 0U) /*!<@brief GPIO pin mask */
+
+/* Symbols to be used with PORT driver */
+#define BOARD_INITPINS_LSC2_CSn_PORT PORTC               /*!<@brief PORT peripheral base pointer */
+#define BOARD_INITPINS_LSC2_CSn_PIN 0U                   /*!<@brief PORT pin number */
+#define BOARD_INITPINS_LSC2_CSn_PIN_MASK (1U << 0U)      /*!<@brief PORT pin mask */
+                                                         /* @} */
+
 /*!
  * @brief Configures pin routing and optionally pin electrical features.
  *

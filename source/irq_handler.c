@@ -48,7 +48,7 @@ void FTM3_IRQHANDLER(void) {
   FTM_ClearStatusFlags(FTM3_PERIPHERAL, intStatus);
 
   /* Place your code here */
-  ls_clk_mng();
+  CamScanPix();
 
   /* Add for ARM errata 838869, affects Cortex-M4, Cortex-M4F
      Store immediate overlapping exception return operation might vector to incorrect interrupt. */

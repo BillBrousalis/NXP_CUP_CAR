@@ -565,7 +565,8 @@ static void FTM3_init(void) {
   NVIC_SetPriority(FTM3_IRQN, FTM3_IRQ_PRIORITY);
   /* Enable interrupt FTM3_IRQn request in the NVIC. */
   EnableIRQ(FTM3_IRQN);
-  FTM_StartTimer(FTM3_PERIPHERAL, kFTM_SystemClock);
+  /* We will start the timer manually */
+  //FTM_StartTimer(FTM3_PERIPHERAL, kFTM_SystemClock);
 }
 
 /***********************************************************************************************************************

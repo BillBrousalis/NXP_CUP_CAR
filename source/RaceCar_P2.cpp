@@ -69,6 +69,7 @@ int main(void) {
 
 
 void default_task(void *pvParameters) {
+	CamScanStart();
 	for (;;) {
         vTaskDelay(pdMS_TO_TICKS(10));
 	}
