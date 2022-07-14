@@ -15,6 +15,8 @@
 #include "fsl_adc16.h"
 #include "fsl_gpio.h"
 #include "fsl_port.h"
+#include "ff.h"
+#include "diskio.h"
 
 #if defined(__cplusplus)
 extern "C" {
@@ -38,6 +40,8 @@ extern "C" {
 #define ADC0_PERIPHERAL ADC0
 /* ADC0 interrupt vector ID (number). */
 #define ADC0_IRQN ADC0_IRQn
+/* ADC0 interrupt vector priority. */
+#define ADC0_IRQ_PRIORITY 4
 /* ADC0 interrupt handler identifier. */
 #define ADC0_IRQHANDLER ADC0_IRQHandler
 /* Channel 0 (SE.3) conversion control group. */
@@ -91,6 +95,8 @@ extern const adc16_config_t ADC1_config;
 extern const adc16_channel_mux_mode_t ADC1_muxMode;
 extern const ftm_config_t FTM0_config;
 extern const ftm_config_t FTM3_config;
+/* FATFS System object */
+extern FATFS FATFS_System_0;
 
 /***********************************************************************************************************************
  * Initialization functions

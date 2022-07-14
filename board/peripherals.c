@@ -6,11 +6,11 @@
 /* clang-format off */
 /* TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
 !!GlobalInfo
-product: Peripherals v10.0
+product: Peripherals v11.0
 processor: MK64FN1M0xxx12
 package_id: MK64FN1M0VLL12
 mcu_data: ksdk2_0
-processor_version: 10.0.0
+processor_version: 11.0.1
 functionalGroups:
 - name: BOARD_InitPeripherals
   UUID: 5106ec8a-bf57-4099-b5e0-fe6130e159f6
@@ -32,6 +32,14 @@ component:
 - type: 'uart_cmsis_common'
 - type_id: 'uart_cmsis_common_9cb8e302497aa696fdbb5a4fd622c2a8'
 - global_USART_CMSIS_common:
+  - quick_selection: 'default'
+ * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
+
+/* TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
+component:
+- type: 'gpio_adapter_common'
+- type_id: 'gpio_adapter_common_57579b9ac814fe26bf95df0a384c36b6'
+- global_gpio_adapter_common:
   - quick_selection: 'default'
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
 /* clang-format on */
@@ -62,6 +70,7 @@ instance:
     - interrupt_table:
       - 0: []
       - 1: []
+      - 2: []
     - interrupts: []
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
 /* clang-format on */
@@ -203,10 +212,10 @@ instance:
       - referenceVoltageSource: 'kADC16_ReferenceVoltageSourceVref'
       - clockSource: 'kADC16_ClockSourceAlt0'
       - enableAsynchronousClock: 'true'
-      - clockDivider: 'kADC16_ClockDivider8'
-      - resolution: 'kADC16_ResolutionSE12Bit'
+      - clockDivider: 'kADC16_ClockDivider4'
+      - resolution: 'kADC16_ResolutionSE16Bit'
       - longSampleMode: 'kADC16_LongSampleDisabled'
-      - hardwareAverageMode: 'kADC16_HardwareAverageDisabled'
+      - hardwareAverageMode: 'kADC16_HardwareAverageCount4'
       - enableHighSpeed: 'false'
       - enableLowPower: 'false'
       - enableContinuousConversion: 'false'
@@ -216,7 +225,7 @@ instance:
     - doAutoCalibration: 'true'
     - trigger: 'false'
     - enable_dma: 'false'
-    - enable_irq: 'false'
+    - enable_irq: 'true'
     - adc_interrupt:
       - IRQn: 'ADC0_IRQn'
       - enable_interrrupt: 'enabled'
@@ -228,7 +237,7 @@ instance:
         - channelName: ''
         - enableDifferentialConversion: 'false'
         - channelNumber: 'SE.3'
-        - enableInterruptOnConversionCompleted: 'false'
+        - enableInterruptOnConversionCompleted: 'true'
         - channelGroup: '0'
         - initializeChannel: 'true'
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
@@ -237,17 +246,17 @@ adc16_channel_config_t ADC0_channelsConfig[1] = {
   {
     .channelNumber = 3U,
     .enableDifferentialConversion = false,
-    .enableInterruptOnConversionCompleted = false,
+    .enableInterruptOnConversionCompleted = true,
   }
 };
 const adc16_config_t ADC0_config = {
   .referenceVoltageSource = kADC16_ReferenceVoltageSourceVref,
   .clockSource = kADC16_ClockSourceAlt0,
   .enableAsynchronousClock = true,
-  .clockDivider = kADC16_ClockDivider8,
-  .resolution = kADC16_ResolutionSE12Bit,
+  .clockDivider = kADC16_ClockDivider4,
+  .resolution = kADC16_ResolutionSE16Bit,
   .longSampleMode = kADC16_LongSampleDisabled,
-  .hardwareAverageMode = kADC16_HardwareAverageDisabled,
+  .hardwareAverageMode = kADC16_HardwareAverageCount4,
   .enableHighSpeed = false,
   .enableLowPower = false,
   .enableContinuousConversion = false
@@ -265,6 +274,10 @@ static void ADC0_init(void) {
   ADC16_DoAutoCalibration(ADC0_PERIPHERAL);
   /* Initialize channel */
   ADC16_SetChannelConfig(ADC0_PERIPHERAL, ADC0_CH0_CONTROL_GROUP, &ADC0_channelsConfig[0]);
+  /* Interrupt vector ADC0_IRQn priority settings in the NVIC. */
+  NVIC_SetPriority(ADC0_IRQN, ADC0_IRQ_PRIORITY);
+  /* Enable interrupt ADC0_IRQn request in the NVIC. */
+  EnableIRQ(ADC0_IRQN);
 }
 
 /***********************************************************************************************************************
@@ -565,8 +578,7 @@ static void FTM3_init(void) {
   NVIC_SetPriority(FTM3_IRQN, FTM3_IRQ_PRIORITY);
   /* Enable interrupt FTM3_IRQn request in the NVIC. */
   EnableIRQ(FTM3_IRQN);
-  /* We will start the timer manually */
-  //FTM_StartTimer(FTM3_PERIPHERAL, kFTM_SystemClock);
+  FTM_StartTimer(FTM3_PERIPHERAL, kFTM_SystemClock);
 }
 
 /***********************************************************************************************************************
@@ -600,6 +612,105 @@ static void GPIOC_init(void) {
 }
 
 /***********************************************************************************************************************
+ * FATFS initialization code
+ **********************************************************************************************************************/
+/* clang-format off */
+/* TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
+instance:
+- name: 'FATFS'
+- type: 'fatfs'
+- mode: 'general'
+- custom_name_enabled: 'false'
+- type_id: 'fatfs_2f85acf758668258920f70258052a088'
+- functional_group: 'BOARD_InitPeripherals'
+- config_sets:
+  - init_config:
+    - initConfig:
+      - initPartitionsStr: 'false'
+      - multiplePartitions:
+        - 0:
+          - Volume: '0'
+          - Partition: 'autoDetect'
+        - 1:
+          - Volume: '0'
+          - Partition: 'autoDetect'
+      - enablePhysicalLayerInit: 'false'
+      - diskConfig:
+        - initFunctionID: 'FATFS_DiskInit'
+      - initResultObject: 'false'
+      - resultName: 'FATFS_Result'
+      - fatfsObjects:
+        - 0:
+          - objID: 'FATFS_System_0'
+          - diskMount: 'true'
+          - mountPath: '0:'
+          - mountInitOpt: 'false'
+      - filObjects: []
+      - filInfoObjects: []
+      - dirObjects: []
+  - ff_config:
+    - revisionID: 'rev14_3'
+    - MSDKadaptation: 'SD_DISK_ENABLE'
+    - functionConfig:
+      - FF_FS_READONLY: 'false'
+      - FF_FS_MINIMIZE: 'level1'
+      - FF_USE_FIND: 'disableDirRead'
+      - FF_USE_MKFS: 'false'
+      - FF_USE_FASTSEEK: 'false'
+      - FF_USE_EXPAND: 'false'
+      - FF_USE_CHMOD: 'false'
+      - FF_USE_LABEL: 'true'
+      - FF_USE_FORWARD: 'false'
+      - FF_USE_STRFUNC: 'enableWithoutConversion'
+      - FF_PRINT_LLI: 'false'
+      - FF_PRINT_FLOAT: 'disable'
+    - namespaceConfig:
+      - FF_USE_LFN: 'disableLfn'
+      - FF_MAX_LFN: '255'
+      - FF_LFN_BUF: 'LFNID'
+      - FF_SFN_BUF: 'SFNID'
+      - FF_LFN_UNICODE: 'UTF16'
+      - FF_STRF_ENCODE: 'UTF16LE'
+      - FF_CODE_PAGE: 'cpUS'
+      - FF_FS_RPATH: 'enableRP2'
+    - driveConfig:
+      - FF_VOLUMES: '1'
+      - FF_STR_VOLUME_ID: 'numericId'
+      - volumes:
+        - 0:
+          - volumeStr: 'RAM'
+      - FF_MULTI_PARTITION: 'false'
+      - FF_MIN_SS: 'value512'
+      - FF_MAX_SS: 'value512'
+      - FF_LBA64: 'false'
+      - FF_MIN_GPT: '0x10000000'
+      - FF_USE_TRIM: 'false'
+    - systemConfig:
+      - FF_FS_TINY: 'false'
+      - FF_FS_EXFAT: 'false'
+      - FF_FS_NORTC: 'false'
+      - FF_NORTC_MON: '1'
+      - FF_NORTC_MDAY: '1'
+      - FF_NORTC_YEAR: '2020'
+      - FF_FS_NOFSINFO: ''
+      - FF_FS_LOCK: '0'
+      - FF_FS_REENTRANT: 'false'
+      - FF_FS_TIMEOUT: '1000'
+      - FF_SYNC_t: 'HANDLE'
+      - includeOS: 'false'
+      - headerFileName: 'somertos.h'
+    - fatfs_codegenerator: []
+ * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
+/* clang-format on */
+/* FATFS System object */
+FATFS FATFS_System_0;
+
+static void FATFS_init(void) {
+  /* FATFS Filesystem work area initialization */
+  (void) f_mount(&FATFS_System_0, (const TCHAR*)"0:", 0);
+}
+
+/***********************************************************************************************************************
  * Initialization functions
  **********************************************************************************************************************/
 void BOARD_InitPeripherals(void)
@@ -611,6 +722,7 @@ void BOARD_InitPeripherals(void)
   FTM0_init();
   FTM3_init();
   GPIOC_init();
+  FATFS_init();
 }
 
 /***********************************************************************************************************************

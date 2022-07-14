@@ -3,33 +3,10 @@
 //////////////////////////////////////////////////////////////
 extern "C"
 {
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-
-#include "board.h"
-#include "peripherals.h"
-#include "pin_mux.h"
-#include "clock_config.h"
-#include "MK64F12.h"
-#include "fsl_debug_console.h"
-
-/* FreeRTOS */
-#include "FreeRTOS.h"
-#include "task.h"
-#include "queue.h"
-#include "timers.h"
-
-/* TODO: insert other include files here. */
-#include "drive_tracking.h"
-#include "base_drivers/servo.h"
-#include "base_drivers/motors.h"
-#include "base_drivers/gpio.h"
-#include "base_drivers/linescan.h"
-#include "tests/pot_testing.h"
-#include "irq_handler.h"
+#include "includes.h"
 }
 
+//-----------------------------------------------------------------------------------------
 
 /* TODO: insert other definitions and declarations here. */
 #define DEFAULT_TASK_PRIO (configMAX_PRIORITIES - 2)
@@ -37,9 +14,9 @@ extern "C"
 void default_task(void *pvParameters);
 TaskHandle_t default_handle;
 
-/*
- * @brief   Application entry point.
- */
+//-----------------------------------------------------------------------------------------
+//  @brief   Application entry point.
+//-----------------------------------------------------------------------------------------
 int main(void) {
     /* Init board hardware. */
     BOARD_InitBootPins();
@@ -50,7 +27,7 @@ int main(void) {
     BOARD_InitDebugConsole();
 #endif
 
-    xTaskCreate(default_task, "Default task", configMINIMAL_STACK_SIZE, NULL, DEFAULT_TASK_PRIO, &default_handle);
+    xTaskCreate(default_task, "Default task", configMINIMAL_STACK_SIZE * 8, NULL, DEFAULT_TASK_PRIO, &default_handle);
     //xTaskCreate(test_all, "Default task", configMINIMAL_STACK_SIZE, NULL, DEFAULT_TASK_PRIO, NULL);
     vTaskStartScheduler();
     for(;;);
@@ -66,11 +43,15 @@ int main(void) {
     }
     return 0 ;
 }
-
-
+//-----------------------------------------------------------------------------------------
+//		Default task
+//-----------------------------------------------------------------------------------------
 void default_task(void *pvParameters) {
-	CamScanStart();
+
+	fileSyetemInit();
 	for (;;) {
-        vTaskDelay(pdMS_TO_TICKS(10));
+		LineCamProcess();
 	}
 }
+//-----------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------

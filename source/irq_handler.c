@@ -1,16 +1,37 @@
-#include <stdint.h>
-#include "fsl_adc16.h"
-#include "peripherals.h"
+//===================================================================================================
+//!
+//===================================================================================================
+#include "includes.h"
 
-#include "base_drivers/pot.h"
-#include "base_drivers/linescan.h"
+extern void PixRead();
 
-#include "irq_handler.h"
+//====================================================================================================
+///* ADC0_IRQn interrupt handler
+//====================================================================================================
 
+void ADC0_IRQHANDLER(void) {
+  /* Get flags for each group */
+
+  uint32_t status = ADC16_GetChannelStatusFlags(ADC0_PERIPHERAL, 0);
+  	if ( status == kADC16_ChannelConversionDoneFlag){
+  		PixRead();	//result_values[i] = ADC16_GetChannelConversionValue(ADC0_PERIPHERAL, 0);
+  	}
+
+  /* Place your code here */
+
+  /* Add for ARM errata 838869, affects Cortex-M4, Cortex-M4F
+     Store immediate overlapping exception return operation might vector to incorrect interrupt. */
+  #if defined __CORTEX_M && (__CORTEX_M == 4U)
+    __DSB();
+  #endif
+}
+
+//====================================================================================================
+//  ADC1_IRQn interrupt handler
+//  POT ADC INTERRUPT
+//====================================================================================================
 int adc1_chnl = 0;
-
-/* POT ADC INTERRUPT */
-/* ADC1_IRQn interrupt handler */
+//====================================================================================================
 void ADC1_IRQHANDLER(void) {
   /* Array of result values*/
   uint32_t result_values[2] = {0};
@@ -37,10 +58,10 @@ void ADC1_IRQHANDLER(void) {
     __DSB();
   #endif
 }
-
-
+//====================================================================================================
 /* LineScan clock interrupt    */
 /* FTM3_IRQn interrupt handler */
+//====================================================================================================
 void FTM3_IRQHANDLER(void) {
   uint32_t intStatus;
   /* Reading all interrupt flags of status register */
@@ -56,3 +77,5 @@ void FTM3_IRQHANDLER(void) {
     __DSB();
   #endif
 }
+//====================================================================================================
+//====================================================================================================
