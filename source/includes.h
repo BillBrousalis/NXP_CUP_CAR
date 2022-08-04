@@ -14,13 +14,13 @@
 #include "clock_config.h"
 #include "MK64F12.h"
 #include "fsl_debug_console.h"
+#include "fsl_uart_freertos.h"
 
 /* FreeRTOS */
 #include "FreeRTOS.h"
 #include "task.h"
 #include "queue.h"
 #include "timers.h"
-#include "ff.h"
 
 
 /* TODO: insert other include files here. */
@@ -32,8 +32,6 @@
 #include "base_drivers/linescan.h"
 #include "tests/pot_testing.h"
 #include "irq_handler.h"
-#include "filesys.h"
 #include "misc.h"
-
 //-----------------------------------------------------------------------------------------------------------------------------------
 //-----------------------------------------------------------------------------------------------------------------------------------

@@ -53,6 +53,49 @@ component:
  * BOARD_InitPeripherals functional group
  **********************************************************************************************************************/
 /***********************************************************************************************************************
+ * DMA initialization code
+ **********************************************************************************************************************/
+/* clang-format off */
+/* TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
+instance:
+- name: 'DMA'
+- type: 'edma'
+- mode: 'basic'
+- custom_name_enabled: 'false'
+- type_id: 'edma_6d0dd4e17e2f179c7d42d98767129ede'
+- functional_group: 'BOARD_InitPeripherals'
+- peripheral: 'DMA'
+- config_sets:
+  - fsl_edma:
+    - common_settings:
+      - enableContinuousLinkMode: 'false'
+      - enableHaltOnError: 'true'
+      - enableRoundRobinArbitration: '$parent.ERCA.getEnumItemValue()'
+      - enableDebugMode: 'false'
+    - dma_table: []
+    - edma_channels: []
+    - errInterruptConfig:
+      - enableErrInterrupt: 'false'
+      - errorInterrupt:
+        - IRQn: 'DMA_Error_IRQn'
+        - enable_interrrupt: 'enabled'
+        - enable_priority: 'false'
+        - priority: '0'
+        - enable_custom_name: 'false'
+ * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
+/* clang-format on */
+const edma_config_t DMA_config = {
+  .enableContinuousLinkMode = false,
+  .enableHaltOnError = true,
+  .enableRoundRobinArbitration = false,
+  .enableDebugMode = false
+};
+
+/* Empty initialization function (commented out)
+static void DMA_init(void) {
+} */
+
+/***********************************************************************************************************************
  * NVIC initialization code
  **********************************************************************************************************************/
 /* clang-format off */
@@ -71,6 +114,10 @@ instance:
       - 0: []
       - 1: []
       - 2: []
+      - 3: []
+      - 4: []
+      - 5: []
+      - 6: []
     - interrupts: []
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
 /* clang-format on */
@@ -210,12 +257,12 @@ instance:
   - fsl_adc16:
     - adc16_config:
       - referenceVoltageSource: 'kADC16_ReferenceVoltageSourceVref'
-      - clockSource: 'kADC16_ClockSourceAlt0'
+      - clockSource: 'kADC16_ClockSourceAlt1'
       - enableAsynchronousClock: 'true'
-      - clockDivider: 'kADC16_ClockDivider4'
-      - resolution: 'kADC16_ResolutionSE16Bit'
+      - clockDivider: 'kADC16_ClockDivider2'
+      - resolution: 'kADC16_Resolution12or13Bit'
       - longSampleMode: 'kADC16_LongSampleDisabled'
-      - hardwareAverageMode: 'kADC16_HardwareAverageCount4'
+      - hardwareAverageMode: 'kADC16_HardwareAverageDisabled'
       - enableHighSpeed: 'false'
       - enableLowPower: 'false'
       - enableContinuousConversion: 'false'
@@ -251,12 +298,12 @@ adc16_channel_config_t ADC0_channelsConfig[1] = {
 };
 const adc16_config_t ADC0_config = {
   .referenceVoltageSource = kADC16_ReferenceVoltageSourceVref,
-  .clockSource = kADC16_ClockSourceAlt0,
+  .clockSource = kADC16_ClockSourceAlt1,
   .enableAsynchronousClock = true,
-  .clockDivider = kADC16_ClockDivider4,
-  .resolution = kADC16_ResolutionSE16Bit,
+  .clockDivider = kADC16_ClockDivider2,
+  .resolution = kADC16_Resolution12or13Bit,
   .longSampleMode = kADC16_LongSampleDisabled,
-  .hardwareAverageMode = kADC16_HardwareAverageCount4,
+  .hardwareAverageMode = kADC16_HardwareAverageDisabled,
   .enableHighSpeed = false,
   .enableLowPower = false,
   .enableContinuousConversion = false
@@ -612,102 +659,113 @@ static void GPIOC_init(void) {
 }
 
 /***********************************************************************************************************************
- * FATFS initialization code
+ * UART3 initialization code
  **********************************************************************************************************************/
 /* clang-format off */
 /* TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
 instance:
-- name: 'FATFS'
-- type: 'fatfs'
-- mode: 'general'
+- name: 'UART3'
+- type: 'uart'
+- mode: 'freertos'
 - custom_name_enabled: 'false'
-- type_id: 'fatfs_2f85acf758668258920f70258052a088'
+- type_id: 'uart_9b45c456566d03f79ecfe90751c10bb4'
 - functional_group: 'BOARD_InitPeripherals'
+- peripheral: 'UART3'
 - config_sets:
-  - init_config:
-    - initConfig:
-      - initPartitionsStr: 'false'
-      - multiplePartitions:
-        - 0:
-          - Volume: '0'
-          - Partition: 'autoDetect'
-        - 1:
-          - Volume: '0'
-          - Partition: 'autoDetect'
-      - enablePhysicalLayerInit: 'false'
-      - diskConfig:
-        - initFunctionID: 'FATFS_DiskInit'
-      - initResultObject: 'false'
-      - resultName: 'FATFS_Result'
-      - fatfsObjects:
-        - 0:
-          - objID: 'FATFS_System_0'
-          - diskMount: 'true'
-          - mountPath: '0:'
-          - mountInitOpt: 'false'
-      - filObjects: []
-      - filInfoObjects: []
-      - dirObjects: []
-  - ff_config:
-    - revisionID: 'rev14_3'
-    - MSDKadaptation: 'SD_DISK_ENABLE'
-    - functionConfig:
-      - FF_FS_READONLY: 'false'
-      - FF_FS_MINIMIZE: 'level1'
-      - FF_USE_FIND: 'disableDirRead'
-      - FF_USE_MKFS: 'false'
-      - FF_USE_FASTSEEK: 'false'
-      - FF_USE_EXPAND: 'false'
-      - FF_USE_CHMOD: 'false'
-      - FF_USE_LABEL: 'true'
-      - FF_USE_FORWARD: 'false'
-      - FF_USE_STRFUNC: 'enableWithoutConversion'
-      - FF_PRINT_LLI: 'false'
-      - FF_PRINT_FLOAT: 'disable'
-    - namespaceConfig:
-      - FF_USE_LFN: 'disableLfn'
-      - FF_MAX_LFN: '255'
-      - FF_LFN_BUF: 'LFNID'
-      - FF_SFN_BUF: 'SFNID'
-      - FF_LFN_UNICODE: 'UTF16'
-      - FF_STRF_ENCODE: 'UTF16LE'
-      - FF_CODE_PAGE: 'cpUS'
-      - FF_FS_RPATH: 'enableRP2'
-    - driveConfig:
-      - FF_VOLUMES: '1'
-      - FF_STR_VOLUME_ID: 'numericId'
-      - volumes:
-        - 0:
-          - volumeStr: 'RAM'
-      - FF_MULTI_PARTITION: 'false'
-      - FF_MIN_SS: 'value512'
-      - FF_MAX_SS: 'value512'
-      - FF_LBA64: 'false'
-      - FF_MIN_GPT: '0x10000000'
-      - FF_USE_TRIM: 'false'
-    - systemConfig:
-      - FF_FS_TINY: 'false'
-      - FF_FS_EXFAT: 'false'
-      - FF_FS_NORTC: 'false'
-      - FF_NORTC_MON: '1'
-      - FF_NORTC_MDAY: '1'
-      - FF_NORTC_YEAR: '2020'
-      - FF_FS_NOFSINFO: ''
-      - FF_FS_LOCK: '0'
-      - FF_FS_REENTRANT: 'false'
-      - FF_FS_TIMEOUT: '1000'
-      - FF_SYNC_t: 'HANDLE'
-      - includeOS: 'false'
-      - headerFileName: 'somertos.h'
-    - fatfs_codegenerator: []
+  - fsl_uart_freertos:
+    - uart_rtos_configuration:
+      - clockSource: 'BusInterfaceClock'
+      - clockSourceFreq: 'GetFreq'
+      - baudrate: '115200'
+      - parity: 'kUART_ParityDisabled'
+      - stopbits: 'kUART_OneStopBit'
+      - buffer_size: '512'
+    - interrupt_rx_tx:
+      - IRQn: 'UART3_RX_TX_IRQn'
+      - enable_priority: 'true'
+      - priority: '4'
+    - interrupt_err:
+      - IRQn: 'UART3_ERR_IRQn'
+      - enable_priority: 'true'
+      - priority: '4'
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
 /* clang-format on */
-/* FATFS System object */
-FATFS FATFS_System_0;
+uart_rtos_handle_t UART3_rtos_handle;
+uart_handle_t UART3_uart_handle;
+uint8_t UART3_background_buffer[UART3_BACKGROUND_BUFFER_SIZE];
+uart_rtos_config_t UART3_rtos_config = {
+  .base = UART3_PERIPHERAL,
+  .baudrate = 115200UL,
+  .parity = kUART_ParityDisabled,
+  .stopbits = kUART_OneStopBit,
+  .buffer = UART3_background_buffer,
+  .buffer_size = UART3_BACKGROUND_BUFFER_SIZE
+};
 
-static void FATFS_init(void) {
-  /* FATFS Filesystem work area initialization */
-  (void) f_mount(&FATFS_System_0, (const TCHAR*)"0:", 0);
+static void UART3_init(void) {
+  /* UART clock source initialization */
+  UART3_rtos_config.srcclk = UART3_CLOCK_SOURCE;
+  /* UART rtos initialization */
+  UART_RTOS_Init(&UART3_rtos_handle, &UART3_uart_handle, &UART3_rtos_config);
+  /* Interrupt vector UART3_RX_TX_IRQn priority settings in the NVIC. */
+  NVIC_SetPriority(UART3_SERIAL_RX_TX_IRQN, UART3_SERIAL_RX_TX_IRQ_PRIORITY);
+  /* Interrupt vector UART3_ERR_IRQn priority settings in the NVIC. */
+  NVIC_SetPriority(UART3_SERIAL_ERROR_IRQN, UART3_SERIAL_ERROR_IRQ_PRIORITY);
+}
+
+/***********************************************************************************************************************
+ * UART4 initialization code
+ **********************************************************************************************************************/
+/* clang-format off */
+/* TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
+instance:
+- name: 'UART4'
+- type: 'uart'
+- mode: 'freertos'
+- custom_name_enabled: 'false'
+- type_id: 'uart_9b45c456566d03f79ecfe90751c10bb4'
+- functional_group: 'BOARD_InitPeripherals'
+- peripheral: 'UART4'
+- config_sets:
+  - fsl_uart_freertos:
+    - uart_rtos_configuration:
+      - clockSource: 'BusInterfaceClock'
+      - clockSourceFreq: 'GetFreq'
+      - baudrate: '115200'
+      - parity: 'kUART_ParityDisabled'
+      - stopbits: 'kUART_OneStopBit'
+      - buffer_size: '512'
+    - interrupt_rx_tx:
+      - IRQn: 'UART4_RX_TX_IRQn'
+      - enable_priority: 'true'
+      - priority: '4'
+    - interrupt_err:
+      - IRQn: 'UART4_ERR_IRQn'
+      - enable_priority: 'true'
+      - priority: '4'
+ * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
+/* clang-format on */
+uart_rtos_handle_t UART4_rtos_handle;
+uart_handle_t UART4_uart_handle;
+uint8_t UART4_background_buffer[UART4_BACKGROUND_BUFFER_SIZE];
+uart_rtos_config_t UART4_rtos_config = {
+  .base = UART4_PERIPHERAL,
+  .baudrate = 115200UL,
+  .parity = kUART_ParityDisabled,
+  .stopbits = kUART_OneStopBit,
+  .buffer = UART4_background_buffer,
+  .buffer_size = UART4_BACKGROUND_BUFFER_SIZE
+};
+
+static void UART4_init(void) {
+  /* UART clock source initialization */
+  UART4_rtos_config.srcclk = UART4_CLOCK_SOURCE;
+  /* UART rtos initialization */
+  UART_RTOS_Init(&UART4_rtos_handle, &UART4_uart_handle, &UART4_rtos_config);
+  /* Interrupt vector UART4_RX_TX_IRQn priority settings in the NVIC. */
+  NVIC_SetPriority(UART4_SERIAL_RX_TX_IRQN, UART4_SERIAL_RX_TX_IRQ_PRIORITY);
+  /* Interrupt vector UART4_ERR_IRQn priority settings in the NVIC. */
+  NVIC_SetPriority(UART4_SERIAL_ERROR_IRQN, UART4_SERIAL_ERROR_IRQ_PRIORITY);
 }
 
 /***********************************************************************************************************************
@@ -715,6 +773,10 @@ static void FATFS_init(void) {
  **********************************************************************************************************************/
 void BOARD_InitPeripherals(void)
 {
+  /* Global initialization */
+  DMAMUX_Init(DMA_DMAMUX_BASEADDR);
+  EDMA_Init(DMA_DMA_BASEADDR, &DMA_config);
+
   /* Initialize components */
   FTM2_init();
   ADC0_init();
@@ -722,7 +784,8 @@ void BOARD_InitPeripherals(void)
   FTM0_init();
   FTM3_init();
   GPIOC_init();
-  FATFS_init();
+  UART3_init();
+  UART4_init();
 }
 
 /***********************************************************************************************************************

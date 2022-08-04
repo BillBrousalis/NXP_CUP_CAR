@@ -82,6 +82,10 @@ BOARD_InitPins:
   - {pin_num: '2', peripheral: SDHC, signal: 'DATA, 0', pin_signal: ADC1_SE5a/PTE1/LLWU_P0/SPI1_SOUT/UART1_RX/SDHC0_D0/TRACE_D3/I2C1_SCL/SPI1_SIN}
   - {pin_num: '1', peripheral: SDHC, signal: 'DATA, 1', pin_signal: ADC1_SE4a/PTE0/SPI1_PCS1/UART1_TX/SDHC0_D1/TRACE_CLKOUT/I2C1_SDA/RTC_CLKOUT}
   - {pin_num: '7', peripheral: GPIOE, signal: 'GPIO, 6', pin_signal: PTE6/SPI1_PCS3/UART3_CTS_b/I2S0_MCLK/FTM3_CH1/USB_SOF_OUT, direction: INPUT, gpio_interrupt: kPORT_InterruptOrDMADisabled}
+  - {pin_num: '86', peripheral: UART4, signal: RX, pin_signal: PTC14/UART4_RX/FB_AD25}
+  - {pin_num: '87', peripheral: UART4, signal: TX, pin_signal: PTC15/UART4_TX/FB_AD24}
+  - {pin_num: '58', peripheral: UART3, signal: RX, pin_signal: ADC1_SE14/PTB10/SPI1_PCS0/UART3_RX/FB_AD19/FTM0_FLT1}
+  - {pin_num: '59', peripheral: UART3, signal: TX, pin_signal: ADC1_SE15/PTB11/SPI1_SCK/UART3_TX/FB_AD18/FTM0_FLT2}
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********
  */
 /* clang-format on */
@@ -178,6 +182,12 @@ void BOARD_InitPins(void)
     /* PORTA19 (pin 51) is configured as XTAL0 */
     PORT_SetPinMux(PORTA, 19U, kPORT_PinDisabledOrAnalog);
 
+    /* PORTB10 (pin 58) is configured as UART3_RX */
+    PORT_SetPinMux(PORTB, 10U, kPORT_MuxAlt3);
+
+    /* PORTB11 (pin 59) is configured as UART3_TX */
+    PORT_SetPinMux(PORTB, 11U, kPORT_MuxAlt3);
+
     /* PORTB18 (pin 64) is configured as FTM2_CH0 */
     PORT_SetPinMux(PORTB, 18U, kPORT_MuxAlt3);
 
@@ -245,6 +255,12 @@ void BOARD_InitPins(void)
                        * pin is configured as a digital input.
                        * Refer to the device data sheet for filter characteristics. */
                       | PORT_PCR_PFE(kPORT_PassiveFilterEnable));
+
+    /* PORTC14 (pin 86) is configured as UART4_RX */
+    PORT_SetPinMux(PORTC, 14U, kPORT_MuxAlt3);
+
+    /* PORTC15 (pin 87) is configured as UART4_TX */
+    PORT_SetPinMux(PORTC, 15U, kPORT_MuxAlt3);
 
     /* PORTC2 (pin 72) is configured as FTM0_CH1 */
     PORT_SetPinMux(PORTC, 2U, kPORT_MuxAlt4);

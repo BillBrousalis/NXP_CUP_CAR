@@ -9,14 +9,16 @@
 /***********************************************************************************************************************
  * Included files
  **********************************************************************************************************************/
+#include "fsl_edma.h"
+#include "fsl_dmamux.h"
 #include "fsl_common.h"
 #include "fsl_clock.h"
 #include "fsl_ftm.h"
 #include "fsl_adc16.h"
 #include "fsl_gpio.h"
 #include "fsl_port.h"
-#include "ff.h"
-#include "diskio.h"
+#include "fsl_uart.h"
+#include "fsl_uart_freertos.h"
 
 #if defined(__cplusplus)
 extern "C" {
@@ -26,6 +28,10 @@ extern "C" {
  * Definitions
  **********************************************************************************************************************/
 /* Definitions for BOARD_InitPeripherals functional group */
+/* Used DMA device. */
+#define DMA_DMA_BASEADDR DMA0
+/* Associated DMAMUX device that is used for muxing of requests. */
+#define DMA_DMAMUX_BASEADDR DMAMUX
 /* Definition of peripheral ID */
 #define FTM2_PERIPHERAL FTM2
 /* Definition of the clock source frequency */
@@ -82,10 +88,39 @@ extern "C" {
 #define FTM3_IRQHANDLER FTM3_IRQHandler
 /* Alias for GPIOC peripheral */
 #define GPIOC_GPIO GPIOC
+/* Definition of peripheral ID */
+#define UART3_PERIPHERAL UART3
+/* Definition of the clock source frequency */
+#define UART3_CLOCK_SOURCE CLOCK_GetFreq(UART3_CLK_SRC)
+/* Definition of the backround buffer size */
+#define UART3_BACKGROUND_BUFFER_SIZE 512
+/* UART3 interrupt vector ID (number). */
+#define UART3_SERIAL_RX_TX_IRQN UART3_RX_TX_IRQn
+/* UART3 interrupt vector priority. */
+#define UART3_SERIAL_RX_TX_IRQ_PRIORITY 4
+/* UART3 interrupt vector ID (number). */
+#define UART3_SERIAL_ERROR_IRQN UART3_ERR_IRQn
+/* UART3 interrupt vector priority. */
+#define UART3_SERIAL_ERROR_IRQ_PRIORITY 4
+/* Definition of peripheral ID */
+#define UART4_PERIPHERAL UART4
+/* Definition of the clock source frequency */
+#define UART4_CLOCK_SOURCE CLOCK_GetFreq(UART4_CLK_SRC)
+/* Definition of the backround buffer size */
+#define UART4_BACKGROUND_BUFFER_SIZE 512
+/* UART4 interrupt vector ID (number). */
+#define UART4_SERIAL_RX_TX_IRQN UART4_RX_TX_IRQn
+/* UART4 interrupt vector priority. */
+#define UART4_SERIAL_RX_TX_IRQ_PRIORITY 4
+/* UART4 interrupt vector ID (number). */
+#define UART4_SERIAL_ERROR_IRQN UART4_ERR_IRQn
+/* UART4 interrupt vector priority. */
+#define UART4_SERIAL_ERROR_IRQ_PRIORITY 4
 
 /***********************************************************************************************************************
  * Global variables
  **********************************************************************************************************************/
+extern const edma_config_t DMA_config;
 extern const ftm_config_t FTM2_config;
 extern adc16_channel_config_t ADC0_channelsConfig[1];
 extern const adc16_config_t ADC0_config;
@@ -95,8 +130,12 @@ extern const adc16_config_t ADC1_config;
 extern const adc16_channel_mux_mode_t ADC1_muxMode;
 extern const ftm_config_t FTM0_config;
 extern const ftm_config_t FTM3_config;
-/* FATFS System object */
-extern FATFS FATFS_System_0;
+extern uart_rtos_handle_t UART3_rtos_handle;
+extern uart_handle_t UART3_uart_handle;
+extern uart_rtos_config_t UART3_rtos_config;
+extern uart_rtos_handle_t UART4_rtos_handle;
+extern uart_handle_t UART4_uart_handle;
+extern uart_rtos_config_t UART4_rtos_config;
 
 /***********************************************************************************************************************
  * Initialization functions

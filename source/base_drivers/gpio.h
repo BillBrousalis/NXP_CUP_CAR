@@ -7,8 +7,8 @@
 //
 //----------------------------------------------------------------------------------------------------------
 
-#define ls_clk_set()	GPIO_PinWrite(BOARD_INITPINS_SPI0_SCLK_GPIO, BOARD_INITPINS_SPI0_SCLK_PIN, 1)
-#define ls_clk_clr()	GPIO_PinWrite(BOARD_INITPINS_SPI0_SCLK_GPIO, BOARD_INITPINS_SPI0_SCLK_PIN, 0)
+#define ls_clk_set()	GPIO_PinWrite(BOARD_INITPINS_SPI0_SCLK_GPIO, BOARD_INITPINS_SPI0_SCLK_PIN, 0)
+#define ls_clk_clr()	GPIO_PinWrite(BOARD_INITPINS_SPI0_SCLK_GPIO, BOARD_INITPINS_SPI0_SCLK_PIN, 1)
 
 //----------------------------------------------------------------------------------------------------------
 //

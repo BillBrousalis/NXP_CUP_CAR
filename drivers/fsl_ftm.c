@@ -571,7 +571,6 @@ status_t FTM_SetupPwm(FTM_Type *base,
  * return kStatus_Success if the PWM update was successful
  *         kStatus_Error on failure
  */
-
 status_t FTM_UpdatePwmDutycycle(FTM_Type *base,
                                 ftm_chnl_t chnlNumber,
                                 ftm_pwm_mode_t currentPwmMode,
