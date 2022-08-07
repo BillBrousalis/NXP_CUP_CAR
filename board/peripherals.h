@@ -19,6 +19,9 @@
 #include "fsl_port.h"
 #include "fsl_uart.h"
 #include "fsl_uart_freertos.h"
+#include "fsl_i2c.h"
+#include "fsl_i2c_freertos.h"
+#include "fsl_dac.h"
 
 #if defined(__cplusplus)
 extern "C" {
@@ -116,6 +119,19 @@ extern "C" {
 #define UART4_SERIAL_ERROR_IRQN UART4_ERR_IRQn
 /* UART4 interrupt vector priority. */
 #define UART4_SERIAL_ERROR_IRQ_PRIORITY 4
+/* BOARD_InitPeripherals defines for I2C0 */
+/* Definition of peripheral ID */
+#define I2C0_PERIPHERAL I2C0
+/* Definition of the clock source */
+#define I2C0_CLOCK_SOURCE I2C0_CLK_SRC
+/* Definition of the clock source frequency */
+#define I2C0_CLK_FREQ CLOCK_GetFreq(I2C0_CLOCK_SOURCE)
+/* I2C0 interrupt vector ID (number). */
+#define I2C0_IRQN I2C0_IRQn
+/* I2C0 interrupt vector priority. */
+#define I2C0_IRQ_PRIORITY 4
+/* Alias for DAC0 peripheral */
+#define DAC0_PERIPHERAL DAC0
 
 /***********************************************************************************************************************
  * Global variables
@@ -136,6 +152,9 @@ extern uart_rtos_config_t UART3_rtos_config;
 extern uart_rtos_handle_t UART4_rtos_handle;
 extern uart_handle_t UART4_uart_handle;
 extern uart_rtos_config_t UART4_rtos_config;
+extern i2c_rtos_handle_t I2C0_rtosHandle;
+extern const i2c_master_config_t I2C0_config;
+extern const dac_config_t DAC0_config;
 
 /***********************************************************************************************************************
  * Initialization functions

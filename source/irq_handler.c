@@ -37,6 +37,7 @@ void ADC1_IRQHANDLER(void) {
   /* Array of result values*/
   uint32_t result_values[2] = {0};
   /* Get flags for each group */
+
   for ( int i=0; i<2; i++){
   uint32_t status = ADC16_GetChannelStatusFlags(ADC1_PERIPHERAL, i);
   	if ( status == kADC16_ChannelConversionDoneFlag){
@@ -55,6 +56,7 @@ void ADC1_IRQHANDLER(void) {
 
   /* Add for ARM errata 838869, affects Cortex-M4, Cortex-M4F
      Store immediate overlapping exception return operation might vector to incorrect interrupt. */
+
   #if defined __CORTEX_M && (__CORTEX_M == 4U)
     __DSB();
   #endif
@@ -65,6 +67,7 @@ void ADC1_IRQHANDLER(void) {
 //====================================================================================================
 void FTM3_IRQHANDLER(void) {
   uint32_t intStatus;
+
   /* Reading all interrupt flags of status register */
   intStatus = FTM_GetStatusFlags(FTM3_PERIPHERAL);
   FTM_ClearStatusFlags(FTM3_PERIPHERAL, intStatus);

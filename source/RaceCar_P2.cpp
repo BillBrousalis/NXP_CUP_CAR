@@ -7,10 +7,6 @@ extern "C"
 }
 
 //-----------------------------------------------------------------------------------------
-
-/* TODO: insert other definitions and declarations here. */
-#define DEFAULT_TASK_PRIO (configMAX_PRIORITIES - 2)
-
 void default_task(void *pvParameters);
 void LineCam_task(void *pvParameters);
 TaskHandle_t default_handle;
@@ -62,7 +58,6 @@ void default_task(void *pvParameters) {
 		if(LineCamGetLast(Sbuf) == 1)
 		{
 			UART_RTOS_Send(&UART3_rtos_handle, Sbuf, 128);
-			vTaskDelayUntil( &xLastWakeTime, pdMS_TO_TICKS(50) );
 		}
 	}
 }
@@ -73,6 +68,9 @@ void LineCam_task(void *pvParameters)
 {
 	LineCamInit();
 	LineCam_IsInit = 1;
+
+	DAC_SetBufferValue(DAC0_PERIPHERAL, 0U, 4095U);							// Lights on dbg
+
 	for(;;)
 	{
 		LineCamProcess();

@@ -27,5 +27,8 @@
 //----------------------------------------------------------------------------------------------------------
 #define dbg2_set()	GPIO_PinWrite(BOARD_INITPINS_DEBUG_OUT2_GPIO, BOARD_INITPINS_DEBUG_OUT2_PIN, 1)
 #define dbg2_clr()	GPIO_PinWrite(BOARD_INITPINS_DEBUG_OUT2_GPIO, BOARD_INITPINS_DEBUG_OUT2_PIN, 0)
+#define dbg2_tog()	GPIO_PortToggle(BOARD_INITPINS_DEBUG_OUT2_GPIO, BOARD_INITPINS_DEBUG_OUT2_PIN_MASK)
+
+
 //----------------------------------------------------------------------------------------------------------
 //----------------------------------------------------------------------------------------------------------

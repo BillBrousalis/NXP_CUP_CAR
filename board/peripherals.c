@@ -118,6 +118,7 @@ instance:
       - 4: []
       - 5: []
       - 6: []
+      - 7: []
     - interrupts: []
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
 /* clang-format on */
@@ -344,7 +345,7 @@ instance:
   - fsl_adc16:
     - adc16_config:
       - referenceVoltageSource: 'kADC16_ReferenceVoltageSourceVref'
-      - clockSource: 'kADC16_ClockSourceAlt0'
+      - clockSource: 'kADC16_ClockSourceAlt2'
       - enableAsynchronousClock: 'true'
       - clockDivider: 'kADC16_ClockDivider8'
       - resolution: 'kADC16_ResolutionSE12Bit'
@@ -398,7 +399,7 @@ adc16_channel_config_t ADC1_channelsConfig[2] = {
 };
 const adc16_config_t ADC1_config = {
   .referenceVoltageSource = kADC16_ReferenceVoltageSourceVref,
-  .clockSource = kADC16_ClockSourceAlt0,
+  .clockSource = kADC16_ClockSourceAlt2,
   .enableAsynchronousClock = true,
   .clockDivider = kADC16_ClockDivider8,
   .resolution = kADC16_ResolutionSE12Bit,
@@ -769,6 +770,115 @@ static void UART4_init(void) {
 }
 
 /***********************************************************************************************************************
+ * I2C0 initialization code
+ **********************************************************************************************************************/
+/* clang-format off */
+/* TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
+instance:
+- name: 'I2C0'
+- type: 'i2c'
+- mode: 'freertos'
+- custom_name_enabled: 'false'
+- type_id: 'i2c_2566d7363e7e9aaedabb432110e372d7'
+- functional_group: 'BOARD_InitPeripherals'
+- peripheral: 'I2C0'
+- config_sets:
+  - fsl_i2c:
+    - i2c_mode: 'kI2C_Master'
+    - clockSource: 'BusInterfaceClock'
+    - clockSourceFreq: 'GetFreq'
+    - rtos_handle:
+      - enable_custom_name: 'false'
+    - i2c_master_config:
+      - enableMaster: 'true'
+      - enableStopHold: 'false'
+      - baudRate_Bps: '100000'
+      - glitchFilterWidth: '0'
+    - interrupt_priority:
+      - IRQn: 'I2C0_IRQn'
+      - enable_priority: 'true'
+      - priority: '4'
+ * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
+/* clang-format on */
+i2c_rtos_handle_t I2C0_rtosHandle;
+const i2c_master_config_t I2C0_config = {
+  .enableMaster = true,
+  .enableStopHold = false,
+  .baudRate_Bps = 100000UL,
+  .glitchFilterWidth = 0U
+};
+
+static void I2C0_init(void) {
+  /* Initialization function */
+  I2C_RTOS_Init(&I2C0_rtosHandle, I2C0_PERIPHERAL, &I2C0_config, I2C0_CLK_FREQ);
+  /* Interrupt vector I2C0_IRQn priority settings in the NVIC. */
+  NVIC_SetPriority(I2C0_IRQN, I2C0_IRQ_PRIORITY);
+}
+
+/***********************************************************************************************************************
+ * AIPS0_custom_init initialization code
+ **********************************************************************************************************************/
+/* clang-format off */
+/* TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
+instance:
+- name: 'AIPS0_custom_init'
+- type: 'custom_init'
+- mode: 'general'
+- custom_name_enabled: 'false'
+- type_id: 'custom_init_87bfd8659a9d6953df1cceb1e02ed9b8'
+- functional_group: 'BOARD_InitPeripherals'
+- peripheral: 'AIPS0'
+- config_sets:
+  - general:
+    - user_includes: ''
+    - user_definitions: ''
+    - user_code: ''
+ * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
+/* clang-format on */
+
+/* Empty initialization function (commented out)
+static void AIPS0_custom_init_init(void) {
+} */
+
+/***********************************************************************************************************************
+ * DAC0 initialization code
+ **********************************************************************************************************************/
+/* clang-format off */
+/* TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
+instance:
+- name: 'DAC0'
+- type: 'dac'
+- mode: 'basic'
+- custom_name_enabled: 'false'
+- type_id: 'dac_a54f338a6fa6fd273bc89d61f5a3b85e'
+- functional_group: 'BOARD_InitPeripherals'
+- peripheral: 'DAC0'
+- config_sets:
+  - fsl_dac:
+    - dac_config:
+      - referenceVoltageSource: 'kDAC_ReferenceVoltageSourceVref1'
+      - enableLowPowerMode: 'false'
+    - dac_enable: 'true'
+    - dac_value: '0'
+ * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
+/* clang-format on */
+const dac_config_t DAC0_config = {
+  .referenceVoltageSource = kDAC_ReferenceVoltageSourceVref1,
+  .enableLowPowerMode = false
+};
+
+static void DAC0_init(void) {
+  /* Initialize DAC converter */
+  DAC_Init(DAC0_PERIPHERAL, &DAC0_config);
+  /* Output value of DAC. */
+  DAC_SetBufferValue(DAC0_PERIPHERAL, 0U, 0U);
+  /* Make sure the read pointer is set to the start */
+  DAC_SetBufferReadPointer(DAC0_PERIPHERAL, 0U);
+  /* Enable DAC output */
+  DAC_Enable(DAC0_PERIPHERAL, true);
+}
+
+/***********************************************************************************************************************
  * Initialization functions
  **********************************************************************************************************************/
 void BOARD_InitPeripherals(void)
@@ -786,6 +896,8 @@ void BOARD_InitPeripherals(void)
   GPIOC_init();
   UART3_init();
   UART4_init();
+  I2C0_init();
+  DAC0_init();
 }
 
 /***********************************************************************************************************************
