@@ -35,6 +35,10 @@
                <pin_label pin_num="20" pin_signal="ADC1_DP0/ADC0_DP3" label="LINECAM_IN" identifier="LINECAM_IN"/>
                <pin_label pin_num="78" pin_signal="CMP0_IN0/PTC6/LLWU_P10/SPI0_SOUT/PDB0_EXTRG/I2S0_RX_BCLK/FB_AD9/I2S0_MCLK" label="DEBUG_OUT2" identifier="DEBUG_OUT2"/>
                <pin_label pin_num="7" pin_signal="PTE6/SPI1_PCS3/UART3_CTS_b/I2S0_MCLK/FTM3_CH1/USB_SOF_OUT" label="SD_DETECT" identifier="SD_DETECT"/>
+               <pin_label pin_num="66" pin_signal="PTB20/SPI2_PCS0/FB_AD31/CMP0_OUT" label="LED1" identifier="LED1"/>
+               <pin_label pin_num="67" pin_signal="PTB21/SPI2_SCK/FB_AD30/CMP1_OUT" label="LED2" identifier="LED2"/>
+               <pin_label pin_num="68" pin_signal="PTB22/SPI2_SOUT/FB_AD29/CMP2_OUT" label="LED3" identifier="LED3"/>
+               <pin_label pin_num="69" pin_signal="PTB23/SPI2_SIN/SPI0_PCS5/FB_AD28" label="LED4" identifier="LED4"/>
             </pin_labels>
          </pins_profile>
          <functions_list>
@@ -211,6 +215,30 @@
                   <pin peripheral="UART3" signal="TX" pin_num="59" pin_signal="ADC1_SE15/PTB11/SPI1_SCK/UART3_TX/FB_AD18/FTM0_FLT2"/>
                   <pin peripheral="I2C0" signal="SCL" pin_num="31" pin_signal="ADC0_SE17/PTE24/UART4_TX/I2C0_SCL/EWM_OUT_b"/>
                   <pin peripheral="I2C0" signal="SDA" pin_num="32" pin_signal="ADC0_SE18/PTE25/UART4_RX/I2C0_SDA/EWM_IN"/>
+                  <pin peripheral="GPIOB" signal="GPIO, 20" pin_num="66" pin_signal="PTB20/SPI2_PCS0/FB_AD31/CMP0_OUT">
+                     <pin_features>
+                        <pin_feature name="direction" value="OUTPUT"/>
+                        <pin_feature name="slew_rate" value="slow"/>
+                     </pin_features>
+                  </pin>
+                  <pin peripheral="GPIOB" signal="GPIO, 21" pin_num="67" pin_signal="PTB21/SPI2_SCK/FB_AD30/CMP1_OUT">
+                     <pin_features>
+                        <pin_feature name="direction" value="OUTPUT"/>
+                        <pin_feature name="slew_rate" value="slow"/>
+                     </pin_features>
+                  </pin>
+                  <pin peripheral="GPIOB" signal="GPIO, 22" pin_num="68" pin_signal="PTB22/SPI2_SOUT/FB_AD29/CMP2_OUT">
+                     <pin_features>
+                        <pin_feature name="direction" value="OUTPUT"/>
+                        <pin_feature name="slew_rate" value="slow"/>
+                     </pin_features>
+                  </pin>
+                  <pin peripheral="GPIOB" signal="GPIO, 23" pin_num="69" pin_signal="PTB23/SPI2_SIN/SPI0_PCS5/FB_AD28">
+                     <pin_features>
+                        <pin_feature name="direction" value="OUTPUT"/>
+                        <pin_feature name="slew_rate" value="slow"/>
+                     </pin_features>
+                  </pin>
                </pins>
             </function>
          </functions_list>
@@ -579,7 +607,7 @@
                         <data type="Frequency" unit="Hz">0</data>
                      </feature>
                   </dependency>
-                  <dependency resourceType="PeripheralUnifiedSignal" resourceId="DAC0.dac_ref_1" description="DACREF_1 signal not routed for DAC0" problem_level="1" source="Peripherals:BOARD_InitPeripherals">
+                  <dependency resourceType="PeripheralUnifiedSignal" resourceId="DAC0.dac_ref_2" description="DACREF_2 signal not routed for DAC0" problem_level="1" source="Peripherals:BOARD_InitPeripherals">
                      <feature name="routed" evaluation="">
                         <data type="Boolean">true</data>
                      </feature>
@@ -1066,11 +1094,11 @@
                   <instance name="DAC0" uuid="a0b7df4f-53ae-4be3-9459-5685df6ea407" type="dac" type_id="dac_a54f338a6fa6fd273bc89d61f5a3b85e" mode="basic" peripheral="DAC0" enabled="true" comment="" custom_name_enabled="false" editing_lock="false">
                      <config_set name="fsl_dac">
                         <struct name="dac_config">
-                           <setting name="referenceVoltageSource" value="kDAC_ReferenceVoltageSourceVref1"/>
+                           <setting name="referenceVoltageSource" value="kDAC_ReferenceVoltageSourceVref2"/>
                            <setting name="enableLowPowerMode" value="false"/>
                         </struct>
                         <setting name="dac_enable" value="true"/>
-                        <setting name="dac_value" value="0"/>
+                        <setting name="dac_value" value="1024"/>
                      </config_set>
                   </instance>
                </instances>

@@ -856,14 +856,14 @@ instance:
 - config_sets:
   - fsl_dac:
     - dac_config:
-      - referenceVoltageSource: 'kDAC_ReferenceVoltageSourceVref1'
+      - referenceVoltageSource: 'kDAC_ReferenceVoltageSourceVref2'
       - enableLowPowerMode: 'false'
     - dac_enable: 'true'
-    - dac_value: '0'
+    - dac_value: '1024'
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
 /* clang-format on */
 const dac_config_t DAC0_config = {
-  .referenceVoltageSource = kDAC_ReferenceVoltageSourceVref1,
+  .referenceVoltageSource = kDAC_ReferenceVoltageSourceVref2,
   .enableLowPowerMode = false
 };
 
@@ -871,7 +871,7 @@ static void DAC0_init(void) {
   /* Initialize DAC converter */
   DAC_Init(DAC0_PERIPHERAL, &DAC0_config);
   /* Output value of DAC. */
-  DAC_SetBufferValue(DAC0_PERIPHERAL, 0U, 0U);
+  DAC_SetBufferValue(DAC0_PERIPHERAL, 0U, 1024U);
   /* Make sure the read pointer is set to the start */
   DAC_SetBufferReadPointer(DAC0_PERIPHERAL, 0U);
   /* Enable DAC output */

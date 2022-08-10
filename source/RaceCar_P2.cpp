@@ -14,6 +14,9 @@ TaskHandle_t LineCam_handle;
 
 uint8_t Sbuf[128];
 uint8_t	LineCam_IsInit = 0;
+
+#define 	LED_DRIVE		720U						//750U // 350mA
+
 //-----------------------------------------------------------------------------------------
 //  @brief   Application entry point.
 //-----------------------------------------------------------------------------------------
@@ -55,6 +58,21 @@ void default_task(void *pvParameters) {
 
 	for (;;) {
 		xLastWakeTime = xTaskGetTickCount();
+		//---------------------------------------
+		if(SW1_read() == 1)
+		{
+			DAC_SetBufferValue(DAC0_PERIPHERAL, 0U, LED_DRIVE);
+			DAC_SetBufferReadPointer(DAC0_PERIPHERAL, 0U);
+			LED1_ON();
+		}
+		else
+		{
+			DAC_SetBufferValue(DAC0_PERIPHERAL, 0U, 0U);
+		    DAC_SetBufferReadPointer(DAC0_PERIPHERAL, 0U);
+		    LED1_OFF();
+		}
+		//---------------------------------------
+
 		if(LineCamGetLast(Sbuf) == 1)
 		{
 			UART_RTOS_Send(&UART3_rtos_handle, Sbuf, 128);
@@ -68,8 +86,6 @@ void LineCam_task(void *pvParameters)
 {
 	LineCamInit();
 	LineCam_IsInit = 1;
-
-	DAC_SetBufferValue(DAC0_PERIPHERAL, 0U, 4095U);							// Lights on dbg
 
 	for(;;)
 	{

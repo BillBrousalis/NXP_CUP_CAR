@@ -23,6 +23,10 @@ pin_labels:
 - {pin_num: '20', pin_signal: ADC1_DP0/ADC0_DP3, label: LINECAM_IN, identifier: LINECAM_IN}
 - {pin_num: '78', pin_signal: CMP0_IN0/PTC6/LLWU_P10/SPI0_SOUT/PDB0_EXTRG/I2S0_RX_BCLK/FB_AD9/I2S0_MCLK, label: DEBUG_OUT2, identifier: DEBUG_OUT2}
 - {pin_num: '7', pin_signal: PTE6/SPI1_PCS3/UART3_CTS_b/I2S0_MCLK/FTM3_CH1/USB_SOF_OUT, label: SD_DETECT, identifier: SD_DETECT}
+- {pin_num: '66', pin_signal: PTB20/SPI2_PCS0/FB_AD31/CMP0_OUT, label: LED1, identifier: LED1}
+- {pin_num: '67', pin_signal: PTB21/SPI2_SCK/FB_AD30/CMP1_OUT, label: LED2, identifier: LED2}
+- {pin_num: '68', pin_signal: PTB22/SPI2_SOUT/FB_AD29/CMP2_OUT, label: LED3, identifier: LED3}
+- {pin_num: '69', pin_signal: PTB23/SPI2_SIN/SPI0_PCS5/FB_AD28, label: LED4, identifier: LED4}
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********
  */
 /* clang-format on */
@@ -88,6 +92,10 @@ BOARD_InitPins:
   - {pin_num: '59', peripheral: UART3, signal: TX, pin_signal: ADC1_SE15/PTB11/SPI1_SCK/UART3_TX/FB_AD18/FTM0_FLT2}
   - {pin_num: '31', peripheral: I2C0, signal: SCL, pin_signal: ADC0_SE17/PTE24/UART4_TX/I2C0_SCL/EWM_OUT_b}
   - {pin_num: '32', peripheral: I2C0, signal: SDA, pin_signal: ADC0_SE18/PTE25/UART4_RX/I2C0_SDA/EWM_IN}
+  - {pin_num: '66', peripheral: GPIOB, signal: 'GPIO, 20', pin_signal: PTB20/SPI2_PCS0/FB_AD31/CMP0_OUT, direction: OUTPUT, slew_rate: slow}
+  - {pin_num: '67', peripheral: GPIOB, signal: 'GPIO, 21', pin_signal: PTB21/SPI2_SCK/FB_AD30/CMP1_OUT, direction: OUTPUT, slew_rate: slow}
+  - {pin_num: '68', peripheral: GPIOB, signal: 'GPIO, 22', pin_signal: PTB22/SPI2_SOUT/FB_AD29/CMP2_OUT, direction: OUTPUT, slew_rate: slow}
+  - {pin_num: '69', peripheral: GPIOB, signal: 'GPIO, 23', pin_signal: PTB23/SPI2_SIN/SPI0_PCS5/FB_AD28, direction: OUTPUT, slew_rate: slow}
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********
  */
 /* clang-format on */
@@ -108,6 +116,34 @@ void BOARD_InitPins(void)
     CLOCK_EnableClock(kCLOCK_PortC);
     /* Port E Clock Gate Control: Clock enabled */
     CLOCK_EnableClock(kCLOCK_PortE);
+
+    gpio_pin_config_t LED1_config = {
+        .pinDirection = kGPIO_DigitalOutput,
+        .outputLogic = 0U
+    };
+    /* Initialize GPIO functionality on pin PTB20 (pin 66)  */
+    GPIO_PinInit(BOARD_INITPINS_LED1_GPIO, BOARD_INITPINS_LED1_PIN, &LED1_config);
+
+    gpio_pin_config_t LED2_config = {
+        .pinDirection = kGPIO_DigitalOutput,
+        .outputLogic = 0U
+    };
+    /* Initialize GPIO functionality on pin PTB21 (pin 67)  */
+    GPIO_PinInit(BOARD_INITPINS_LED2_GPIO, BOARD_INITPINS_LED2_PIN, &LED2_config);
+
+    gpio_pin_config_t LED3_config = {
+        .pinDirection = kGPIO_DigitalOutput,
+        .outputLogic = 0U
+    };
+    /* Initialize GPIO functionality on pin PTB22 (pin 68)  */
+    GPIO_PinInit(BOARD_INITPINS_LED3_GPIO, BOARD_INITPINS_LED3_PIN, &LED3_config);
+
+    gpio_pin_config_t LED4_config = {
+        .pinDirection = kGPIO_DigitalOutput,
+        .outputLogic = 0U
+    };
+    /* Initialize GPIO functionality on pin PTB23 (pin 69)  */
+    GPIO_PinInit(BOARD_INITPINS_LED4_GPIO, BOARD_INITPINS_LED4_PIN, &LED4_config);
 
     gpio_pin_config_t LSC2_CSn_config = {
         .pinDirection = kGPIO_DigitalOutput,
@@ -195,6 +231,50 @@ void BOARD_InitPins(void)
 
     /* PORTB19 (pin 65) is configured as FTM2_CH1 */
     PORT_SetPinMux(PORTB, 19U, kPORT_MuxAlt3);
+
+    /* PORTB20 (pin 66) is configured as PTB20 */
+    PORT_SetPinMux(BOARD_INITPINS_LED1_PORT, BOARD_INITPINS_LED1_PIN, kPORT_MuxAsGpio);
+
+    PORTB->PCR[20] = ((PORTB->PCR[20] &
+                       /* Mask bits to zero which are setting */
+                       (~(PORT_PCR_SRE_MASK | PORT_PCR_ISF_MASK)))
+
+                      /* Slew Rate Enable: Slow slew rate is configured on the corresponding pin, if the pin is
+                       * configured as a digital output. */
+                      | PORT_PCR_SRE(kPORT_SlowSlewRate));
+
+    /* PORTB21 (pin 67) is configured as PTB21 */
+    PORT_SetPinMux(BOARD_INITPINS_LED2_PORT, BOARD_INITPINS_LED2_PIN, kPORT_MuxAsGpio);
+
+    PORTB->PCR[21] = ((PORTB->PCR[21] &
+                       /* Mask bits to zero which are setting */
+                       (~(PORT_PCR_SRE_MASK | PORT_PCR_ISF_MASK)))
+
+                      /* Slew Rate Enable: Slow slew rate is configured on the corresponding pin, if the pin is
+                       * configured as a digital output. */
+                      | PORT_PCR_SRE(kPORT_SlowSlewRate));
+
+    /* PORTB22 (pin 68) is configured as PTB22 */
+    PORT_SetPinMux(BOARD_INITPINS_LED3_PORT, BOARD_INITPINS_LED3_PIN, kPORT_MuxAsGpio);
+
+    PORTB->PCR[22] = ((PORTB->PCR[22] &
+                       /* Mask bits to zero which are setting */
+                       (~(PORT_PCR_SRE_MASK | PORT_PCR_ISF_MASK)))
+
+                      /* Slew Rate Enable: Slow slew rate is configured on the corresponding pin, if the pin is
+                       * configured as a digital output. */
+                      | PORT_PCR_SRE(kPORT_SlowSlewRate));
+
+    /* PORTB23 (pin 69) is configured as PTB23 */
+    PORT_SetPinMux(BOARD_INITPINS_LED4_PORT, BOARD_INITPINS_LED4_PIN, kPORT_MuxAsGpio);
+
+    PORTB->PCR[23] = ((PORTB->PCR[23] &
+                       /* Mask bits to zero which are setting */
+                       (~(PORT_PCR_SRE_MASK | PORT_PCR_ISF_MASK)))
+
+                      /* Slew Rate Enable: Slow slew rate is configured on the corresponding pin, if the pin is
+                       * configured as a digital output. */
+                      | PORT_PCR_SRE(kPORT_SlowSlewRate));
 
     /* PORTC0 (pin 70) is configured as PTC0 */
     PORT_SetPinMux(BOARD_INITPINS_LSC2_CSn_PORT, BOARD_INITPINS_LSC2_CSn_PIN, kPORT_MuxAsGpio);

@@ -17,7 +17,7 @@ void ADC0_IRQHANDLER(void) {
   	if ( status == kADC16_ChannelConversionDoneFlag){
   		PixRead();	//result_values[i] = ADC16_GetChannelConversionValue(ADC0_PERIPHERAL, 0);
   	}
-
+  	ADC16_ClearStatusFlags(ADC0_PERIPHERAL, 0);
   /* Place your code here */
 
   /* Add for ARM errata 838869, affects Cortex-M4, Cortex-M4F

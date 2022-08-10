@@ -150,6 +150,58 @@ void BOARD_InitBootPins(void);
 #define BOARD_INITPINS_SD_DETECT_PIN_MASK (1U << 6U)      /*!<@brief PORT pin mask */
                                                           /* @} */
 
+/*! @name PORTB20 (number 66), LED1
+  @{ */
+
+/* Symbols to be used with GPIO driver */
+#define BOARD_INITPINS_LED1_GPIO GPIOB                /*!<@brief GPIO peripheral base pointer */
+#define BOARD_INITPINS_LED1_GPIO_PIN_MASK (1U << 20U) /*!<@brief GPIO pin mask */
+
+/* Symbols to be used with PORT driver */
+#define BOARD_INITPINS_LED1_PORT PORTB                /*!<@brief PORT peripheral base pointer */
+#define BOARD_INITPINS_LED1_PIN 20U                   /*!<@brief PORT pin number */
+#define BOARD_INITPINS_LED1_PIN_MASK (1U << 20U)      /*!<@brief PORT pin mask */
+                                                      /* @} */
+
+/*! @name PORTB21 (number 67), LED2
+  @{ */
+
+/* Symbols to be used with GPIO driver */
+#define BOARD_INITPINS_LED2_GPIO GPIOB                /*!<@brief GPIO peripheral base pointer */
+#define BOARD_INITPINS_LED2_GPIO_PIN_MASK (1U << 21U) /*!<@brief GPIO pin mask */
+
+/* Symbols to be used with PORT driver */
+#define BOARD_INITPINS_LED2_PORT PORTB                /*!<@brief PORT peripheral base pointer */
+#define BOARD_INITPINS_LED2_PIN 21U                   /*!<@brief PORT pin number */
+#define BOARD_INITPINS_LED2_PIN_MASK (1U << 21U)      /*!<@brief PORT pin mask */
+                                                      /* @} */
+
+/*! @name PORTB22 (number 68), LED3
+  @{ */
+
+/* Symbols to be used with GPIO driver */
+#define BOARD_INITPINS_LED3_GPIO GPIOB                /*!<@brief GPIO peripheral base pointer */
+#define BOARD_INITPINS_LED3_GPIO_PIN_MASK (1U << 22U) /*!<@brief GPIO pin mask */
+
+/* Symbols to be used with PORT driver */
+#define BOARD_INITPINS_LED3_PORT PORTB                /*!<@brief PORT peripheral base pointer */
+#define BOARD_INITPINS_LED3_PIN 22U                   /*!<@brief PORT pin number */
+#define BOARD_INITPINS_LED3_PIN_MASK (1U << 22U)      /*!<@brief PORT pin mask */
+                                                      /* @} */
+
+/*! @name PORTB23 (number 69), LED4
+  @{ */
+
+/* Symbols to be used with GPIO driver */
+#define BOARD_INITPINS_LED4_GPIO GPIOB                /*!<@brief GPIO peripheral base pointer */
+#define BOARD_INITPINS_LED4_GPIO_PIN_MASK (1U << 23U) /*!<@brief GPIO pin mask */
+
+/* Symbols to be used with PORT driver */
+#define BOARD_INITPINS_LED4_PORT PORTB                /*!<@brief PORT peripheral base pointer */
+#define BOARD_INITPINS_LED4_PIN 23U                   /*!<@brief PORT pin number */
+#define BOARD_INITPINS_LED4_PIN_MASK (1U << 23U)      /*!<@brief PORT pin mask */
+                                                      /* @} */
+
 /*!
  * @brief Configures pin routing and optionally pin electrical features.
  *
