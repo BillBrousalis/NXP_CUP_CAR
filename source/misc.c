@@ -36,21 +36,19 @@ int same_sign(float x, float y) {
 //==============================================================================
 //              Pseydorandom number generator
 //==============================================================================
-static uint8_t a = 71;                                // some initializers
+static uint8_t a = 71;       // some initializers
 static uint8_t b = 19;
 static uint8_t d = 0;
 //===========================================================================
 //    mysrand initializes the random number generator with a seed
 //===========================================================================
-void mysrand(uint8_t seed)
-{
+void mysrand(uint8_t seed) {
   d = seed;
 }
 //===========================================================================
 //  myrand generates a pseudorandom sequence
 //===========================================================================
-uint8_t myrand(uint8_t threshold)
-{
+uint8_t myrand(uint8_t threshold) {
   uint8_t x = d;
   x = (a*x + b) % threshold;
   d = x;                                   // advance with each function call
