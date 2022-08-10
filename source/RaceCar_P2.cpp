@@ -51,30 +51,25 @@ int main(void) {
 //		Default task
 //-----------------------------------------------------------------------------------------
 void default_task(void *pvParameters) {
-
 	TickType_t xLastWakeTime;
-
 	while(LineCam_IsInit ==0) osDelay(1);								// Wait for LineCam task to start
 
 	for (;;) {
 		xLastWakeTime = xTaskGetTickCount();
 		//---------------------------------------
-		if(SW1_read() == 1)
-		{
+		if(SW1_read() == 1) {
 			DAC_SetBufferValue(DAC0_PERIPHERAL, 0U, LED_DRIVE);
 			DAC_SetBufferReadPointer(DAC0_PERIPHERAL, 0U);
 			LED1_ON();
 		}
-		else
-		{
+		else {
 			DAC_SetBufferValue(DAC0_PERIPHERAL, 0U, 0U);
 		    DAC_SetBufferReadPointer(DAC0_PERIPHERAL, 0U);
 		    LED1_OFF();
 		}
 		//---------------------------------------
 
-		if(LineCamGetLast(Sbuf) == 1)
-		{
+		if(LineCamGetLast(Sbuf) == 1) {
 			UART_RTOS_Send(&UART3_rtos_handle, Sbuf, 128);
 		}
 	}
@@ -82,13 +77,10 @@ void default_task(void *pvParameters) {
 //-----------------------------------------------------------------------------------------
 //		Line camera task
 //-----------------------------------------------------------------------------------------
-void LineCam_task(void *pvParameters)
-{
+void LineCam_task(void *pvParameters) {
 	LineCamInit();
 	LineCam_IsInit = 1;
-
-	for(;;)
-	{
+	for(;;) {
 		LineCamProcess();
 	}
 }

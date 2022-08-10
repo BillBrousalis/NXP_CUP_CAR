@@ -13,5 +13,6 @@ status_t FTM_SetPpm(FTM_Type *base, ftm_chnl_t chnlNumber, ftm_pwm_mode_t pwm_mo
 		base->CONTROLS[chnlNumber].CnV = base->MOD * cnv;
 		return kStatus_Success;
 	}
+	return kStatus_Fail;
 }
 
