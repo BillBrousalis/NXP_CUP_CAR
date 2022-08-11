@@ -68,7 +68,6 @@ void default_task(void *pvParameters) {
 		    LED1_OFF();
 		}
 		//---------------------------------------
-
 		if(LineCamGetLast(Sbuf) == 1) {
 			UART_RTOS_Send(&UART3_rtos_handle, Sbuf, 128);
 		}
