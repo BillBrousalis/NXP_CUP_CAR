@@ -43,14 +43,14 @@ static uint8_t d = 0;
 //    mysrand initializes the random number generator with a seed
 //===========================================================================
 void mysrand(uint8_t seed) {
-  d = seed;
+	d = seed;
 }
 //===========================================================================
 //  myrand generates a pseudorandom sequence
 //===========================================================================
 uint8_t myrand(uint8_t threshold) {
-  uint8_t x = d;
-  x = (a*x + b) % threshold;
-  d = x;                                   // advance with each function call
-  return(x);
+	uint8_t x = d;
+	x = (a*x + b) % threshold;
+	d = x;                                   // advance with each function call
+	return(x);
 }

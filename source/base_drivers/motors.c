@@ -19,7 +19,7 @@
 #define WHEEL_DIFF_MULT 0.4f
 
 /* Because writing motors_set(0.0f, 0.0f); is too much work */
-void motors_stop() {
+void motors_stop(void) {
 	motors_set(0.0f, 0.0f);
 }
 
@@ -58,7 +58,7 @@ void speed_set(float speed) {
 }
 
 /* Initialize both brushless motors */
-void motors_init() {
+void motors_init(void) {
 	float s = -0.25f;
 	while(s <= 0.25f) {
 		motors_set(s, s);

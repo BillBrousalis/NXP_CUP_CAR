@@ -9,5 +9,5 @@ typedef struct {
 	float pot[2];
 } TrackingState;
 
-void init_tracking();
+void init_tracking(void);
 extern TrackingState *car_state;

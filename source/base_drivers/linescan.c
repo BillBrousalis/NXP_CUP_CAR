@@ -45,9 +45,9 @@ QueueHandle_t LCqueue;
 void LineCamInit(void) {
 	LineCam_Inntensity = LINECAM_RATE_FPS;
 	LCqueue = xQueueCreate(3, sizeof(unsigned long));
-    if( LCqueue == NULL ) {
-        /* Queue was not created and must not be used. */
-    }
+	if( LCqueue == NULL ) {
+		/* Queue was not created and must not be used. */
+	}
 }
 //============================================================================================================
 //
@@ -66,12 +66,12 @@ void CamScanStart(void) {
 	LinePixInProgress = 1;											// If == 1 then Line scan is in progress
 	ls_si_set();
 	FTM_SetTimerPeriod(FTM3_PERIPHERAL, LineCam_Inntensity);  		// This one between SI(H) and CLK(H) guarantees that Tsu>20nS (per man page 9)
-    ls_clk_set();
-    clk_state = 1;													// Clock current state (H/L)
-    clk_count = 0;
-    PixCount = 0;													// Reset the pixel count
-    ls_si_clr();													// Clear the SI signal
-    start_timer();
+	ls_clk_set();
+	clk_state = 1;													// Clock current state (H/L)
+	clk_count = 0;
+	PixCount = 0;													// Reset the pixel count
+	ls_si_clr();													// Clear the SI signal
+	start_timer();
 }
 
 //============================================================================================================
@@ -100,14 +100,14 @@ void CamScanPix(void) {
 //============================================================================================================
 void PixRead(void) {
 	if(PixCount < LINEMAXPIX) {
-		#ifdef 	LENS_COSINE_CORRECTION
-        float a = (float)(ADC16_GetChannelConversionValue(ADC0_PERIPHERAL, 0U) << 4);		// Convert to 16bit
-        a *= CosTable[PixCount];
-        if(a>65535.0f) a = 65535.0f;		// overflow protection
-        LCamData[PixCount++] = (uint16_t)a;
-		#else
-		LCamData[PixCount++] = ADC16_GetChannelConversionValue(ADC0_PERIPHERAL, 0U) << 4;		// Convert to 16bit
-		#endif
+	#ifdef LENS_COSINE_CORRECTION
+		float a = (float)(ADC16_GetChannelConversionValue(ADC0_PERIPHERAL, 0U) << 4);		// Convert to 16bit
+		a *= CosTable[PixCount];
+		if(a>65535.0f) a = 65535.0f;		// overflow protection
+		LCamData[PixCount++] = (uint16_t)a;
+	#else
+		LCamData[PixCount++] = ADC16_GetChannelConversionValue(ADC0_PERIPHERAL, 0U) << 4;	// Convert to 16bit
+	#endif
 	}
 	else {
 		ADC16_GetChannelConversionValue(ADC0_PERIPHERAL, 0U);
@@ -126,15 +126,15 @@ void LineCamProcess(void) {
 	self_priority = uxTaskPriorityGet(LineCam_handle);										// Save task's original priority - if it is fixed we could save some time here later
 	vTaskPrioritySet(LineCam_handle, MAX_TASK_PRIO);										// escalate task priority to avoid transaction corruption
 	if(LCqueue != 0) {
-        if(xQueueSend( LCqueue, (void *) &LineCamIdx, (TickType_t)0 ) != pdPASS) { 			// try to send the index to queue
-            /* Failed to post the message, even after 10 ticks. */
-        }
-        else {
-        	uint16_t  *LCptr = &LineCamData[LineCamIdx++][0];								// Index is already queued
-        	memcpy((uint16_t  *)LCptr, (uint16_t  *)LCamData, LINEMAXPIX*sizeof(uint16_t));	// Copy the actual data
-        	if(LineCamIdx >= LC_MAX_ENTRIES) LineCamIdx = 0;								// circulate buffer
-        }
-    }
+		if(xQueueSend( LCqueue, (void *) &LineCamIdx, (TickType_t)0 ) != pdPASS) { 			// try to send the index to queue
+			/* Failed to post the message, even after 10 ticks. */
+		}
+		else {
+			uint16_t  *LCptr = &LineCamData[LineCamIdx++][0];								// Index is already queued
+			memcpy((uint16_t  *)LCptr, (uint16_t  *)LCamData, LINEMAXPIX*sizeof(uint16_t));	// Copy the actual data
+			if(LineCamIdx >= LC_MAX_ENTRIES) LineCamIdx = 0;								// circulate buffer
+		}
+	}
 	vTaskPrioritySet(LineCam_handle, self_priority);										// Restore task's original priority
 }
 
@@ -155,8 +155,8 @@ uint32_t LineCamGetLast(uint8_t *buff) {
 		//------------------------------------------------------
 		else
 			return 0;
-	}
-	return 0;
+}
+return 0;
 }
 //============================================================================================================
 //	TBD -

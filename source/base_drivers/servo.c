@@ -31,7 +31,7 @@ void servo_set(float steer) {
 }
 
 /* Center the steering servo */
-void servo_center() {
+void servo_center(void) {
 	float perc = map(SERVO_CENTER, -1.0f, 1.0f, 50.0f, 100.0f);
 	// set compare register to appropriate value
 	FTM_SetPpm(FTM2_PERIPHERAL, kFTM_Chnl_0, kFTM_EdgeAlignedPwm, perc);
