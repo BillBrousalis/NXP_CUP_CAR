@@ -353,7 +353,7 @@ instance:
       - hardwareAverageMode: 'kADC16_HardwareAverageCount8'
       - enableHighSpeed: 'false'
       - enableLowPower: 'false'
-      - enableContinuousConversion: 'true'
+      - enableContinuousConversion: 'false'
     - adc16_channel_mux_mode: 'kADC16_ChannelMuxA'
     - adc16_hardware_compare_config:
       - hardwareCompareModeEnable: 'false'
@@ -407,7 +407,7 @@ const adc16_config_t ADC1_config = {
   .hardwareAverageMode = kADC16_HardwareAverageCount8,
   .enableHighSpeed = false,
   .enableLowPower = false,
-  .enableContinuousConversion = true
+  .enableContinuousConversion = false
 };
 const adc16_channel_mux_mode_t ADC1_muxMode = kADC16_ChannelMuxA;
 
@@ -859,7 +859,7 @@ instance:
       - referenceVoltageSource: 'kDAC_ReferenceVoltageSourceVref2'
       - enableLowPowerMode: 'false'
     - dac_enable: 'true'
-    - dac_value: '1024'
+    - dac_value: '0'
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
 /* clang-format on */
 const dac_config_t DAC0_config = {
@@ -871,7 +871,7 @@ static void DAC0_init(void) {
   /* Initialize DAC converter */
   DAC_Init(DAC0_PERIPHERAL, &DAC0_config);
   /* Output value of DAC. */
-  DAC_SetBufferValue(DAC0_PERIPHERAL, 0U, 1024U);
+  DAC_SetBufferValue(DAC0_PERIPHERAL, 0U, 0U);
   /* Make sure the read pointer is set to the start */
   DAC_SetBufferReadPointer(DAC0_PERIPHERAL, 0U);
   /* Enable DAC output */

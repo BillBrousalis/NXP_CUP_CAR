@@ -6,19 +6,17 @@ extern "C"
 #include "includes.h"
 }
 
-//-----------------------------------------------------------------------------------------
-void default_task(void *pvParameters);
-void LineCam_task(void *pvParameters);
-TaskHandle_t default_handle;
+//------------------------------------
+/* Task Handles */
+TaskHandle_t PotsUpdate_handle;
+TaskHandle_t TestCam_handle;
 TaskHandle_t LineCam_handle;
-
-uint8_t Sbuf[128];
-uint8_t	LineCam_IsInit = 0;
-
-#define 	LED_DRIVE		720U						//750U // 350mA
+TaskHandle_t Commands_handle;
+//------------------------------------
+TaskHandle_t TestAll_handle;
 
 //-----------------------------------------------------------------------------------------
-//  @brief   Application entry point.
+//  @brief Application entry point.
 //-----------------------------------------------------------------------------------------
 int main(void) {
     /* Init board hardware. */
@@ -30,12 +28,20 @@ int main(void) {
     BOARD_InitDebugConsole();
 #endif
 
-    xTaskCreate(default_task, "Default task", configMINIMAL_STACK_SIZE * 8, NULL, DEFAULT_TASK_PRIO, &default_handle);
-    xTaskCreate(LineCam_task, "LineCam_task", configMINIMAL_STACK_SIZE * 4, NULL, DEFAULT_TASK_PRIO, &LineCam_handle);
-
+    //------------------------------------------------------
+    /* Start Camera Reading Task */
+    //xTaskCreate(LineCam_task, "LineCam_task", configMINIMAL_STACK_SIZE * 4, NULL, DEFAULT_TASK_PRIO, &LineCam_handle);
+    /* Start Pots Reading Task */
+    //xTaskCreate(PotsUpdate_task, "PotsUpdate_task", configMINIMAL_STACK_SIZE * 4, NULL, DEFAULT_TASK_PRIO, &PotsUpdate_handle);
+    //------------------------------------------------------
+    /* Switch-Based Mode Startup */
+    if(SW1_read() == 1) xTaskCreate(test_all, "Test All", configMINIMAL_STACK_SIZE * 8, NULL, DEFAULT_TASK_PRIO, &TestAll_handle);
+    else if(SW2_read() == 1) xTaskCreate(TestCam_task, "Test Cam", configMINIMAL_STACK_SIZE * 8, NULL, DEFAULT_TASK_PRIO, &TestCam_handle);
+    else if(SW3_read() == 1) xTaskCreate(Commands_task, "COMMANDS", configMINIMAL_STACK_SIZE * 8, NULL, DEFAULT_TASK_PRIO, &Commands_handle);
+    //------------------------------------------------------
+    /* Start Tasks */
     vTaskStartScheduler();
     for(;;);
-
     /* Force the counter to be placed into memory. */
     volatile static int i = 0;
     /* Enter an infinite loop, just incrementing a counter. */
@@ -47,41 +53,3 @@ int main(void) {
     }
     return 0 ;
 }
-//-----------------------------------------------------------------------------------------
-//		Default task
-//-----------------------------------------------------------------------------------------
-void default_task(void *pvParameters) {
-	TickType_t xLastWakeTime;
-	while(LineCam_IsInit ==0) osDelay(1);								// Wait for LineCam task to start
-
-	for (;;) {
-		xLastWakeTime = xTaskGetTickCount();
-		//---------------------------------------
-		if(SW1_read() == 1) {
-			DAC_SetBufferValue(DAC0_PERIPHERAL, 0U, LED_DRIVE);
-			DAC_SetBufferReadPointer(DAC0_PERIPHERAL, 0U);
-			LED1_ON();
-		}
-		else {
-			DAC_SetBufferValue(DAC0_PERIPHERAL, 0U, 0U);
-		    DAC_SetBufferReadPointer(DAC0_PERIPHERAL, 0U);
-		    LED1_OFF();
-		}
-		//---------------------------------------
-		if(LineCamGetLast(Sbuf) == 1) {
-			UART_RTOS_Send(&UART3_rtos_handle, Sbuf, 128);
-		}
-	}
-}
-//-----------------------------------------------------------------------------------------
-//		Line camera task
-//-----------------------------------------------------------------------------------------
-void LineCam_task(void *pvParameters) {
-	LineCamInit();
-	LineCam_IsInit = 1;
-	for(;;) {
-		LineCamProcess();
-	}
-}
-//-----------------------------------------------------------------------------------------
-//-----------------------------------------------------------------------------------------
