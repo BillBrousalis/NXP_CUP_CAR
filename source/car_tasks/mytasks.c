@@ -6,6 +6,7 @@
 #include "queue.h"
 #include "timers.h"
 
+#include "irq_handler.h"
 #include "defines.h"
 #include "base_drivers/linescan.h"
 #include "base_drivers/uart.h"
@@ -19,6 +20,8 @@
 /* 128 pixel values + speed + steer */
 uint8_t Sbuf[LINEMAXPIX+2];
 uint8_t LineCam_IsInit = 0;
+//-----------------------------------------
+#define ADC1_DELAY	33
 //-----------------------------------------------------------------------------------------
 //		test_cam_task - send linescan output data over to RPI
 //-----------------------------------------------------------------------------------------
@@ -71,11 +74,31 @@ void Commands_task(void *pvParameters) {
 	}
 }
 //-----------------------------------------------------------------------------------------
-//		Read Pots - Battery
+//		Adc task -> Read Pots - Battery
 //-----------------------------------------------------------------------------------------
-// TODO: make it work
-int32_t x;
-void PotsUpdate_task(void *pvParameters) {
-	x = ADC16_GetChannelConversionValue(ADC1_PERIPHERAL, 0U);
-	osDelay(100);
+uint32_t adc1_chnl = 0;
+uint32_t adc1_result;
+void adc1_task(void *pvParameters) {
+	for(;;) {
+		if(xSemaphoreTake(adc1_Semaphore, portMAX_DELAY) == pdTRUE) {
+			adc1_channels[adc1_chnl++] = adc1_result;
+			if(adc1_chnl > 2) adc1_chnl = 0;
+			osDelay(ADC1_DELAY);
+			switch(adc1_chnl) {
+				case 0:
+					ADC16_SetChannelConfig(ADC1_PERIPHERAL, ADC1_CH0_CONTROL_GROUP, &ADC1_channelsConfig[adc1_chnl]);
+					break;
+				case 1:
+					ADC16_SetChannelConfig(ADC1_PERIPHERAL, ADC1_CH1_CONTROL_GROUP, &ADC1_channelsConfig[adc1_chnl]);
+					break;
+				case 2:
+					ADC16_SetChannelConfig(ADC1_PERIPHERAL, ADC1_CH2_CONTROL_GROUP, &ADC1_channelsConfig[adc1_chnl]);
+					break;
+				default:
+					break;
+			}
+		}
+	}
 }
+//-----------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------

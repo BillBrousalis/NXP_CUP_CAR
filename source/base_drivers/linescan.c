@@ -118,12 +118,12 @@ void LineCamProcess(void) {
 	self_priority = uxTaskPriorityGet(LineCam_handle);										// Save task's original priority - if it is fixed we could save some time here later
 	vTaskPrioritySet(LineCam_handle, MAX_TASK_PRIO);										// escalate task priority to avoid transaction corruption
 	if(LCqueue != 0) {
-		if(xQueueSend( LCqueue, (void *) &LineCamIdx, (TickType_t)0 ) != pdPASS) { 			// try to send the index to queue
+		if(xQueueSend(LCqueue, (void *)&LineCamIdx, (TickType_t)0 ) != pdPASS) { 			// try to send the index to queue
 			/* Failed to post the message, even after 10 ticks. */
 		}
 		else {
-			uint16_t  *LCptr = &LineCamData[LineCamIdx++][0];								// Index is already queued
-			memcpy((uint16_t  *)LCptr, (uint16_t  *)LCamData, LINEMAXPIX*sizeof(uint16_t));	// Copy the actual data
+			uint16_t *LCptr = &LineCamData[LineCamIdx++][0];								// Index is already queued
+			memcpy((uint16_t *)LCptr, (uint16_t *)LCamData, LINEMAXPIX*sizeof(uint16_t));	// Copy the actual data
 			if(LineCamIdx >= LC_MAX_ENTRIES) LineCamIdx = 0;								// circulate buffer
 		}
 	}
@@ -136,7 +136,7 @@ uint32_t LineCamGetLast(uint8_t *buff) {
 	uint32_t i;
 	if(LCqueue != 0) {															// Check if queue is created
 		if(xQueuePeek(LCqueue, &i, (TickType_t)10) == pdPASS) {					// check if new entry is available but do not remove yet to guarantee atomicity
-			uint16_t  *LCptr = &LineCamData[i][0];								// Get the right pointer
+			uint16_t *LCptr = &LineCamData[i][0];								// Get the right pointer
 			for(uint8_t z=0; z<LINEMAXPIX; z++) {
 				buff[z] = LCptr[z] >> 8;										// ShiftR 8 because buff is uint8_t type
 			}
