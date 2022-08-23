@@ -15,7 +15,7 @@ TaskHandle_t LineCam_handle;
 uint8_t Sbuf[128];
 uint8_t	LineCam_IsInit = 0;
 
-#define 	LED_DRIVE		720U						//750U // 350mA
+#define 	LED_DRIVE		550U						//750U // 350mA
 
 //-----------------------------------------------------------------------------------------
 //  @brief   Application entry point.
