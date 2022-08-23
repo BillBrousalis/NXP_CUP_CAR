@@ -780,7 +780,7 @@
                            <setting name="hardwareAverageMode" value="kADC16_HardwareAverageCount8"/>
                            <setting name="enableHighSpeed" value="false"/>
                            <setting name="enableLowPower" value="false"/>
-                           <setting name="enableContinuousConversion" value="true"/>
+                           <setting name="enableContinuousConversion" value="false"/>
                         </struct>
                         <setting name="adc16_channel_mux_mode" value="kADC16_ChannelMuxA"/>
                         <struct name="adc16_hardware_compare_config">
@@ -1098,7 +1098,7 @@
                            <setting name="enableLowPowerMode" value="false"/>
                         </struct>
                         <setting name="dac_enable" value="true"/>
-                        <setting name="dac_value" value="1024"/>
+                        <setting name="dac_value" value="0"/>
                      </config_set>
                   </instance>
                </instances>

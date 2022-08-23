@@ -11,26 +11,42 @@ float fabs(float x) {
 //==============================================================================
 //
 //==============================================================================
-float max(float x, float y) {
+float fmax(float x, float y) {
+	return x >= y ? x : y;
+}
+
+int16_t max(int16_t x, int16_t y) {
 	return x >= y ? x : y;
 }
 //==============================================================================
 //
 //==============================================================================
-float min(float x, float y) {
+float fmin(float x, float y) {
+	return x <= y ? x : y;
+}
+
+int16_t min(int16_t x, int16_t y) {
 	return x <= y ? x : y;
 }
 //==============================================================================
 //
 //==============================================================================
-float map(float in, float in_low, float in_high, float out_low, float out_high) {
+float fmap(float in, float in_low, float in_high, float out_low, float out_high) {
+	return out_low + ((out_high - out_low) / (in_high - in_low)) * (in - in_low);
+}
+
+int16_t map(int16_t in, int16_t in_low, int16_t in_high, int16_t out_low, int16_t out_high) {
 	return out_low + ((out_high - out_low) / (in_high - in_low)) * (in - in_low);
 }
 //==============================================================================
 //
 //==============================================================================
-int same_sign(float x, float y) {
+int fsame_sign(float x, float y) {
 	return ((x >= 0.0f && y >= 0.0f) || (x <= 0.0f && y <= 0.0f)) ? 1 : 0;
+}
+
+int same_sign(int16_t x, int16_t y) {
+	return ((x >= 0 && y >= 0) || (x <= 0 && y <= 0)) ? 1 : 0;
 }
 
 //==============================================================================
@@ -39,18 +55,20 @@ int same_sign(float x, float y) {
 static uint8_t a = 71;       // some initializers
 static uint8_t b = 19;
 static uint8_t d = 0;
+
 //===========================================================================
-//    mysrand initializes the random number generator with a seed
+//   initializes the random number generator with a seed
 //===========================================================================
 void mysrand(uint8_t seed) {
-  d = seed;
+	d = seed;
 }
+
 //===========================================================================
-//  myrand generates a pseudorandom sequence
+//  generates a pseudo-random sequence
 //===========================================================================
 uint8_t myrand(uint8_t threshold) {
-  uint8_t x = d;
-  x = (a*x + b) % threshold;
-  d = x;                                   // advance with each function call
-  return(x);
+	uint8_t x = d;
+	x = (a*x + b) % threshold;
+	d = x;                                   // advance with each function call
+	return(x);
 }

@@ -1,13 +1,15 @@
+#pragma once
+
 typedef struct {
 	/* driving */
-	float steering;
-	float speed;
+	int16_t steering;
+	int16_t speed;
 	/* camera */
-	float error;
-	float preverror;
+	int16_t error;
+	int16_t preverror;
 	/* generic board */
-	float pot[2];
+	int16_t pot[2];
 } TrackingState;
 
-void init_tracking();
+void init_tracking(void);
 extern TrackingState *car_state;
