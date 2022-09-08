@@ -2,6 +2,8 @@
 //!irq_handler.c
 //===================================================================================================
 #include "includes.h"
+#include "base_drivers/linescan.h"
+#include "globals.h"
 
 extern void PixRead(void);
 //====================================================================================================
@@ -25,9 +27,6 @@ void ADC0_IRQHANDLER(void) {
 //==========================================================================================================
 /* ADC1_IRQn interrupt handler */
 //==========================================================================================================
-extern SemaphoreHandle_t adc1_Semaphore;
-extern uint32_t adc1_result;
-//---------------------------------------
 void ADC1_IRQHANDLER(void) {
 	static BaseType_t xHigherPriorityTaskWoken;
 	xHigherPriorityTaskWoken = pdFALSE;

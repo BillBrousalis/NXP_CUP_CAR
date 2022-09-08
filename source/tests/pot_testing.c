@@ -1,15 +1,8 @@
-/* FreeRTOS */
-#include "FreeRTOS.h"
-#include "task.h"
-#include "queue.h"
-#include "timers.h"
-
-/* written includes */
-#include "drive_tracking.h"
+#include "includes.h"
 #include "base_drivers/servo.h"
 #include "base_drivers/motors.h"
 #include "safety/safety.h"
-#include "defines.h"
+#include "globals.h"
 
 #include "pot_testing.h"
 
@@ -39,15 +32,12 @@ void test_motors(void *pvParameters) {
 // Control Motor Speed + Steering with both Pots
 //============================================================================================================
 void test_all(void *pvParameters) {
-    /* INITIALIZATION FUNCTIONS HERE */
-    init_tracking();
-    motors_init();
-    servo_center();
-    motors_stop();
-	osDelay(1000);
+	static RequestedState reqstate = {.req_speed = 0, .req_steer = 0};
+	while(!CarInitialized) osDelay(1);
 	for (;;) {
-		speed_set(car_state->pot[0]);
-		steer_set(car_state->pot[1]);
-		osDelay(10);
+		reqstate.req_speed = car_state->pot[0];
+		reqstate.req_steer = car_state->pot[1];
+		xQueueSend(CarControlQueueHandle, &reqstate, (TickType_t)1);
+		osDelay(50);
 	}
 }

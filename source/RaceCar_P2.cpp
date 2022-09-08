@@ -4,25 +4,11 @@
 extern "C"
 {
 #include "includes.h"
+#include "globals.h"
+#include "car_tasks/car_tasks.h"
+#include "tests/pot_testing.h"
+#include "base_drivers/gpio.h"
 }
-
-//------------------------------------
-/* Task Handles */
-TaskHandle_t PotsUpdate_handle;
-TaskHandle_t TestCam_handle;
-TaskHandle_t LineCam_handle;
-<<<<<<< HEAD
-
-uint8_t Sbuf[128];
-uint8_t	LineCam_IsInit = 0;
-
-#define 	LED_DRIVE		550U						//750U // 350mA
-=======
-TaskHandle_t Commands_handle;
-//------------------------------------
-TaskHandle_t TestAll_handle;
->>>>>>> b3e74fa476de624d5c6ad25815a4efbcdc2222a7
-
 //-----------------------------------------------------------------------------------------
 //  @brief Application entry point.
 //-----------------------------------------------------------------------------------------
@@ -36,28 +22,38 @@ int main(void) {
     BOARD_InitDebugConsole();
 #endif
 
+    adc1_Semaphore = xSemaphoreCreateBinary();
+    CarControlQueueHandle = xQueueCreate((UBaseType_t)3, (UBaseType_t)sizeof(RequestedState));
     //------------------------------------------------------
-    /* Start Camera Reading Task */
-    //xTaskCreate(LineCam_task, "LineCam_task", configMINIMAL_STACK_SIZE * 4, NULL, DEFAULT_TASK_PRIO, &LineCam_handle);
+    /* Start Initialization / Housekeeping task */
+    xTaskCreate(Housekeeping_task, "Housekeeping", configMINIMAL_STACK_SIZE * 4, NULL, DEFAULT_TASK_PRIO, &Housekeeping_handle);
+    //------------------------------------------------------
+    /* Start Initialization / Housekeeping task */
+    xTaskCreate(Car_task, "Car", configMINIMAL_STACK_SIZE * 4, NULL, HIGH_TASK_PRIO, &Car_handle);
+    //------------------------------------------------------
     /* Start Pots Reading Task */
-    //xTaskCreate(PotsUpdate_task, "PotsUpdate_task", configMINIMAL_STACK_SIZE * 4, NULL, DEFAULT_TASK_PRIO, &PotsUpdate_handle);
+    xTaskCreate(PotsBatUpdate_task, "PotsBatUpdate_task", configMINIMAL_STACK_SIZE * 4, NULL, DEFAULT_TASK_PRIO, &PotsBatUpdate_handle);
+    /* Start Camera Reading Task */
+    xTaskCreate(LineCam_task, "LineCam_task", configMINIMAL_STACK_SIZE * 4, NULL, DEFAULT_TASK_PRIO, &LineCam_handle);
     //------------------------------------------------------
     /* Switch-Based Mode Startup */
-    if(SW1_read() == 1) xTaskCreate(test_all, "Test All", configMINIMAL_STACK_SIZE * 8, NULL, DEFAULT_TASK_PRIO, &TestAll_handle);
-    else if(SW2_read() == 1) xTaskCreate(TestCam_task, "Test Cam", configMINIMAL_STACK_SIZE * 8, NULL, DEFAULT_TASK_PRIO, &TestCam_handle);
-    else if(SW3_read() == 1) xTaskCreate(Commands_task, "COMMANDS", configMINIMAL_STACK_SIZE * 8, NULL, DEFAULT_TASK_PRIO, &Commands_handle);
+    if(SW1_read() == 1) 	 	xTaskCreate(test_all, "Test All", configMINIMAL_STACK_SIZE * 8, NULL, DEFAULT_TASK_PRIO, &TestAll_handle);
+    else if(SW2_read() == 1)	xTaskCreate(TestCam_task, "Test Cam", configMINIMAL_STACK_SIZE * 8, NULL, DEFAULT_TASK_PRIO, &TestCam_handle);
+    else if(SW3_read() == 1)	xTaskCreate(Commands_task, "COMMANDS", configMINIMAL_STACK_SIZE * 8, NULL, DEFAULT_TASK_PRIO, &Commands_handle);
     //------------------------------------------------------
     /* Start Tasks */
     vTaskStartScheduler();
+    /* Shouldn't get here */
     for(;;);
     /* Force the counter to be placed into memory. */
     volatile static int i = 0;
     /* Enter an infinite loop, just incrementing a counter. */
     while(1) {
-        i++ ;
+        i++;
         /* 'Dummy' NOP to allow source level single stepping of
             tight while() loop */
         __asm volatile ("nop");
     }
     return 0 ;
 }
+

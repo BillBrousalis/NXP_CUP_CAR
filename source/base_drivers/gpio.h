@@ -1,5 +1,5 @@
-#pragma once
-
+#ifndef GPIO_H_
+#define GPIO_H_
 #include "fsl_gpio.h"
 #include "pin_mux.h"
 
@@ -56,3 +56,5 @@
 #define LED4_TOG()	GPIO_PortToggle(BOARD_INITPINS_LED4_PORT, BOARD_INITPINS_LED4_PIN_MASK)
 //----------------------------------------------------------------------------------------------------------
 //----------------------------------------------------------------------------------------------------------
+
+#endif

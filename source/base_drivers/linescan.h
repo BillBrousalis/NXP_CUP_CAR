@@ -1,5 +1,5 @@
-#pragma once
-
+#ifndef LINESCAN_H_
+#define LINESCAN_H_
 //------------------------------------------
 #define	LINEMAXPIX		128			// Number of pixels that cam reads
 #define	LINEMINITER		129			// Minimum amount of iterations(clock cycles) required for a correctly executed read
@@ -22,3 +22,5 @@ void PixRead(void);
 uint32_t LineCamGetLast(uint8_t *buff);
 
 extern uint8_t LinePixInProgress;						// if 1 line scan is currently in progress
+
+#endif
