@@ -11,9 +11,8 @@
 
 #include "car_tasks.h"
 
-
-// TODO: put them in globals.c
-//-----------------------------------------
+/* TODO: put in globals */
+//------------------------------------
 /* 128 pixel values + speed + steer */
 uint8_t Sbuf[LINEMAXPIX+2];
 uint8_t LineCam_IsInit = 0;
@@ -23,11 +22,18 @@ void Housekeeping_task(void *pvParaments) {
 	init_tracking();
 	servo_center();
 	motors_init();
+	Led1_ON();
 	/* Set ready flag */
 	CarInitialized = 1;
 	for(;;) {
 		// run pot bat task here
-		osDelay(100);
+		if(SW4_read() == 1) {
+			speed_set((int16_t)20);
+		}
+		else {
+			motors_stop();
+		}
+		osDelay(10);
 	}
 }
 //-----------------------------------------
@@ -39,7 +45,7 @@ void Car_task(void *pvParameters) {
 	while(CarControlQueueHandle == NULL) osDelay(1);
 	for(;;) {
 		if(xQueueReceive(CarControlQueueHandle, &reqstate, (TickType_t)0) == pdPASS) {
-			speed_set(reqstate.req_speed);
+			//speed_set(reqstate.req_speed);
 			steer_set(reqstate.req_steer);
 			carsteer = reqstate.req_steer;
 			//speed_set(BASE_SPEED);
@@ -112,20 +118,6 @@ void LineCam_task(void *pvParameters) {
 // TODO: test this
 int16_t uartrec = 0; //watch
 void Commands_task(void *pvParameters) {
-#if 0
-	init_tracking();
-	int16_t steer = -60;
-	int8_t sign = 1;
-	int8_t step = 1;
-	for(;;) {
-		if(steer > 60 || steer < -60) {
-			sign *= -1;
-		}
-		steer += (int16_t)(sign * step);
-		servo_set(steer);
-		osDelay(20);
-	}
-#endif
 	static RequestedState reqstate = {.req_speed = 0, .req_steer = 0};
 	while(!CarInitialized) osDelay(1);
 	/* speed - steer buffer */
