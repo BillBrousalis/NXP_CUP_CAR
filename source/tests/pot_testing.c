@@ -15,7 +15,6 @@ void test_steer(void *pvParameters) {
 		steer_set(car_state->pot[0]);
 		osDelay(10);
 	}
-
 }
 //============================================================================================================
 // Control Motor Speed with Pot

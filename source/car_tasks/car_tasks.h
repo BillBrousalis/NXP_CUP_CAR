@@ -6,6 +6,7 @@
 //-----------------------------------------
 void Housekeeping_task(void *pvParaments);
 void Car_task(void *pvParameters);
+void NativeControl_task(void *pvParameters);
 void TestCam_task(void *pvParameters);
 void LineCam_task(void *pvParameters);
 void Commands_task(void *pvParameters);
