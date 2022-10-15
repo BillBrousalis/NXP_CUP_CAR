@@ -61,7 +61,8 @@ void error_calculation(int npeaks, int peak1, int peak2) {
 	cam_dat->error = err;
 }
 
-int16_t pid2input(void) {
+int16_t error2input(void) {
+	/* convert calculated error to target vector for gyro | steering */
 	return 0;
 }
 
