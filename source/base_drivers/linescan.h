@@ -3,6 +3,7 @@
 //------------------------------------------
 #define	LINEMAXPIX		128			// Number of pixels that cam reads
 #define	LINEMINITER		129			// Minimum amount of iterations(clock cycles) required for a correctly executed read
+#define LINEMID			64			// Index of line middle point
 //------------------------------------------
 #define	LINECAM_RATE_15FPS		7560
 #define	LINECAM_RATE_20FPS		5740
@@ -21,6 +22,6 @@ void CamScanPix(void);
 void PixRead(void);
 uint32_t LineCamGetLast(uint8_t *buff);
 
-extern uint8_t LinePixInProgress;						// if 1 line scan is currently in progress
+extern uint8_t LinePixInProgress; // if 1 line scan is currently in progress
 
 #endif

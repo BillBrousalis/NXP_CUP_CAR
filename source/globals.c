@@ -31,18 +31,18 @@ TrackingState *car_state = &s;
 RequestedState rs;
 RequestedState *requested_state = &rs;
 //------------------------------------
-CameraDat camdat = {
+CameraDat cdat = {
 	.calibration_max = 0,
 	.calibration_min = 0,
-	.error = 0,
-	.prev_error = 0,
-	.l_edge_idx = 0,
-	.r_edge_idx = 0
+	.error = 0.0f,
+	.prev_error = 0.0f,
+	.peak_idx1 = 0,
+	.peak_idx2 = 0
 };
-CameraDat *cameradat = &camdat;
+CameraDat *cam_dat = &cdat;
 //------------------------------------
 int16_t CarInitialized = 0;
 //------------------------------------
 /* 128 pixel values + speed + steer + 2 peaks idx */
-uint8_t Sbuf[LINEMAXPIX+4];
+uint8_t data_buf[LINEMAXPIX+4];
 uint8_t LineCam_IsInit = 0;

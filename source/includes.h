@@ -8,6 +8,8 @@
 #include <stdlib.h>
 #include <stdint.h>
 
+#include "base_drivers/linescan.h"
+
 #include "defines.h"
 #include "board.h"
 #include "fsl_adc16.h"

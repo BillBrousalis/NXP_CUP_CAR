@@ -9,10 +9,10 @@
 #include "base_drivers/led.h"
 #include "globals.h"
 #include "processing/peak_detector.h"
+#include "processing/control.h"
 
 #include "car_tasks.h"
 
-/* TODO: put in globals */
 //-----------------------------------------
 void Housekeeping_task(void *pvParaments) {
 	/* Initialization */
@@ -26,7 +26,6 @@ void Housekeeping_task(void *pvParaments) {
 	}
 }
 //-----------------------------------------
-int16_t carsteer = 0;
 void Car_task(void *pvParameters) {
 	static RequestedState reqstate = {.req_speed = 0, .req_steer = 0};
 	TickType_t xLastWakeTime = xTaskGetTickCount();
@@ -36,7 +35,6 @@ void Car_task(void *pvParameters) {
 		if(xQueueReceive(CarControlQueueHandle, &reqstate, (TickType_t)0) == pdPASS) {
 			//speed_set(reqstate.req_speed);
 			steer_set(reqstate.req_steer);
-			carsteer = reqstate.req_steer;
 			//speed_set(BASE_SPEED);
 		}
 		vTaskDelayUntil(&xLastWakeTime, xPeriod);
@@ -46,46 +44,23 @@ void Car_task(void *pvParameters) {
 //-----------------------------------------------------------------------------------------
 //		Run controls natively
 //-----------------------------------------------------------------------------------------
-#define emi_sz 1
-#define absop_sz 10
 void NativeControl_task(void *pvParameters) {
 	TickType_t xLastWakeTime = xTaskGetTickCount();
 	const TickType_t xPeriod = CAR_CONTROL_PERIOD;
 	//----------------------------------------
 	while(LineCam_IsInit == 0) osDelay(1);
 	//----------------------------------------
-	static int emi_peaks[emi_sz];
-	static int absop_peaks[absop_sz];
-	static float data[LINEMAXPIX];
-	int n_emi_peaks = 0;
-	int n_absop_peaks = 0;
-	float delta = 40.0f;
-	int emi_first = 0;
 	for (;;) {
 		//---------------------------------------
 		if(SW1_read() == 1) Led1_ON();
 		else Led1_OFF();
 		//---------------------------------------
-		if(LineCamGetLast(Sbuf) == 1) {
-            /* Fetch Line */
-            for(int i=0; i<LINEMAXPIX; i++) {
-            	data[i] = (float)Sbuf[i];
-            }
-            memset(emi_peaks, 0, sizeof(emi_peaks));
-            memset(absop_peaks, 0, sizeof(absop_peaks));
-            detect_peak(data, LINEMAXPIX, emi_peaks, &n_emi_peaks, emi_sz, absop_peaks, &n_absop_peaks, absop_sz, delta, emi_first);
+		if(LineCamGetLast(data_buf) == 1) {
             /* Send to RPI */
-            Sbuf[LINEMAXPIX] = car_state->speed;
-            Sbuf[LINEMAXPIX+1] = car_state->steering;
-            Sbuf[LINEMAXPIX+2] = (uint8_t)0;
-            Sbuf[LINEMAXPIX+3] = (uint8_t)0;
-            if(n_absop_peaks > 0) {
-            	Sbuf[LINEMAXPIX+2] = absop_peaks[0];
-            	if(n_absop_peaks > 1) {
-            		Sbuf[LINEMAXPIX+3] = absop_peaks[1];
-            	}
-            }
-        	UartSendPi(Sbuf, sizeof(Sbuf));
+			drive_control();
+			data_buf[LINEMAXPIX] = car_state->speed;
+			data_buf[LINEMAXPIX+1] = car_state->steering;
+        	UartSendPi(data_buf, sizeof(data_buf));
         	vTaskDelayUntil(&xLastWakeTime, xPeriod);
         }
 	}
@@ -102,10 +77,10 @@ void TestCam_task(void *pvParameters) {
 		else Led1_OFF();
 		//---------------------------------------
 		/* Fetch Line */
-		if(LineCamGetLast(Sbuf) == 1) {
-			Sbuf[LINEMAXPIX] = car_state->speed;
-			Sbuf[LINEMAXPIX+1] = car_state->steering;
-			UartSendPi(Sbuf, LINEMAXPIX+2);
+		if(LineCamGetLast(data_buf) == 1) {
+			data_buf[LINEMAXPIX] = car_state->speed;
+			data_buf[LINEMAXPIX+1] = car_state->steering;
+			UartSendPi(data_buf, LINEMAXPIX+2);
 		}
 	}
 }
@@ -164,10 +139,10 @@ void Commands_task(void *pvParameters) {
 	const TickType_t xPeriod = pdMS_TO_TICKS(44);
 	for(;;) {
 		/* Get Line - Send to RPI */
-		if(LineCamGetLast(Sbuf) == 1) {
-			Sbuf[LINEMAXPIX] = car_state->speed;
-			Sbuf[LINEMAXPIX+1] = car_state->steering;
-			UartSendPi(Sbuf, LINEMAXPIX+2);
+		if(LineCamGetLast(data_buf) == 1) {
+			data_buf[LINEMAXPIX] = car_state->speed;
+			data_buf[LINEMAXPIX+1] = car_state->steering;
+			UartSendPi(data_buf, LINEMAXPIX+2);
 			/* Get Updated Speed - Steer */
 			UartRecvPi(buf, 1*sizeof(buf));
 			//------

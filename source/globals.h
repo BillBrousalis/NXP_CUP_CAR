@@ -21,11 +21,11 @@ typedef struct {
 	int16_t calibration_max;
 	int16_t calibration_min;
 	/* error */
-	int16_t error;
-	int16_t prev_error;
+	float error;
+	float prev_error;
 	/* lines */
-	int16_t l_edge_idx;
-	int16_t r_edge_idx;
+	int16_t peak_idx1;
+	int16_t peak_idx2;
 } CameraDat;
 //-------------------
 void init_tracking(void);
@@ -45,13 +45,13 @@ extern SemaphoreHandle_t adc1_Semaphore;
 //-------------------
 extern TrackingState *car_state;
 //-------------------
-extern CameraDat *cameradat;
+extern CameraDat *cam_dat;
 //-------------------
 extern uint32_t adc1_result;
 //-------------------
 extern int16_t CarInitialized;
 //-------------------
-extern uint8_t Sbuf[LINEMAXPIX+4];
+extern uint8_t data_buf[LINEMAXPIX+4];
 extern uint8_t LineCam_IsInit;
 
 #endif
