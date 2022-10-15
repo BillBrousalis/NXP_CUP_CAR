@@ -6,6 +6,6 @@
 
 void drive_control(void);
 void error_calculation(int npeaks, int peak1, int peak2);
-int16_t pid2input(void);
+int16_t error2input(void);
 
 #endif

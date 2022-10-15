@@ -23,21 +23,19 @@ void drive_control(void) {
 	detect_peak(data, LINEMAXPIX, emi_peaks, &n_emi_peaks, emi_sz, absop_peaks, &n_absop_peaks, absop_sz, delta, emi_first);
 
 	error_calculation(n_absop_peaks, absop_peaks[0], absop_peaks[1]);
+	error2input();
 
 	/* update data_buf for plotting detected peaks in GUI */
 	data_buf[LINEMAXPIX+2] = (uint8_t)0;
 	data_buf[LINEMAXPIX+3] = (uint8_t)0;
-	if(n_absop_peaks > 0) {
-		data_buf[LINEMAXPIX+2] = absop_peaks[0];
-		if(n_absop_peaks > 1) {
-			data_buf[LINEMAXPIX+3] = absop_peaks[1];
-		}
+	for(int i = 0; i < n_absop_peaks; ++i) {
+		data_buf[LINEMAXPIX+2+i] = (uint8_t)absop_peaks[i];
 	}
 }
 
 void error_calculation(int npeaks, int peak1, int peak2) {
 	// TODO: fix error "scaling"
-	/* Normalized error -1 to 1 */
+	/* Normalized error [-1, 1] */
 	float err = 0.0f;
 	switch(npeaks) {
 		case 0: // 0 peaks
