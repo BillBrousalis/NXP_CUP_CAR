@@ -37,9 +37,10 @@ int main(void) {
     xTaskCreate(LineCam_task, "LineCam_task", configMINIMAL_STACK_SIZE * 4, NULL, DEFAULT_TASK_PRIO, &LineCam_handle);
     //------------------------------------------------------
     /* Switch-Based Mode Startup */
-    if(SW1_read() == 1) 	 	xTaskCreate(test_all, "Test All", configMINIMAL_STACK_SIZE * 8, NULL, DEFAULT_TASK_PRIO, &TestAll_handle);
-    else if(SW2_read() == 1)	xTaskCreate(TestCam_task, "Test Cam", configMINIMAL_STACK_SIZE * 8, NULL, DEFAULT_TASK_PRIO, &TestCam_handle);
-    else if(SW3_read() == 1)	xTaskCreate(Commands_task, "COMMANDS", configMINIMAL_STACK_SIZE * 8, NULL, DEFAULT_TASK_PRIO, &Commands_handle);
+    //if(SW1_read() == 1) 	 	xTaskCreate(test_all, "Test All", configMINIMAL_STACK_SIZE * 8, NULL, DEFAULT_TASK_PRIO, &TestAll_handle);
+    //else if(SW2_read() == 1)	xTaskCreate(TestCam_task, "Test Cam", configMINIMAL_STACK_SIZE * 8, NULL, DEFAULT_TASK_PRIO, &TestCam_handle);
+    if(SW3_read() == 1)	xTaskCreate(Commands_task, "COMMANDS", configMINIMAL_STACK_SIZE * 8, NULL, DEFAULT_TASK_PRIO, &Commands_handle);
+    else if(SW4_read() == 1) xTaskCreate(NativeControl_task, "Native", configMINIMAL_STACK_SIZE * 12, NULL, DEFAULT_TASK_PRIO, &NativeControl_handle);
     //------------------------------------------------------
     /* Start Tasks */
     vTaskStartScheduler();
