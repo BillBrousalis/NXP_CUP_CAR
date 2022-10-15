@@ -1,6 +1,12 @@
 #include "includes.h"
 #include "globals.h"
 
+void drive_control(void) {
+
+
+
+}
+
 /*
  * func():
  	put state machine here:

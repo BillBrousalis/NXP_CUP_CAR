@@ -13,10 +13,6 @@
 #include "car_tasks.h"
 
 /* TODO: put in globals */
-//------------------------------------
-/* 128 pixel values + speed + steer */
-uint8_t Sbuf[LINEMAXPIX+4];
-uint8_t LineCam_IsInit = 0;
 //-----------------------------------------
 void Housekeeping_task(void *pvParaments) {
 	/* Initialization */
@@ -26,15 +22,6 @@ void Housekeeping_task(void *pvParaments) {
 	/* Set ready flag */
 	CarInitialized = 1;
 	for(;;) {
-		/*
-		// run pot bat task here
-		if(SW4_read() == 1) {
-			speed_set((int16_t)20);
-		}
-		else {
-			motors_stop();
-		}
-		*/
 		osDelay(10);
 	}
 }

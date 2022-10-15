@@ -3,7 +3,7 @@
 #include <stdbool.h>
 #include "pid.h"
 
-pid_t pid_create(pid_t pid, float* in, float* out, float* set, float kp, float ki, float kd) {
+pid_ctrl pid_create(pid_ctrl pid, float* in, float* out, float* set, float kp, float ki, float kd, float dt) {
 	pid->input = in;
 	pid->output = out;
 	pid->setpoint = set;
@@ -15,19 +15,22 @@ pid_t pid_create(pid_t pid, float* in, float* out, float* set, float kp, float k
 	pid->sampletime = 100 * (TICK_SECOND / 1000);
 
 	pid_direction(pid, E_PID_DIRECT);
-	pid_tune(pid, kp, ki, kd);
+	pid_tune(pid, kp, ki, kd, dt);
 
-	pid->lasttime = tick_get() - pid->sampletime;
+	//pid->lasttime = tick_get() - pid->sampletime;
 
 	return pid;
 }
 
-bool pid_need_compute(pid_t pid) {
+// no need to call
+/*
+bool pid_need_compute(pid_ctrl pid) {
 	// Check if the PID period has elapsed
 	return(tick_get() - pid->lasttime >= pid->sampletime) ? true : false;
 }
+*/
 
-void pid_compute(pid_t pid) {
+void pid_compute(pid_ctrl pid) {
 	// Check if control is enabled
 	if (!pid->automode)
 		return false;
@@ -54,16 +57,17 @@ void pid_compute(pid_t pid) {
 	(*pid->output) = out;
 	// Keep track of some variables for next execution
 	pid->lastin = in;
-	pid->lasttime = tick_get();;
+	//pid->lasttime = tick_get();;
 }
 
-void pid_tune(pid_t pid, float kp, float ki, float kd) {
+void pid_ctrlune(pid_ctrl pid, float kp, float ki, float kd, float dt) {
 	// Check for validity
 	if (kp < 0 || ki < 0 || kd < 0)
 		return;
 
 	//Compute sample time in seconds
-	float ssec = ((float) pid->sampletime) / ((float) TICK_SECOND);
+	//float ssec = ((float) pid->sampletime) / ((float) TICK_SECOND);
+	float ssec = dt;
 
 	pid->Kp = kp;
 	pid->Ki = ki * ssec;
@@ -76,7 +80,7 @@ void pid_tune(pid_t pid, float kp, float ki, float kd) {
 	}
 }
 
-void pid_sample(pid_t pid, uint32_t time) {
+void pid_sample(pid_ctrl pid, uint32_t time) {
 	if (time > 0) {
 		float ratio = (float) (time * (TICK_SECOND / 1000)) / (float) pid->sampletime;
 		pid->Ki *= ratio;
@@ -85,7 +89,7 @@ void pid_sample(pid_t pid, uint32_t time) {
 	}
 }
 
-void pid_limits(pid_t pid, float min, float max) {
+void pid_limits(pid_ctrl pid, float min, float max) {
 	if (min >= max) return;
 	pid->omin = min;
 	pid->omax = max;
@@ -103,7 +107,7 @@ void pid_limits(pid_t pid, float min, float max) {
 	}
 }
 
-void pid_auto(pid_t pid) {
+void pid_auto(pid_ctrl pid) {
 	// If going from manual to auto
 	if (!pid->automode) {
 		pid->iterm = *(pid->output);
@@ -116,11 +120,11 @@ void pid_auto(pid_t pid) {
 	}
 }
 
-void pid_manual(pid_t pid) {
+void pid_manual(pid_ctrl pid) {
 	pid->automode = false;
 }
 
-void pid_direction(pid_t pid, enum pid_control_directions dir) {
+void pid_direction(pid_ctrl pid, enum pid_control_directions dir) {
 	if (pid->automode && pid->direction != dir) {
 		pid->Kp = (0 - pid->Kp);
 		pid->Ki = (0 - pid->Ki);

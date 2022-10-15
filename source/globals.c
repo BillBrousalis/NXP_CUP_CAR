@@ -42,3 +42,7 @@ CameraDat camdat = {
 CameraDat *cameradat = &camdat;
 //------------------------------------
 int16_t CarInitialized = 0;
+//------------------------------------
+/* 128 pixel values + speed + steer + 2 peaks idx */
+uint8_t Sbuf[LINEMAXPIX+4];
+uint8_t LineCam_IsInit = 0;

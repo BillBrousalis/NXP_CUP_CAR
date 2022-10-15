@@ -17,7 +17,7 @@
 #define TICK_SECOND	pdMS_TO_TICKS(1000)
 
 /**
- * Defines if the controler is direct or reverse
+ * Defines if the controller is direct or reverse
  */
 enum pid_control_directions {
 	E_PID_DIRECT,
@@ -26,7 +26,7 @@ enum pid_control_directions {
 
 /**
  * Structure that holds PID all the PID controller data, multiple instances are
- * posible using different structures for each controller
+ * possible using different structures for each controller
  */
 struct pid_controller {
 	// Input, output and setpoint
@@ -51,7 +51,7 @@ struct pid_controller {
 	enum pid_control_directions direction;
 };
 
-typedef struct pid_controller * pid_t;
+typedef struct pid_controller * pid_ctrl;
 
 /*-------------------------------------------------------------*/
 /*		Function prototypes				*/
@@ -73,9 +73,9 @@ extern "C" {
 	 * @param ki Integral gain
 	 * @param kd Diferential gain
 	 *
-	 * @return returns a pid_t controller handle
+	 * @return returns a pid_ctrl controller handle
 	 */
-	pid_t pid_create(pid_t pid, float* in, float* out, float* set, float kp, float ki, float kd);
+	pid_ctrl pid_create(pid_ctrl pid, float* in, float* out, float* set, float kp, float ki, float kd, float dt);
 
 	/**
 	 * @brief Check if PID loop needs to run
@@ -86,7 +86,7 @@ extern "C" {
 	 *
 	 * @return return Return true if PID control algorithm is required to run
 	 */
-	bool pid_need_compute(pid_t pid);
+	bool pid_need_compute(pid_ctrl pid);
 
 	/**
 	 * @brief Computes the output of the PID control
@@ -96,7 +96,7 @@ extern "C" {
 	 *
 	 * @param pid The PID controller instance which will be used for computation
 	 */
-	void pid_compute(pid_t pid);
+	void pid_compute(pid_ctrl pid);
 
 	/**
 	 * @brief Sets new PID tuning parameters
@@ -109,7 +109,7 @@ extern "C" {
 	 * @param ki Integral gain
 	 * @param kd Derivative gain
 	 */
-	void pid_tune(pid_t pid, float kp, float ki, float kd);
+	void pid_tune(pid_ctrl pid, float kp, float ki, float kd, float dt);
 
 	/**
 	 * @brief Sets the pid algorithm period
@@ -119,7 +119,7 @@ extern "C" {
 	 * @param pid The PID controller instance to modify
 	 * @param time The time in milliseconds between computations
 	 */
-	void pid_sample(pid_t pid, uint32_t time);
+	void pid_sample(pid_ctrl pid, uint32_t time);
 
 	/**
 	 * @brief Sets the limits for the PID controller output
@@ -128,7 +128,7 @@ extern "C" {
 	 * @param min The minimum output value for the PID controller
 	 * @param max The maximum output value for the PID controller
 	 */
-	void pid_limits(pid_t pid, float min, float max);
+	void pid_limits(pid_ctrl pid, float min, float max);
 
 	/**
 	 * @brief Enables automatic control using PID
@@ -139,7 +139,7 @@ extern "C" {
 	 *
 	 * @param pid The PID controller instance to enable
 	 */
-	void pid_auto(pid_t pid);
+	void pid_auto(pid_ctrl pid);
 
 	/**
 	 * @brief Disables automatic process control
@@ -149,7 +149,7 @@ extern "C" {
 	 *
 	 * @param pid The PID controller instance to disable
 	 */
-	void pid_manual(pid_t pid);
+	void pid_manual(pid_ctrl pid);
 
 	/**
 	 * @brief Configures the PID controller direction
@@ -162,7 +162,7 @@ extern "C" {
 	 * @param pid The PID controller instance to modify
 	 * @param direction The new direction of the PID controller
 	 */
-	void pid_direction(pid_t pid, enum pid_control_directions dir);
+	void pid_direction(pid_ctrl pid, enum pid_control_directions dir);
 
 #ifdef	__cplusplus
 }

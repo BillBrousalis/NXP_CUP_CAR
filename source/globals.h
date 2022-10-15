@@ -50,5 +50,8 @@ extern CameraDat *cameradat;
 extern uint32_t adc1_result;
 //-------------------
 extern int16_t CarInitialized;
+//-------------------
+extern uint8_t Sbuf[LINEMAXPIX+4];
+extern uint8_t LineCam_IsInit;
 
 #endif
