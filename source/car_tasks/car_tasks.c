@@ -33,9 +33,8 @@ void Car_task(void *pvParameters) {
 	while(CarControlQueueHandle == NULL) osDelay(1);
 	for(;;) {
 		if(xQueueReceive(CarControlQueueHandle, &reqstate, (TickType_t)0) == pdPASS) {
-			//speed_set(reqstate.req_speed);
+			speed_set(reqstate.req_speed);
 			steer_set(reqstate.req_steer);
-			//speed_set(BASE_SPEED);
 		}
 		vTaskDelayUntil(&xLastWakeTime, xPeriod);
 	}

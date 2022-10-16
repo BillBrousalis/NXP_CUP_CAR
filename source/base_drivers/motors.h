@@ -3,7 +3,7 @@
 //---------------------------------
 #define WHEEL_DIFF_MULT	0.007f // 0.005f cuts speed (one side) in half at most
 //---------------------------------
-#define MOTORSIDLE	(int16_t)7
+#define MOTORSIDLE	(int16_t)6
 #define MOTORSMIN	(int16_t)-100
 #define MOTORSMAX	(int16_t)100
 //---------------------------------
