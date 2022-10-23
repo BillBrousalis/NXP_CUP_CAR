@@ -70,9 +70,9 @@ extern "C" {
 /* Definition of peripheral ID */
 #define FTM0_PERIPHERAL FTM0
 /* Definition of the clock source frequency */
-#define FTM0_CLOCK_SOURCE 60000000UL
+#define FTM0_CLOCK_SOURCE CLOCK_GetFreq(kCLOCK_BusClk)
 /* Definition of the clock source frequency */
-#define FTM0_TIMER_MODULO_VALUE 37499
+#define FTM0_TIMER_MODULO_VALUE (((FTM0_CLOCK_SOURCE/ (1U << (FTM0_PERIPHERAL->SC & FTM_SC_PS_MASK))) / 50) - 1)
 /* Definition of FTM0 channel/pair number 0 on Edge-aligned PWM */
 #define FTM0_PWM_MOT_A_CHANNEL kFTM_Chnl_0
 /* Definition of FTM0 channel/pair number 1 on Edge-aligned PWM */

@@ -202,6 +202,32 @@ void BOARD_InitBootPins(void);
 #define BOARD_INITPINS_LED4_PIN_MASK (1U << 23U)      /*!<@brief PORT pin mask */
                                                       /* @} */
 
+/*! @name PORTC16 (number 90), PB1
+  @{ */
+
+/* Symbols to be used with GPIO driver */
+#define BOARD_INITPINS_PB1_GPIO GPIOC                /*!<@brief GPIO peripheral base pointer */
+#define BOARD_INITPINS_PB1_GPIO_PIN_MASK (1U << 16U) /*!<@brief GPIO pin mask */
+
+/* Symbols to be used with PORT driver */
+#define BOARD_INITPINS_PB1_PORT PORTC                /*!<@brief PORT peripheral base pointer */
+#define BOARD_INITPINS_PB1_PIN 16U                   /*!<@brief PORT pin number */
+#define BOARD_INITPINS_PB1_PIN_MASK (1U << 16U)      /*!<@brief PORT pin mask */
+                                                     /* @} */
+
+/*! @name PORTC17 (number 91), PB2
+  @{ */
+
+/* Symbols to be used with GPIO driver */
+#define BOARD_INITPINS_PB2_GPIO GPIOC                /*!<@brief GPIO peripheral base pointer */
+#define BOARD_INITPINS_PB2_GPIO_PIN_MASK (1U << 17U) /*!<@brief GPIO pin mask */
+
+/* Symbols to be used with PORT driver */
+#define BOARD_INITPINS_PB2_PORT PORTC                /*!<@brief PORT peripheral base pointer */
+#define BOARD_INITPINS_PB2_PIN 17U                   /*!<@brief PORT pin number */
+#define BOARD_INITPINS_PB2_PIN_MASK (1U << 17U)      /*!<@brief PORT pin mask */
+                                                     /* @} */
+
 /*!
  * @brief Configures pin routing and optionally pin electrical features.
  *

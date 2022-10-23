@@ -443,7 +443,7 @@ instance:
   - ftm_main_config:
     - ftm_config:
       - clockSource: 'kFTM_SystemClock'
-      - clockSourceFreq: 'BOARD_BootClockRUN'
+      - clockSourceFreq: 'GetFreq'
       - timerPrescaler: '32'
       - timerOutputFrequency: '50 Hz'
       - systemClockSource: 'BusInterfaceClock'

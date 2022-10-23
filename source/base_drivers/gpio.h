@@ -35,7 +35,13 @@
 #define SW2_read() 	GPIO_PinRead(BOARD_INITPINS_DILSW2_GPIO, BOARD_INITPINS_DILSW2_PIN)
 #define SW3_read() 	GPIO_PinRead(BOARD_INITPINS_DILSW3_GPIO, BOARD_INITPINS_DILSW3_PIN)
 #define SW4_read() 	GPIO_PinRead(BOARD_INITPINS_DILSW4_GPIO, BOARD_INITPINS_DILSW4_PIN)
-
+//----------------------------------------------------------------------------------------------------------
+//
+//----------------------------------------------------------------------------------------------------------
+#define PB1_read() 	GPIO_PinRead(BOARD_INITPINS_PB1_GPIO, BOARD_INITPINS_PB1_PIN)
+#define PB2_read() 	GPIO_PinRead(BOARD_INITPINS_PB2_GPIO, BOARD_INITPINS_PB2_PIN)
+#define PB_ON		1
+#define PB_OFF		0
 //----------------------------------------------------------------------------------------------------------
 //
 //----------------------------------------------------------------------------------------------------------

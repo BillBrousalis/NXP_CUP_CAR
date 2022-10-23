@@ -27,6 +27,8 @@ pin_labels:
 - {pin_num: '67', pin_signal: PTB21/SPI2_SCK/FB_AD30/CMP1_OUT, label: LED2, identifier: LED2}
 - {pin_num: '68', pin_signal: PTB22/SPI2_SOUT/FB_AD29/CMP2_OUT, label: LED3, identifier: LED3}
 - {pin_num: '69', pin_signal: PTB23/SPI2_SIN/SPI0_PCS5/FB_AD28, label: LED4, identifier: LED4}
+- {pin_num: '90', pin_signal: PTC16/UART3_RX/ENET0_1588_TMR0/FB_CS5_b/FB_TSIZ1/FB_BE23_16_BLS15_8_b, label: PB1, identifier: PB1}
+- {pin_num: '91', pin_signal: PTC17/UART3_TX/ENET0_1588_TMR1/FB_CS4_b/FB_TSIZ0/FB_BE31_24_BLS7_0_b, label: PB2, identifier: PB2}
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********
  */
 /* clang-format on */
@@ -96,6 +98,8 @@ BOARD_InitPins:
   - {pin_num: '67', peripheral: GPIOB, signal: 'GPIO, 21', pin_signal: PTB21/SPI2_SCK/FB_AD30/CMP1_OUT, direction: OUTPUT, slew_rate: slow}
   - {pin_num: '68', peripheral: GPIOB, signal: 'GPIO, 22', pin_signal: PTB22/SPI2_SOUT/FB_AD29/CMP2_OUT, direction: OUTPUT, slew_rate: slow}
   - {pin_num: '69', peripheral: GPIOB, signal: 'GPIO, 23', pin_signal: PTB23/SPI2_SIN/SPI0_PCS5/FB_AD28, direction: OUTPUT, slew_rate: slow}
+  - {pin_num: '90', peripheral: GPIOC, signal: 'GPIO, 16', pin_signal: PTC16/UART3_RX/ENET0_1588_TMR0/FB_CS5_b/FB_TSIZ1/FB_BE23_16_BLS15_8_b, direction: INPUT}
+  - {pin_num: '91', peripheral: GPIOC, signal: 'GPIO, 17', pin_signal: PTC17/UART3_TX/ENET0_1588_TMR1/FB_CS4_b/FB_TSIZ0/FB_BE31_24_BLS7_0_b, direction: INPUT}
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********
  */
 /* clang-format on */
@@ -193,6 +197,20 @@ void BOARD_InitPins(void)
     };
     /* Initialize GPIO functionality on pin PTC12 (pin 84)  */
     GPIO_PinInit(BOARD_INITPINS_DILSW4_GPIO, BOARD_INITPINS_DILSW4_PIN, &DILSW4_config);
+
+    gpio_pin_config_t PB1_config = {
+        .pinDirection = kGPIO_DigitalInput,
+        .outputLogic = 0U
+    };
+    /* Initialize GPIO functionality on pin PTC16 (pin 90)  */
+    GPIO_PinInit(BOARD_INITPINS_PB1_GPIO, BOARD_INITPINS_PB1_PIN, &PB1_config);
+
+    gpio_pin_config_t PB2_config = {
+        .pinDirection = kGPIO_DigitalInput,
+        .outputLogic = 0U
+    };
+    /* Initialize GPIO functionality on pin PTC17 (pin 91)  */
+    GPIO_PinInit(BOARD_INITPINS_PB2_GPIO, BOARD_INITPINS_PB2_PIN, &PB2_config);
 
     gpio_pin_config_t SD_DETECT_config = {
         .pinDirection = kGPIO_DigitalInput,
@@ -343,6 +361,12 @@ void BOARD_InitPins(void)
 
     /* PORTC15 (pin 87) is configured as UART4_TX */
     PORT_SetPinMux(PORTC, 15U, kPORT_MuxAlt3);
+
+    /* PORTC16 (pin 90) is configured as PTC16 */
+    PORT_SetPinMux(BOARD_INITPINS_PB1_PORT, BOARD_INITPINS_PB1_PIN, kPORT_MuxAsGpio);
+
+    /* PORTC17 (pin 91) is configured as PTC17 */
+    PORT_SetPinMux(BOARD_INITPINS_PB2_PORT, BOARD_INITPINS_PB2_PIN, kPORT_MuxAsGpio);
 
     /* PORTC2 (pin 72) is configured as FTM0_CH1 */
     PORT_SetPinMux(PORTC, 2U, kPORT_MuxAlt4);

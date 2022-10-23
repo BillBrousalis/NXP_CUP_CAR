@@ -27,7 +27,7 @@ void drive_control(void) {
 	error_calculation(absop_peaks, n_absop_peaks);
 	int16_t target_steer = error2input();
 	// TODO: fix me
-    int16_t target_speed = (int16_t)(30.0f - (float)(abs(target_steer) * 6.0f / 75.0f));
+    int16_t target_speed = (int16_t)(30.0f - (float)(abs(target_steer) * 6.0f / 100.0f));
 
     /*
     if(cam_dat->uncertainty_counter > 20) {
@@ -97,7 +97,7 @@ void error_calculation(int *peaks, int npeaks) {
 int16_t error2input(void) {
 	/* convert calculated error to target vector for gyro | steering */
 	/* demo implementation to test*/
-	float KP = 75.0f;
+	float KP = 100.0f;
 	int16_t servo = (int16_t)(KP * cam_dat->error);
 	return servo;
 }

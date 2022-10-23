@@ -17,8 +17,7 @@
 void Housekeeping_task(void *pvParaments) {
 	/* Initialization */
 	servo_center();
-	motors_init();
-	Led1_ON();
+	//Led1_ON();
 	/* Set ready flag */
 	CarInitialized = 1;
 	for(;;) {
@@ -32,7 +31,8 @@ void Car_task(void *pvParameters) {
 	const TickType_t xPeriod = CAR_CONTROL_PERIOD;
 	while(CarControlQueueHandle == NULL) osDelay(1);
 	for(;;) {
-		if(xQueueReceive(CarControlQueueHandle, &reqstate, (TickType_t)0) == pdPASS) {
+		if(PB1_read() == PB_ON) motors_init();
+		else if(xQueueReceive(CarControlQueueHandle, &reqstate, (TickType_t)0) == pdPASS) {
 			speed_set(reqstate.req_speed);
 			steer_set(reqstate.req_steer);
 		}

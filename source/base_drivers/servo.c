@@ -28,7 +28,7 @@ void steer_set(int16_t steer) {
 void servo_set(int16_t steer) {
 	/* add servo offset to equation for more precision */
 	steer += SERVOCENTER;
-	float perc = map(steer, SERVOMAXL, SERVOMAXR, 0.0f, 100.0f);
+	float perc = map(-steer, SERVOMAXL, SERVOMAXR, 0.0f, 100.0f);
 	// set compare register to appropriate value
 	FTM_SetPpm(FTM2_PERIPHERAL, kFTM_Chnl_0, kFTM_EdgeAlignedPwm, perc);
 	FTM_SetSoftwareTrigger(FTM2_PERIPHERAL, 1);

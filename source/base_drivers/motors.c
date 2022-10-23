@@ -13,13 +13,12 @@
 /* Initialize both brushless motors
 	- There has to be a better way to do this */
 void motors_init(void) {
-	int16_t s = -5;
-	while(s <= 8) {
-		motors_set(s, s);
-		osDelay(250);
-		++s;
-	}
-	motors_stop();
+	float perc = 48.0f;
+	FTM_SetPpm(FTM0_PERIPHERAL, kFTM_Chnl_0, kFTM_EdgeAlignedPwm, perc);
+	FTM_SetPpm(FTM0_PERIPHERAL, kFTM_Chnl_1, kFTM_EdgeAlignedPwm, perc);
+	/* Trigger */
+	FTM_SetSoftwareTrigger(FTM0_PERIPHERAL, true);
+	//motors_stop();
 }
 
 /* Because writing motors_set(0, 0); is too much work */
