@@ -61,30 +61,31 @@ void error_calculation(int *peaks, int npeaks) {
 			break;
 		case 1:	// 1 peak
 			//cam_dat->uncertainty_counter = 0;
-			if(peaks[0] >= LINEMID) { // is right
-				err = -(float)(LINEMAXPIX - peaks[0]) / (float)LINEMID;
+			if(peaks[0] >= LINEMID) {
+				err = (float)((peaks[0] - cam_dat->lane_width) + peaks[0]) / 2.0f;
 			}
-			else{ // is left
-				err = (float)peaks[0] / (float)LINEMID;
+			else {
+				err = (float)(peaks[0] + (peaks[0] + cam_dat->lane_width)) / 2.0f;
 			}
+			err -= (float)LINEMID;
+			err /= (float)LINEMID;
 			break;
 		case 2: // 2 peaks
 			//cam_dat->uncertainty_counter = 0;
 			// peaks[0] always < peaks[1]
 			if(peaks[0] < LINEMID && peaks[1] >= LINEMID) { // peaks[0] is left and peaks[1] is right
-				if(peaks[0] > (LINEMAXPIX - peaks[1])) {
-					err = (float)peaks[0] / (float)LINEMID;
-				}
-				else {
-					err = -(float)(LINEMAXPIX - peaks[1]) / (float)LINEMID;
-				}
+				err = ((float)(peaks[0] + peaks[1]) / 2.0f);
+				/* update lane width */
+				cam_dat->lane_width = (int16_t)(peaks[1] - peaks[0]);
 			}
 			else if(peaks[0] >= LINEMID) { // peaks[0] is right
-				err = (float)(LINEMAXPIX - peaks[0]) / (float)LINEMID;
+				err = ((float)((peaks[0] - cam_dat->lane_width) + peaks[0]) / 2.0f);
 			}
 			else { // peaks[1] is left
-				err = -(float)peaks[1] / (float)LINEMID;
+				err = ((float)(peaks[1] + (peaks[1] + cam_dat->lane_width)) / 2.0f);
 			}
+			err -= (float)LINEMID;
+			err /= (float)LINEMID;
 			break;
 		default:
 			// something went very wrong

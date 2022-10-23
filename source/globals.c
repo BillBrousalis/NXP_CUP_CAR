@@ -38,6 +38,7 @@ CameraDat cdat = {
 	.prev_error = 0.0f,
 	.peak_idx1 = 0,
 	.peak_idx2 = 0,
+	.lane_width = 80,
 	.uncertainty_counter = 0
 };
 CameraDat *cam_dat = &cdat;
