@@ -37,7 +37,8 @@ CameraDat cdat = {
 	.error = 0.0f,
 	.prev_error = 0.0f,
 	.peak_idx1 = 0,
-	.peak_idx2 = 0
+	.peak_idx2 = 0,
+	.uncertainty_counter = 0
 };
 CameraDat *cam_dat = &cdat;
 //------------------------------------

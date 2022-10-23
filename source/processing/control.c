@@ -1,6 +1,7 @@
 #include "includes.h"
 #include "globals.h"
 #include "base_drivers/servo.h"
+#include "base_drivers/motors.h"
 #include "processing/peak_detector.h"
 
 #include "control.h"
@@ -11,7 +12,7 @@ void drive_control(void) {
 	static float data[LINEMAXPIX];
 	int n_emi_peaks = 0;
 	int n_absop_peaks = 0;
-	float delta = 40.0f;
+	float delta = 50.0f;
 	int emi_first = 0;
 
 	for(int i=0; i<LINEMAXPIX; i++) {
@@ -25,11 +26,21 @@ void drive_control(void) {
 
 	error_calculation(absop_peaks, n_absop_peaks);
 	int16_t target_steer = error2input();
+	// TODO: fix me
+    int16_t target_speed = (int16_t)(30.0f - (float)(abs(target_steer) * 6.0f / 75.0f));
+
+    /*
+    if(cam_dat->uncertainty_counter > 20) {
+		static RequestedState reqstate = {.req_speed = MOTORSIDLE, .req_steer = 0};
+		xQueueSend(CarControlQueueHandle, &reqstate, (TickType_t)1);
+		for(;;);
+    }
+    */
 
 	// append request
 	static RequestedState reqstate = {.req_speed = 0, .req_steer = 0};
-	reqstate.req_speed = (int16_t)20;
     reqstate.req_steer = target_steer;
+	reqstate.req_speed = target_speed;
     xQueueSend(CarControlQueueHandle, &reqstate, (TickType_t)1);
 
 	/* update data_buf for plotting detected peaks in GUI */
@@ -40,25 +51,25 @@ void drive_control(void) {
 	}
 }
 
-void error_calculation(int peaks[], int npeaks) {
+void error_calculation(int *peaks, int npeaks) {
 	/* Normalized error [-1.0, 1.0] */
 	float err = 0.0f;
 	switch(npeaks) {
 		case 0: // 0 peaks
+			//cam_dat->uncertainty_counter += 1;
 			err = cam_dat->prev_error;
 			break;
-		//TODO: fix this approach, not correct for 1 line case
 		case 1:	// 1 peak
-			/* negative error -> is left | positive error -> is right */
+			//cam_dat->uncertainty_counter = 0;
 			if(peaks[0] >= LINEMID) { // is right
-				err = -(float)(LINEMAXPIX - peaks[0]) / (float)LINEMID * (-1.0f);
+				err = -(float)(LINEMAXPIX - peaks[0]) / (float)LINEMID;
 			}
 			else{ // is left
 				err = (float)peaks[0] / (float)LINEMID;
 			}
 			break;
 		case 2: // 2 peaks
-			/* negative error -> is left | positive error -> is right */
+			//cam_dat->uncertainty_counter = 0;
 			// peaks[0] always < peaks[1]
 			if(peaks[0] < LINEMID && peaks[1] >= LINEMID) { // peaks[0] is left and peaks[1] is right
 				if(peaks[0] > (LINEMAXPIX - peaks[1])) {
@@ -69,10 +80,10 @@ void error_calculation(int peaks[], int npeaks) {
 				}
 			}
 			else if(peaks[0] >= LINEMID) { // peaks[0] is right
-				err = -(float)(LINEMAXPIX - peaks[0]) / (float)LINEMID;
+				err = (float)(LINEMAXPIX - peaks[0]) / (float)LINEMID;
 			}
 			else { // peaks[1] is left
-				err = (float)peaks[1] / (float)LINEMID;
+				err = -(float)peaks[1] / (float)LINEMID;
 			}
 			break;
 		default:

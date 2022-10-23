@@ -26,6 +26,8 @@ typedef struct {
 	/* lines */
 	int16_t peak_idx1;
 	int16_t peak_idx2;
+	/* uncertain state */
+	int16_t uncertainty_counter;
 } CameraDat;
 //-------------------
 void init_tracking(void);
