@@ -17,7 +17,6 @@
 void Housekeeping_task(void *pvParaments) {
 	/* Initialization */
 	servo_center();
-	Led1_ON();
 	/* Set ready flag */
 	CarInitialized = 1;
 	for(;;) {
@@ -52,15 +51,15 @@ void NativeControl_task(void *pvParameters) {
 	for (;;) {
 		//---------------------------------------
 		if(SW1_read() == 1) Led1_ON();
-		//else Led1_OFF();
+		else Led1_OFF();
 		//---------------------------------------
 		if(LineCamGetLast(data_buf) == 1) {
-            /* Send to RPI */
+			/* Send to RPI */
 			drive_control();
 			data_buf[LINEMAXPIX] = car_state->speed;
 			data_buf[LINEMAXPIX+1] = car_state->steering;
-        	UartSendPi(data_buf, sizeof(data_buf));
-        	vTaskDelayUntil(&xLastWakeTime, xPeriod);
+			UartSendPi(data_buf, sizeof(data_buf));
+			vTaskDelayUntil(&xLastWakeTime, xPeriod);
         }
 	}
 }
