@@ -9,8 +9,8 @@
 #include "globals.h"
 #include "linescan.h"
 //============================================================================================================
-#define	LINECAM_RATE_FPS		LINECAM_RATE_50FPS//LINECAM_RATE_25FPS
-//------------------------------------------
+#define	LINECAM_RATE_FPS		LINECAM_RATE_25FPS
+//============================================================================================================
 #define	LENS_COSINE_CORRECTION
 
 #ifdef 	LENS_COSINE_CORRECTION

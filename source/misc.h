@@ -1,7 +1,8 @@
 #ifndef MISC_H_
 #define MISC_H_
 //------------------------------------
-#define abs(x)		(x >= 0 ? x : -x)
+//#define abs(x)		(x >= 0 ? x : -x)
+#define float_abs(x)		(x >= 0 ? x : -x)
 //------------------------------------
 #define max(x, y)	(x >= y ? x : y)
 //------------------------------------

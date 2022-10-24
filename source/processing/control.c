@@ -1,5 +1,6 @@
 #include "includes.h"
 #include "globals.h"
+#include "misc.h"
 #include "base_drivers/servo.h"
 #include "base_drivers/motors.h"
 #include "processing/peak_detector.h"
@@ -12,7 +13,7 @@ void drive_control(void) {
 	static float data[LINEMAXPIX];
 	int n_emi_peaks = 0;
 	int n_absop_peaks = 0;
-	float delta = 50.0f;
+	float delta = 30.0f;
 	int emi_first = 0;
 
 	for(int i=0; i<LINEMAXPIX; i++) {
@@ -27,7 +28,7 @@ void drive_control(void) {
 	error_calculation(absop_peaks, n_absop_peaks);
 	int16_t target_steer = error2input();
 	// TODO: fix me
-    int16_t target_speed = (int16_t)(30.0f - (float)(abs(target_steer) * 6.0f / 100.0f));
+    int16_t target_speed = (int16_t)(28.0f - (float_abs(cam_dat->error) * 7.5f));
 
     /*
     if(cam_dat->uncertainty_counter > 20) {
@@ -69,6 +70,9 @@ void error_calculation(int *peaks, int npeaks) {
 			}
 			err -= (float)LINEMID;
 			err /= (float)LINEMID;
+			if(prev_err_check(err) == (int16_t)0) {
+				err *= -1.0f;
+			}
 			break;
 		case 2: // 2 peaks
 			//cam_dat->uncertainty_counter = 0;
@@ -86,6 +90,9 @@ void error_calculation(int *peaks, int npeaks) {
 			}
 			err -= (float)LINEMID;
 			err /= (float)LINEMID;
+			if(prev_err_check(err) == (int16_t)0) {
+				err *= -1.0f;
+			}
 			break;
 		default:
 			// something went very wrong
@@ -98,11 +105,17 @@ void error_calculation(int *peaks, int npeaks) {
 int16_t error2input(void) {
 	/* convert calculated error to target vector for gyro | steering */
 	/* demo implementation to test*/
-	float KP = 100.0f;
+	float KP = 110.0f;
 	int16_t servo = (int16_t)(KP * cam_dat->error);
 	return servo;
 }
 
+int16_t prev_err_check(float err) {
+	/* err jump too large - crossover */
+	if(abs(err - cam_dat->prev_error) >= ERR_DIFF_THRESHOLD) return 0;
+	/* err jump ok */
+	return 1;
+}
 
 /*
  * func():
