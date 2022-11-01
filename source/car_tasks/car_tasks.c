@@ -34,8 +34,10 @@ void Car_task(void *pvParameters) {
 		else if(xQueueReceive(CarControlQueueHandle, &reqstate, (TickType_t)0) == pdPASS) {
 			speed_set(reqstate.req_speed);
 			steer_set(reqstate.req_steer);
+
+			osDelay(20);
 		}
-		vTaskDelayUntil(&xLastWakeTime, xPeriod);
+		//vTaskDelayUntil(&xLastWakeTime, xPeriod);
 	}
 }
 
@@ -151,5 +153,17 @@ void Commands_task(void *pvParameters) {
 			xQueueSend(CarControlQueueHandle, &reqstate, (TickType_t)1);
 			vTaskDelayUntil(&xLastWakeTime, xPeriod);
 		}
+	}
+}
+
+//-----------------------------------------------------------------------------------------
+//		IMU Task
+//-----------------------------------------------------------------------------------------
+void IMU_Task(void *pvParameters)
+{
+	IMU_init();
+	for(;;)
+	{
+		IMU_loop();
 	}
 }

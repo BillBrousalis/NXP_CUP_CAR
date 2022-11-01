@@ -41,6 +41,7 @@ extern TaskHandle_t TestCam_handle;
 extern TaskHandle_t LineCam_handle;
 extern TaskHandle_t Commands_handle;
 extern TaskHandle_t NativeControl_handle;
+extern TaskHandle_t IMU_handle;
 //-------------------
 extern TaskHandle_t TestAll_handle;
 //-------------------

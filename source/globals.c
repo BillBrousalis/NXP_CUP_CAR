@@ -10,6 +10,7 @@ TaskHandle_t TestCam_handle;
 TaskHandle_t LineCam_handle;
 TaskHandle_t Commands_handle;
 TaskHandle_t NativeControl_handle;
+TaskHandle_t IMU_handle;
 //------------------------------------
 TaskHandle_t TestAll_handle;
 //------------------------------------

@@ -27,6 +27,11 @@ int main(void) {
     //------------------------------------------------------
     /* Start Initialization / Housekeeping task */
     xTaskCreate(Housekeeping_task, "Housekeeping", configMINIMAL_STACK_SIZE * 4, NULL, DEFAULT_TASK_PRIO, &Housekeeping_handle);
+
+    //------------------------------------------------------
+    /* Start IMU task */
+    //    xTaskCreate(IMU_Task, "IMU", configMINIMAL_STACK_SIZE * 4, NULL, DEFAULT_TASK_PRIO, &IMU_handle);
+
     //------------------------------------------------------
     /* Start Initialization / Housekeeping task */
     xTaskCreate(Car_task, "Car", configMINIMAL_STACK_SIZE * 4, NULL, HIGH_TASK_PRIO, &Car_handle);

@@ -29,6 +29,8 @@ pin_labels:
 - {pin_num: '69', pin_signal: PTB23/SPI2_SIN/SPI0_PCS5/FB_AD28, label: LED4, identifier: LED4}
 - {pin_num: '90', pin_signal: PTC16/UART3_RX/ENET0_1588_TMR0/FB_CS5_b/FB_TSIZ1/FB_BE23_16_BLS15_8_b, label: PB1, identifier: PB1}
 - {pin_num: '91', pin_signal: PTC17/UART3_TX/ENET0_1588_TMR1/FB_CS4_b/FB_TSIZ0/FB_BE31_24_BLS7_0_b, label: PB2, identifier: PB2}
+- {pin_num: '42', pin_signal: CMP2_IN0/PTA12/CAN0_TX/FTM1_CH0/RMII0_RXD1/MII0_RXD1/I2C2_SCL/I2S0_TXD0/FTM1_QD_PHA, label: MOTA_ENC, identifier: MOTA;MOTA_ENC}
+- {pin_num: '43', pin_signal: CMP2_IN1/PTA13/LLWU_P4/CAN0_RX/FTM1_CH1/RMII0_RXD0/MII0_RXD0/I2C2_SDA/I2S0_TX_FS/FTM1_QD_PHB, label: MOTB_ENC, identifier: MOTB;MOTB_ENC}
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********
  */
 /* clang-format on */
@@ -59,8 +61,6 @@ BOARD_InitPins:
   - {pin_num: '65', peripheral: FTM2, signal: 'CH, 1', pin_signal: PTB19/CAN0_RX/FTM2_CH1/I2S0_TX_FS/FB_OE_b/FTM2_QD_PHB}
   - {pin_num: '16', peripheral: ADC1, signal: 'DP, 1', pin_signal: ADC1_DP1}
   - {pin_num: '18', peripheral: ADC1, signal: 'DP, 3', pin_signal: ADC0_DP0/ADC1_DP3}
-  - {pin_num: '42', peripheral: FTM1, signal: 'CH, 0', pin_signal: CMP2_IN0/PTA12/CAN0_TX/FTM1_CH0/RMII0_RXD1/MII0_RXD1/I2C2_SCL/I2S0_TXD0/FTM1_QD_PHA}
-  - {pin_num: '43', peripheral: FTM1, signal: 'CH, 1', pin_signal: CMP2_IN1/PTA13/LLWU_P4/CAN0_RX/FTM1_CH1/RMII0_RXD0/MII0_RXD0/I2C2_SDA/I2S0_TX_FS/FTM1_QD_PHB}
   - {pin_num: '27', peripheral: DAC0, signal: OUT, pin_signal: DAC0_OUT/CMP1_IN3/ADC0_SE23}
   - {pin_num: '50', peripheral: ENET, signal: RMII_CLKIN, pin_signal: EXTAL0/PTA18/FTM0_FLT2/FTM_CLKIN0}
   - {pin_num: '51', peripheral: OSC, signal: XTAL0, pin_signal: XTAL0/PTA19/FTM1_FLT0/FTM_CLKIN1/LPTMR0_ALT1}
@@ -100,6 +100,10 @@ BOARD_InitPins:
   - {pin_num: '69', peripheral: GPIOB, signal: 'GPIO, 23', pin_signal: PTB23/SPI2_SIN/SPI0_PCS5/FB_AD28, direction: OUTPUT, slew_rate: slow}
   - {pin_num: '90', peripheral: GPIOC, signal: 'GPIO, 16', pin_signal: PTC16/UART3_RX/ENET0_1588_TMR0/FB_CS5_b/FB_TSIZ1/FB_BE23_16_BLS15_8_b, direction: INPUT}
   - {pin_num: '91', peripheral: GPIOC, signal: 'GPIO, 17', pin_signal: PTC17/UART3_TX/ENET0_1588_TMR1/FB_CS4_b/FB_TSIZ0/FB_BE31_24_BLS7_0_b, direction: INPUT}
+  - {pin_num: '42', peripheral: GPIOA, signal: 'GPIO, 12', pin_signal: CMP2_IN0/PTA12/CAN0_TX/FTM1_CH0/RMII0_RXD1/MII0_RXD1/I2C2_SCL/I2S0_TXD0/FTM1_QD_PHA, identifier: MOTA_ENC,
+    direction: INPUT, gpio_interrupt: kPORT_InterruptEitherEdge, slew_rate: slow, pull_select: up, pull_enable: enable, passive_filter: enable}
+  - {pin_num: '43', peripheral: GPIOA, signal: 'GPIO, 13', pin_signal: CMP2_IN1/PTA13/LLWU_P4/CAN0_RX/FTM1_CH1/RMII0_RXD0/MII0_RXD0/I2C2_SDA/I2S0_TX_FS/FTM1_QD_PHB,
+    identifier: MOTB_ENC, direction: INPUT, gpio_interrupt: kPORT_InterruptEitherEdge, slew_rate: slow, pull_select: up, pull_enable: enable, passive_filter: enable}
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********
  */
 /* clang-format on */
@@ -120,6 +124,20 @@ void BOARD_InitPins(void)
     CLOCK_EnableClock(kCLOCK_PortC);
     /* Port E Clock Gate Control: Clock enabled */
     CLOCK_EnableClock(kCLOCK_PortE);
+
+    gpio_pin_config_t MOTA_ENC_config = {
+        .pinDirection = kGPIO_DigitalInput,
+        .outputLogic = 0U
+    };
+    /* Initialize GPIO functionality on pin PTA12 (pin 42)  */
+    GPIO_PinInit(BOARD_INITPINS_MOTA_ENC_GPIO, BOARD_INITPINS_MOTA_ENC_PIN, &MOTA_ENC_config);
+
+    gpio_pin_config_t MOTB_ENC_config = {
+        .pinDirection = kGPIO_DigitalInput,
+        .outputLogic = 0U
+    };
+    /* Initialize GPIO functionality on pin PTA13 (pin 43)  */
+    GPIO_PinInit(BOARD_INITPINS_MOTB_ENC_GPIO, BOARD_INITPINS_MOTB_ENC_PIN, &MOTB_ENC_config);
 
     gpio_pin_config_t LED1_config = {
         .pinDirection = kGPIO_DigitalOutput,
@@ -226,11 +244,53 @@ void BOARD_InitPins(void)
     /* Initialize GPIO functionality on pin PTE26 (pin 33)  */
     GPIO_PinInit(BOARD_INITPINS_DEBUG_OUT_GPIO, BOARD_INITPINS_DEBUG_OUT_PIN, &DEBUG_OUT_config);
 
-    /* PORTA12 (pin 42) is configured as FTM1_CH0 */
-    PORT_SetPinMux(PORTA, 12U, kPORT_MuxAlt3);
+    /* PORTA12 (pin 42) is configured as PTA12 */
+    PORT_SetPinMux(BOARD_INITPINS_MOTA_ENC_PORT, BOARD_INITPINS_MOTA_ENC_PIN, kPORT_MuxAsGpio);
 
-    /* PORTA13 (pin 43) is configured as FTM1_CH1 */
-    PORT_SetPinMux(PORTA, 13U, kPORT_MuxAlt3);
+    /* Interrupt configuration on PORTA12 (pin 42): Interrupt on either edge */
+    PORT_SetPinInterruptConfig(BOARD_INITPINS_MOTA_ENC_PORT, BOARD_INITPINS_MOTA_ENC_PIN, kPORT_InterruptEitherEdge);
+
+    PORTA->PCR[12] =
+        ((PORTA->PCR[12] &
+          /* Mask bits to zero which are setting */
+          (~(PORT_PCR_PS_MASK | PORT_PCR_PE_MASK | PORT_PCR_SRE_MASK | PORT_PCR_PFE_MASK | PORT_PCR_ISF_MASK)))
+
+         /* Pull Select: Internal pullup resistor is enabled on the corresponding pin, if the corresponding PE
+          * field is set. */
+         | (uint32_t)(kPORT_PullUp)
+
+         /* Slew Rate Enable: Slow slew rate is configured on the corresponding pin, if the pin is configured as
+          * a digital output. */
+         | PORT_PCR_SRE(kPORT_SlowSlewRate)
+
+         /* Passive Filter Enable: Passive input filter is enabled on the corresponding pin, if the pin is
+          * configured as a digital input.
+          * Refer to the device data sheet for filter characteristics. */
+         | PORT_PCR_PFE(kPORT_PassiveFilterEnable));
+
+    /* PORTA13 (pin 43) is configured as PTA13 */
+    PORT_SetPinMux(BOARD_INITPINS_MOTB_ENC_PORT, BOARD_INITPINS_MOTB_ENC_PIN, kPORT_MuxAsGpio);
+
+    /* Interrupt configuration on PORTA13 (pin 43): Interrupt on either edge */
+    PORT_SetPinInterruptConfig(BOARD_INITPINS_MOTB_ENC_PORT, BOARD_INITPINS_MOTB_ENC_PIN, kPORT_InterruptEitherEdge);
+
+    PORTA->PCR[13] =
+        ((PORTA->PCR[13] &
+          /* Mask bits to zero which are setting */
+          (~(PORT_PCR_PS_MASK | PORT_PCR_PE_MASK | PORT_PCR_SRE_MASK | PORT_PCR_PFE_MASK | PORT_PCR_ISF_MASK)))
+
+         /* Pull Select: Internal pullup resistor is enabled on the corresponding pin, if the corresponding PE
+          * field is set. */
+         | (uint32_t)(kPORT_PullUp)
+
+         /* Slew Rate Enable: Slow slew rate is configured on the corresponding pin, if the pin is configured as
+          * a digital output. */
+         | PORT_PCR_SRE(kPORT_SlowSlewRate)
+
+         /* Passive Filter Enable: Passive input filter is enabled on the corresponding pin, if the pin is
+          * configured as a digital input.
+          * Refer to the device data sheet for filter characteristics. */
+         | PORT_PCR_PFE(kPORT_PassiveFilterEnable));
 
     /* PORTA18 (pin 50) is configured as EXTAL0 */
     PORT_SetPinMux(PORTA, 18U, kPORT_PinDisabledOrAnalog);
@@ -458,10 +518,7 @@ void BOARD_InitPins(void)
 
     SIM->SOPT4 = ((SIM->SOPT4 &
                    /* Mask bits to zero which are setting */
-                   (~(SIM_SOPT4_FTM1CH0SRC_MASK | SIM_SOPT4_FTM2CH0SRC_MASK)))
-
-                  /* FTM1 channel 0 input capture source select: FTM1_CH0 signal. */
-                  | SIM_SOPT4_FTM1CH0SRC(SOPT4_FTM1CH0SRC_FTM)
+                   (~(SIM_SOPT4_FTM2CH0SRC_MASK)))
 
                   /* FTM2 channel 0 input capture source select: FTM2_CH0 signal. */
                   | SIM_SOPT4_FTM2CH0SRC(SOPT4_FTM2CH0SRC_FTM));

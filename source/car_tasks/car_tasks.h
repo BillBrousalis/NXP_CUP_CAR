@@ -11,5 +11,6 @@ void TestCam_task(void *pvParameters);
 void LineCam_task(void *pvParameters);
 void Commands_task(void *pvParameters);
 void PotsBatUpdate_task(void *pvParameters);
+void IMU_Task(void *pvParameters);
 
 #endif
