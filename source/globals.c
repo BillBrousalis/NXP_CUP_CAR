@@ -1,6 +1,7 @@
 #include "includes.h"
 #include "globals.h"
 #include "processing/pid.h"
+#include "car_tasks/car_tasks.h"
 //------------------------------------
 /* Task Handles */
 TaskHandle_t Housekeeping_handle;
@@ -42,6 +43,27 @@ CameraDat cdat = {
 	.uncertainty_counter = 0
 };
 CameraDat *cam_dat = &cdat;
+//------------------------------------
+Drive_PID dpid= {
+	.kp = 100.0f,
+	.ki = 0.0f,
+	.kd = 0.0f,
+	.dt = (float)CAR_CONTROL_PERIOD,
+	.setpoint = 0.0f,
+	.out = 0.0f,
+	.min = -100.0f,
+	.max = 100.0f
+};
+Drive_PID *drive_pid = &dpid;
+//------------------------------------
+struct pid_controller ctrldata;
+// fixme
+/*pid = pid_create(&ctrldata, &cam_dat->error, &drive_pid->out, &drive_pid->setpoint,
+						  drive_pid->kp, drive_pid->ki, drive_pid->kd, drive_pid->dt);
+pid_limits(pid, drive_pid->min, drive_pid->max);
+// Allow PID to compute and change output
+pid_auto(pid);
+*/
 //------------------------------------
 int16_t CarInitialized = 0;
 //------------------------------------

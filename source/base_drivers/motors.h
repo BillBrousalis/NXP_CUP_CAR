@@ -1,7 +1,7 @@
 #ifndef MOTORS_H_
 #define MOTORS_H_
 //---------------------------------
-#define WHEEL_DIFF_MULT	0.0055f // 0.005f cuts speed (one side) in half at most
+#define WHEEL_DIFF_MULT	0.0035f // 0.005f cuts speed (one side) in half at max steering angle
 //---------------------------------
 #define MOTORSIDLE	(int16_t)6
 #define MOTORSMIN	(int16_t)-100

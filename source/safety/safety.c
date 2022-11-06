@@ -15,7 +15,6 @@ void throttle_control(int16_t *s) {
 }
 
 /* Smoother throttle transitions */
-
 void throttle_rate_limiter(int16_t *s) {
 	if(abs(car_state->speed - *s) > THROTTLE_MAX_STEP) {
 		if(car_state->speed < *s) {

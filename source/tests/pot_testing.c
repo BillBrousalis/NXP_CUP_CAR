@@ -3,6 +3,7 @@
 #include "base_drivers/motors.h"
 #include "safety/safety.h"
 #include "globals.h"
+#include "car_tasks/car_tasks.h"
 
 #include "pot_testing.h"
 
@@ -33,10 +34,12 @@ void test_motors(void *pvParameters) {
 void test_all(void *pvParameters) {
 	static RequestedState reqstate = {.req_speed = 0, .req_steer = 0};
 	while(!CarInitialized) osDelay(1);
+	TickType_t xLastWakeTime = xTaskGetTickCount();
+	const TickType_t xPeriod = CAR_CONTROL_PERIOD;
 	for (;;) {
 		reqstate.req_speed = car_state->pot[0];
 		reqstate.req_steer = car_state->pot[1];
 		xQueueSend(CarControlQueueHandle, &reqstate, (TickType_t)1);
-		osDelay(50);
+		vTaskDelayUntil(&xLastWakeTime, xPeriod);
 	}
 }

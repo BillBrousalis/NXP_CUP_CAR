@@ -13,7 +13,7 @@ void drive_control(void) {
 	static float data[LINEMAXPIX];
 	int n_emi_peaks = 0;
 	int n_absop_peaks = 0;
-	float delta = 30.0f;
+	float delta = 60.0f;
 	int emi_first = 0;
 
 	for(int i=0; i<LINEMAXPIX; i++) {
@@ -28,7 +28,7 @@ void drive_control(void) {
 	error_calculation(absop_peaks, n_absop_peaks);
 	int16_t target_steer = error2input();
 	// TODO: fix me
-    int16_t target_speed = (int16_t)(28.0f - (float_abs(cam_dat->error) * 7.5f));
+    int16_t target_speed = (int16_t)(29.0f - (float_abs(cam_dat->error) * 8.0f));
 
     /*
     if(cam_dat->uncertainty_counter > 20) {
@@ -71,7 +71,14 @@ void error_calculation(int *peaks, int npeaks) {
 			err -= (float)LINEMID;
 			err /= (float)LINEMID;
 			if(prev_err_check(err) == (int16_t)0) {
-				err *= -1.0f;
+				if(peaks[0] < LINEMID) {
+					err = (float)((peaks[0] - cam_dat->lane_width) + peaks[0]) / 2.0f;
+				}
+				else {
+					err = (float)(peaks[0] + (peaks[0] + cam_dat->lane_width)) / 2.0f;
+				}
+				err -= (float)LINEMID;
+				err /= (float)LINEMID;
 			}
 			break;
 		case 2: // 2 peaks
@@ -91,7 +98,19 @@ void error_calculation(int *peaks, int npeaks) {
 			err -= (float)LINEMID;
 			err /= (float)LINEMID;
 			if(prev_err_check(err) == (int16_t)0) {
-				err *= -1.0f;
+				if(peaks[0] < LINEMID && peaks[1] >= LINEMID) { // peaks[0] is left and peaks[1] is right
+					err = ((float)(peaks[0] + peaks[1]) / 2.0f);
+					/* update lane width */
+					cam_dat->lane_width = (int16_t)(peaks[1] - peaks[0]);
+				}
+				else if(peaks[0] < LINEMID) { // peaks[0] is right
+				err = ((float)((peaks[0] - cam_dat->lane_width) + peaks[0]) / 2.0f);
+				}
+				else {
+					err = ((float)(peaks[1] + (peaks[1] + cam_dat->lane_width)) / 2.0f);
+				}
+				err -= (float)LINEMID;
+				err /= (float)LINEMID;
 			}
 			break;
 		default:
@@ -105,7 +124,7 @@ void error_calculation(int *peaks, int npeaks) {
 int16_t error2input(void) {
 	/* convert calculated error to target vector for gyro | steering */
 	/* demo implementation to test*/
-	float KP = 110.0f;
+	float KP = 100.0f;
 	int16_t servo = (int16_t)(KP * cam_dat->error);
 	return servo;
 }

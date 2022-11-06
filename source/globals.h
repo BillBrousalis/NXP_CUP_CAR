@@ -30,6 +30,22 @@ typedef struct {
 	/* uncertain state */
 	int16_t uncertainty_counter;
 } CameraDat;
+
+typedef struct {
+	/* params */
+	float kp;
+	float ki;
+	float kd;
+	float dt;
+	/* target - output */
+	float setpoint;
+	float out;
+	/* limits */
+	float min;
+	float max;
+} Drive_PID;
+//-------------------
+//pid_ctrl pid; //fixme
 //-------------------
 void init_tracking(void);
 //-------------------

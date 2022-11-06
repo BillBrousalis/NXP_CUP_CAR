@@ -3,7 +3,7 @@
 //---------------------------------
 #define THROTTLE_MAX 		(int16_t)45
 #define THROTTLE_MIN 		(int16_t)-20
-#define THROTTLE_MAX_STEP 	(uint16_t)5 //3
+#define THROTTLE_MAX_STEP 	(uint16_t)6 //3
 //---------------------------------
 #define STEER_MAX 		(int16_t)100
 #define STEER_MIN 		(int16_t)-100

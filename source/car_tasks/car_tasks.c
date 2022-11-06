@@ -18,9 +18,11 @@ void Housekeeping_task(void *pvParaments) {
 	/* Initialization */
 	servo_center();
 	/* Set ready flag */
+	TickType_t xLastWakeTime = xTaskGetTickCount();
+	const TickType_t xPeriod = CAR_CONTROL_PERIOD;
 	CarInitialized = 1;
 	for(;;) {
-		osDelay(10);
+		vTaskDelayUntil(&xLastWakeTime, xPeriod);
 	}
 }
 //-----------------------------------------
@@ -44,7 +46,7 @@ void Car_task(void *pvParameters) {
 //-----------------------------------------------------------------------------------------
 void NativeControl_task(void *pvParameters) {
 	TickType_t xLastWakeTime = xTaskGetTickCount();
-	const TickType_t xPeriod = CAR_CONTROL_PERIOD;
+	const TickType_t xPeriod = CAR_CONTROL_PERIOD/3;
 	//----------------------------------------
 	while(LineCam_IsInit == 0) osDelay(1);
 	//----------------------------------------
