@@ -1,24 +1,19 @@
-//#include "includes.h"
-//#include "globals.h"
+#include "includes.h"
+#include "globals.h"
 #include <stdbool.h>
+
 #include "pid.h"
 
-pid_ctrl pid_create(pid_ctrl pid, float* in, float* out, float* set, float kp, float ki, float kd, float dt) {
+pid_ctrl pid_create(pid_ctrl pid, float* in, Drive_PID *pid_params) {
 	pid->input = in;
-	pid->output = out;
-	pid->setpoint = set;
-	pid->automode = false;
+	pid->output = &pid_params->out;
+	pid->setpoint = &pid_params->setpoint;
+	pid->automode = true;
 
-	pid_limits(pid, 0, 255);
-
-	// Set default sample time to 100 ms
-	pid->sampletime = 100 * (TICK_SECOND / 1000);
-
+	pid_limits(pid, pid_params->min, pid_params->max);
+	pid->sampletime = pid_params->dt;
 	pid_direction(pid, E_PID_DIRECT);
-	pid_tune(pid, kp, ki, kd, dt);
-
-	//pid->lasttime = tick_get() - pid->sampletime;
-
+	pid_tune(pid, pid_params->kp, pid_params->ki, pid_params->kd, pid_params->dt);
 	return pid;
 }
 
@@ -32,8 +27,8 @@ bool pid_need_compute(pid_ctrl pid) {
 
 void pid_compute(pid_ctrl pid) {
 	// Check if control is enabled
-	if (!pid->automode)
-		return false;
+	//if (!pid->automode)
+	//	return false;
 
 	float in = *(pid->input);
 	// Compute error
@@ -60,7 +55,7 @@ void pid_compute(pid_ctrl pid) {
 	//pid->lasttime = tick_get();;
 }
 
-void pid_ctrlune(pid_ctrl pid, float kp, float ki, float kd, float dt) {
+void pid_tune(pid_ctrl pid, float kp, float ki, float kd, float dt) {
 	// Check for validity
 	if (kp < 0 || ki < 0 || kd < 0)
 		return;
@@ -106,7 +101,7 @@ void pid_limits(pid_ctrl pid, float min, float max) {
 			pid->iterm = pid->omin;
 	}
 }
-
+/*
 void pid_auto(pid_ctrl pid) {
 	// If going from manual to auto
 	if (!pid->automode) {
@@ -119,6 +114,7 @@ void pid_auto(pid_ctrl pid) {
 		pid->automode = true;
 	}
 }
+*/
 
 void pid_manual(pid_ctrl pid) {
 	pid->automode = false;

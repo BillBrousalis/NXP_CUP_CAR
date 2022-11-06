@@ -11,8 +11,6 @@
 /*-------------------------------------------------------------*/
 /*		Typedefs enums & structs			*/
 /*-------------------------------------------------------------*/
-#include "includes.h"
-#include "globals.h"
 
 #define TICK_SECOND	pdMS_TO_TICKS(1000)
 
@@ -75,7 +73,7 @@ extern "C" {
 	 *
 	 * @return returns a pid_ctrl controller handle
 	 */
-	pid_ctrl pid_create(pid_ctrl pid, float* in, float* out, float* set, float kp, float ki, float kd, float dt);
+	pid_ctrl pid_create(pid_ctrl pid, float* in, Drive_PID *pid_params);
 
 	/**
 	 * @brief Check if PID loop needs to run
@@ -86,7 +84,7 @@ extern "C" {
 	 *
 	 * @return return Return true if PID control algorithm is required to run
 	 */
-	bool pid_need_compute(pid_ctrl pid);
+	//bool pid_need_compute(pid_ctrl pid);
 
 	/**
 	 * @brief Computes the output of the PID control
@@ -139,7 +137,7 @@ extern "C" {
 	 *
 	 * @param pid The PID controller instance to enable
 	 */
-	void pid_auto(pid_ctrl pid);
+	//void pid_auto(pid_ctrl pid);
 
 	/**
 	 * @brief Disables automatic process control

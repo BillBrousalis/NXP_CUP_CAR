@@ -1,8 +1,8 @@
 #include "includes.h"
+#include "globals.h"
 #include "signals.h"
 #include "safety/safety.h"
 #include "misc.h"
-#include "globals.h"
 
 #include "servo.h"
 

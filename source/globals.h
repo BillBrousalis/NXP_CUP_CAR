@@ -30,6 +30,24 @@ typedef struct {
 	/* uncertain state */
 	int16_t uncertainty_counter;
 } CameraDat;
+
+typedef struct {
+	/* params */
+	float kp;
+	float ki;
+	float kd;
+	float dt;
+	/* target - output */
+	float setpoint;
+	float out;
+	/* limits */
+	float min;
+	float max;
+} Drive_PID;
+//-------------------
+//extern pid_ctrl drive_ctrldata;
+//extern pid_ctrl drive_pid;
+extern Drive_PID *drive_pid_params;
 //-------------------
 void init_tracking(void);
 //-------------------
@@ -41,6 +59,7 @@ extern TaskHandle_t TestCam_handle;
 extern TaskHandle_t LineCam_handle;
 extern TaskHandle_t Commands_handle;
 extern TaskHandle_t NativeControl_handle;
+extern TaskHandle_t IMU_handle;
 //-------------------
 extern TaskHandle_t TestAll_handle;
 //-------------------

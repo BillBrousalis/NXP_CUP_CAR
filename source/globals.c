@@ -1,6 +1,7 @@
 #include "includes.h"
-#include "globals.h"
 #include "processing/pid.h"
+#include "car_tasks/car_tasks.h"
+#include "globals.h"
 //------------------------------------
 /* Task Handles */
 TaskHandle_t Housekeeping_handle;
@@ -10,6 +11,7 @@ TaskHandle_t TestCam_handle;
 TaskHandle_t LineCam_handle;
 TaskHandle_t Commands_handle;
 TaskHandle_t NativeControl_handle;
+TaskHandle_t IMU_handle;
 //------------------------------------
 TaskHandle_t TestAll_handle;
 //------------------------------------
@@ -42,6 +44,21 @@ CameraDat cdat = {
 	.uncertainty_counter = 0
 };
 CameraDat *cam_dat = &cdat;
+//------------------------------------
+Drive_PID dpid= {
+	.kp = 100.0f,
+	.ki = 0.0f,
+	.kd = 0.0f,
+	.dt = (float)CAR_CONTROL_PERIOD,
+	.setpoint = 0.0f,
+	.out = 0.0f,
+	.min = -100.0f,
+	.max = 100.0f
+};
+Drive_PID *drive_pid_params = &dpid;
+//------------------------------------
+pid_ctrl drive_ctrldata;
+pid_ctrl drive_pid;
 //------------------------------------
 int16_t CarInitialized = 0;
 //------------------------------------

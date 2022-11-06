@@ -1,4 +1,5 @@
 #include "includes.h"
+#include "globals.h"
 #include "base_drivers/gpio.h"
 #include "led.h"
 

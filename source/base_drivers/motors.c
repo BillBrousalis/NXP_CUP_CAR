@@ -1,9 +1,9 @@
 #include "includes.h"
+#include "globals.h"
 #include "signals.h"
 #include "misc.h"
 #include "safety/safety.h"
 #include "defines.h"
-#include "globals.h"
 
 #include "motors.h"
 

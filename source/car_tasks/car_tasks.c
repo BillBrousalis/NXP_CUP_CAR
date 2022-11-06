@@ -1,5 +1,7 @@
 #include "includes.h"
+#include "globals.h"
 #include "defines.h"
+#include "misc.h"
 #include "base_drivers/linescan.h"
 #include "base_drivers/uart.h"
 #include "base_drivers/motors.h"
@@ -7,7 +9,6 @@
 #include "base_drivers/pot_bat.h"
 #include "base_drivers/gpio.h"
 #include "base_drivers/led.h"
-#include "globals.h"
 #include "processing/peak_detector.h"
 #include "processing/control.h"
 
@@ -17,11 +18,12 @@
 void Housekeeping_task(void *pvParaments) {
 	/* Initialization */
 	servo_center();
-	//Led1_ON();
 	/* Set ready flag */
+	TickType_t xLastWakeTime = xTaskGetTickCount();
+	const TickType_t xPeriod = CAR_CONTROL_PERIOD;
 	CarInitialized = 1;
 	for(;;) {
-		osDelay(10);
+		vTaskDelayUntil(&xLastWakeTime, xPeriod);
 	}
 }
 //-----------------------------------------
@@ -35,8 +37,9 @@ void Car_task(void *pvParameters) {
 		else if(xQueueReceive(CarControlQueueHandle, &reqstate, (TickType_t)0) == pdPASS) {
 			speed_set(reqstate.req_speed);
 			steer_set(reqstate.req_steer);
+			osDelay(20);
 		}
-		vTaskDelayUntil(&xLastWakeTime, xPeriod);
+		//vTaskDelayUntil(&xLastWakeTime, xPeriod);
 	}
 }
 
@@ -44,6 +47,7 @@ void Car_task(void *pvParameters) {
 //		Run controls natively
 //-----------------------------------------------------------------------------------------
 void NativeControl_task(void *pvParameters) {
+	//drive_pid = pid_create(drive_ctrldata, &cam_dat->error, drive_pid_params);
 	TickType_t xLastWakeTime = xTaskGetTickCount();
 	const TickType_t xPeriod = CAR_CONTROL_PERIOD;
 	//----------------------------------------
@@ -55,13 +59,23 @@ void NativeControl_task(void *pvParameters) {
 		else Led1_OFF();
 		//---------------------------------------
 		if(LineCamGetLast(data_buf) == 1) {
-            /* Send to RPI */
-			drive_control();
+			/* process camera data */
+			cam_data_process();
+			/* pass to drive pid */
+			int16_t target_steer = error2input();
+			int16_t target_speed = (int16_t)(29.0f - (float_abs(target_steer) * 8.0f / 100.0f));
+			/* append state request */
+			RequestedState reqstate = {.req_speed = 0, .req_steer = 0};
+			reqstate.req_steer = target_steer;
+			reqstate.req_speed = target_speed;
+			xQueueSend(CarControlQueueHandle, &reqstate, (TickType_t)1);
+			/* Send to RPI */
 			data_buf[LINEMAXPIX] = car_state->speed;
 			data_buf[LINEMAXPIX+1] = car_state->steering;
-        	UartSendPi(data_buf, sizeof(data_buf));
-        	vTaskDelayUntil(&xLastWakeTime, xPeriod);
+			UartSendPi(data_buf, sizeof(data_buf));
         }
+		vTaskDelayUntil(&xLastWakeTime, xPeriod);
+
 	}
 }
 
@@ -152,5 +166,17 @@ void Commands_task(void *pvParameters) {
 			xQueueSend(CarControlQueueHandle, &reqstate, (TickType_t)1);
 			vTaskDelayUntil(&xLastWakeTime, xPeriod);
 		}
+	}
+}
+
+//-----------------------------------------------------------------------------------------
+//		IMU Task
+//-----------------------------------------------------------------------------------------
+void IMU_Task(void *pvParameters)
+{
+	IMU_init();
+	for(;;)
+	{
+		IMU_loop();
 	}
 }

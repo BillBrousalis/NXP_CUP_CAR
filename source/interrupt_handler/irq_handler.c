@@ -2,8 +2,9 @@
 //!irq_handler.c
 //===================================================================================================
 #include "includes.h"
-#include "base_drivers/linescan.h"
 #include "globals.h"
+#include "base_drivers/WheelEncoder.h"
+#include "base_drivers/linescan.h"
 
 extern void PixRead(void);
 //====================================================================================================
@@ -64,3 +65,48 @@ void FTM3_IRQHANDLER(void) {
 		__DSB();
   	#endif
 }
+//====================================================================================================
+/* PORTA_IRQn interrupt handler */
+/* MOTOR A&B ENCODER  */
+/* GPIOA_IRQn interrupt handler */
+//====================================================================================================
+void GPIOA_IRQHANDLER(void) {
+  /* Get pin flags */
+  uint32_t pin_flags = GPIO_PortGetInterruptFlags(GPIOA);
+
+  /* Place your interrupt code here */
+
+  WheelEncoderProcess();
+
+  /* Clear pin flags */
+  GPIO_PortClearInterruptFlags(GPIOA, pin_flags);
+
+  /* Add for ARM errata 838869, affects Cortex-M4, Cortex-M4F
+     Store immediate overlapping exception return operation might vector to incorrect interrupt. */
+  #if defined __CORTEX_M && (__CORTEX_M == 4U)
+    __DSB();
+  #endif
+}
+
+//====================================================================================================
+/* FTM1_IRQn interrupt handler */
+//====================================================================================================
+
+void FTM1_IRQHANDLER(void) {
+  uint32_t intStatus;
+  /* Reading all interrupt flags of status register */
+  intStatus = FTM_GetStatusFlags(FTM1_PERIPHERAL);
+  FTM_ClearStatusFlags(FTM1_PERIPHERAL, intStatus);
+
+  WrapAround();
+  /* Place your code here */
+
+  /* Add for ARM errata 838869, affects Cortex-M4, Cortex-M4F
+     Store immediate overlapping exception return operation might vector to incorrect interrupt. */
+  #if defined __CORTEX_M && (__CORTEX_M == 4U)
+    __DSB();
+  #endif
+}
+
+//====================================================================================================
+//====================================================================================================
