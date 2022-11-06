@@ -132,6 +132,26 @@ extern "C" {
 #define I2C0_IRQ_PRIORITY 4
 /* Alias for DAC0 peripheral */
 #define DAC0_PERIPHERAL DAC0
+/* Alias for GPIOA peripheral */
+#define GPIOA_GPIO GPIOA
+/* Alias for PORTA */
+#define GPIOA_PORT PORTA
+/* GPIOA interrupt vector ID (number). */
+#define GPIOA_IRQN PORTA_IRQn
+/* GPIOA interrupt vector priority. */
+#define GPIOA_IRQ_PRIORITY 4
+/* GPIOA interrupt handler identifier. */
+#define GPIOA_IRQHANDLER PORTA_IRQHandler
+/* Definition of peripheral ID */
+#define FTM1_PERIPHERAL FTM1
+/* Definition of the clock source frequency */
+#define FTM1_CLOCK_SOURCE 250000UL
+/* Definition of the clock source frequency */
+#define FTM1_TIMER_MODULO_VALUE 16
+/* FTM1 interrupt vector ID (number). */
+#define FTM1_IRQN FTM1_IRQn
+/* FTM1 interrupt handler identifier. */
+#define FTM1_IRQHANDLER FTM1_IRQHandler
 
 /***********************************************************************************************************************
  * Global variables
@@ -155,6 +175,7 @@ extern uart_rtos_config_t UART4_rtos_config;
 extern i2c_rtos_handle_t I2C0_rtosHandle;
 extern const i2c_master_config_t I2C0_config;
 extern const dac_config_t DAC0_config;
+extern const ftm_config_t FTM1_config;
 
 /***********************************************************************************************************************
  * Initialization functions

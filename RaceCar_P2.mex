@@ -41,6 +41,8 @@
                <pin_label pin_num="69" pin_signal="PTB23/SPI2_SIN/SPI0_PCS5/FB_AD28" label="LED4" identifier="LED4"/>
                <pin_label pin_num="90" pin_signal="PTC16/UART3_RX/ENET0_1588_TMR0/FB_CS5_b/FB_TSIZ1/FB_BE23_16_BLS15_8_b" label="PB1" identifier="PB1"/>
                <pin_label pin_num="91" pin_signal="PTC17/UART3_TX/ENET0_1588_TMR1/FB_CS4_b/FB_TSIZ0/FB_BE31_24_BLS7_0_b" label="PB2" identifier="PB2"/>
+               <pin_label pin_num="42" pin_signal="CMP2_IN0/PTA12/CAN0_TX/FTM1_CH0/RMII0_RXD1/MII0_RXD1/I2C2_SCL/I2S0_TXD0/FTM1_QD_PHA" label="MOTA_ENC" identifier="MOTA;MOTA_ENC"/>
+               <pin_label pin_num="43" pin_signal="CMP2_IN1/PTA13/LLWU_P4/CAN0_RX/FTM1_CH1/RMII0_RXD0/MII0_RXD0/I2C2_SDA/I2S0_TX_FS/FTM1_QD_PHB" label="MOTB_ENC" identifier="MOTB;MOTB_ENC"/>
             </pin_labels>
          </pins_profile>
          <functions_list>
@@ -58,11 +60,6 @@
                      </feature>
                   </dependency>
                   <dependency resourceType="Peripheral" resourceId="ADC1" description="Peripheral ADC1 is not initialized" problem_level="1" source="Pins:BOARD_InitPins">
-                     <feature name="initialized" evaluation="equal">
-                        <data>true</data>
-                     </feature>
-                  </dependency>
-                  <dependency resourceType="Peripheral" resourceId="FTM1" description="Peripheral FTM1 is not initialized" problem_level="1" source="Pins:BOARD_InitPins">
                      <feature name="initialized" evaluation="equal">
                         <data>true</data>
                      </feature>
@@ -112,6 +109,11 @@
                         <data>true</data>
                      </feature>
                   </dependency>
+                  <dependency resourceType="Peripheral" resourceId="GPIOA" description="Peripheral GPIOA is not initialized" problem_level="1" source="Pins:BOARD_InitPins">
+                     <feature name="initialized" evaluation="equal">
+                        <data>true</data>
+                     </feature>
+                  </dependency>
                   <dependency resourceType="SWComponent" resourceId="platform.drivers.common" description="Pins initialization requires the COMMON Driver in the project." problem_level="2" source="Pins:BOARD_InitPins">
                      <feature name="enabled" evaluation="equal" configuration="core0">
                         <data>true</data>
@@ -133,8 +135,6 @@
                   <pin peripheral="FTM2" signal="CH, 1" pin_num="65" pin_signal="PTB19/CAN0_RX/FTM2_CH1/I2S0_TX_FS/FB_OE_b/FTM2_QD_PHB"/>
                   <pin peripheral="ADC1" signal="DP, 1" pin_num="16" pin_signal="ADC1_DP1"/>
                   <pin peripheral="ADC1" signal="DP, 3" pin_num="18" pin_signal="ADC0_DP0/ADC1_DP3"/>
-                  <pin peripheral="FTM1" signal="CH, 0" pin_num="42" pin_signal="CMP2_IN0/PTA12/CAN0_TX/FTM1_CH0/RMII0_RXD1/MII0_RXD1/I2C2_SCL/I2S0_TXD0/FTM1_QD_PHA"/>
-                  <pin peripheral="FTM1" signal="CH, 1" pin_num="43" pin_signal="CMP2_IN1/PTA13/LLWU_P4/CAN0_RX/FTM1_CH1/RMII0_RXD0/MII0_RXD0/I2C2_SDA/I2S0_TX_FS/FTM1_QD_PHB"/>
                   <pin peripheral="DAC0" signal="OUT" pin_num="27" pin_signal="DAC0_OUT/CMP1_IN3/ADC0_SE23"/>
                   <pin peripheral="ENET" signal="RMII_CLKIN" pin_num="50" pin_signal="EXTAL0/PTA18/FTM0_FLT2/FTM_CLKIN0"/>
                   <pin peripheral="OSC" signal="XTAL0" pin_num="51" pin_signal="XTAL0/PTA19/FTM1_FLT0/FTM_CLKIN1/LPTMR0_ALT1"/>
@@ -249,6 +249,28 @@
                   <pin peripheral="GPIOC" signal="GPIO, 17" pin_num="91" pin_signal="PTC17/UART3_TX/ENET0_1588_TMR1/FB_CS4_b/FB_TSIZ0/FB_BE31_24_BLS7_0_b">
                      <pin_features>
                         <pin_feature name="direction" value="INPUT"/>
+                     </pin_features>
+                  </pin>
+                  <pin peripheral="GPIOA" signal="GPIO, 12" pin_num="42" pin_signal="CMP2_IN0/PTA12/CAN0_TX/FTM1_CH0/RMII0_RXD1/MII0_RXD1/I2C2_SCL/I2S0_TXD0/FTM1_QD_PHA">
+                     <pin_features>
+                        <pin_feature name="identifier" value="MOTA_ENC"/>
+                        <pin_feature name="direction" value="INPUT"/>
+                        <pin_feature name="gpio_interrupt" value="kPORT_InterruptEitherEdge"/>
+                        <pin_feature name="slew_rate" value="slow"/>
+                        <pin_feature name="pull_select" value="up"/>
+                        <pin_feature name="pull_enable" value="enable"/>
+                        <pin_feature name="passive_filter" value="enable"/>
+                     </pin_features>
+                  </pin>
+                  <pin peripheral="GPIOA" signal="GPIO, 13" pin_num="43" pin_signal="CMP2_IN1/PTA13/LLWU_P4/CAN0_RX/FTM1_CH1/RMII0_RXD0/MII0_RXD0/I2C2_SDA/I2S0_TX_FS/FTM1_QD_PHB">
+                     <pin_features>
+                        <pin_feature name="identifier" value="MOTB_ENC"/>
+                        <pin_feature name="direction" value="INPUT"/>
+                        <pin_feature name="gpio_interrupt" value="kPORT_InterruptEitherEdge"/>
+                        <pin_feature name="slew_rate" value="slow"/>
+                        <pin_feature name="pull_select" value="up"/>
+                        <pin_feature name="pull_enable" value="enable"/>
+                        <pin_feature name="passive_filter" value="enable"/>
                      </pin_features>
                   </pin>
                </pins>
@@ -629,6 +651,26 @@
                         <data type="Boolean">true</data>
                      </feature>
                   </dependency>
+                  <dependency resourceType="SWComponent" resourceId="platform.drivers.port" description="The fsl_port driver is missing in the project (required for the GPIO driver)." problem_level="1" source="Peripherals:BOARD_InitPeripherals">
+                     <feature name="enabled" evaluation="equal">
+                        <data type="Boolean">true</data>
+                     </feature>
+                  </dependency>
+                  <dependency resourceType="SWComponent" resourceId="platform.drivers.port" description="The compatible version of the fsl_port driver is not available in the project (required for the GPIO driver)." problem_level="1" source="Peripherals:BOARD_InitPeripherals">
+                     <feature name="version" evaluation="compatible">
+                        <data type="Version">2.1.0</data>
+                     </feature>
+                  </dependency>
+                  <dependency resourceType="ClockOutput" resourceId="MCGFFCLK" description="MCGFFCLK is inactive." problem_level="2" source="Peripherals:BOARD_InitPeripherals">
+                     <feature name="frequency" evaluation="greaterThan">
+                        <data type="Frequency" unit="Hz">0</data>
+                     </feature>
+                  </dependency>
+                  <dependency resourceType="ClockOutput" resourceId="MCGFFCLK" description="MCGFFCLK is inactive." problem_level="2" source="Peripherals:BOARD_InitPeripherals">
+                     <feature name="frequency" evaluation="greaterThan">
+                        <data type="Frequency" unit="Hz">0</data>
+                     </feature>
+                  </dependency>
                </dependencies>
                <instances>
                   <instance name="NVIC" uuid="109a548b-09f0-44da-b6e2-5e59f7dc6c0e" type="nvic" type_id="nvic_57b5eef3774cc60acaede6f5b8bddc67" mode="general" peripheral="NVIC" enabled="true" comment="" custom_name_enabled="false" editing_lock="false">
@@ -642,6 +684,8 @@
                            <struct name="5"/>
                            <struct name="6"/>
                            <struct name="7"/>
+                           <struct name="8"/>
+                           <struct name="9"/>
                         </array>
                         <array name="interrupts"/>
                      </config_set>
@@ -1111,6 +1155,92 @@
                         </struct>
                         <setting name="dac_enable" value="true"/>
                         <setting name="dac_value" value="0"/>
+                     </config_set>
+                  </instance>
+                  <instance name="GPIOA" uuid="02dc67e1-e1ca-47f7-8556-bc3c2561dd7c" type="gpio" type_id="gpio_5920c5e026e8e974e6dc54fbd5e22ad7" mode="GPIO" peripheral="GPIOA" enabled="true" comment="" custom_name_enabled="false" editing_lock="false">
+                     <config_set name="fsl_gpio">
+                        <setting name="enable_irq" value="true"/>
+                        <struct name="port_interrupt">
+                           <setting name="IRQn" value="PORTA_IRQn"/>
+                           <setting name="enable_interrrupt" value="enabled"/>
+                           <setting name="enable_priority" value="true"/>
+                           <setting name="priority" value="4"/>
+                           <setting name="enable_custom_name" value="false"/>
+                        </struct>
+                     </config_set>
+                  </instance>
+                  <instance name="FTM1" uuid="7d32dda1-b954-463c-b287-f204a8da1b5b" type="ftm" type_id="ftm_a206ca22312775f3c8a462078188c129" mode="EdgeAligned" peripheral="FTM1" enabled="true" comment="" custom_name_enabled="false" editing_lock="false">
+                     <config_set name="ftm_main_config">
+                        <struct name="ftm_config">
+                           <setting name="clockSource" value="kFTM_FixedClock"/>
+                           <setting name="clockSourceFreq" value="BOARD_BootClockRUN"/>
+                           <setting name="timerPrescaler" value="16"/>
+                           <setting name="timerOutputFrequency" value="900 Hz"/>
+                           <setting name="systemClockSource" value="BusInterfaceClock"/>
+                           <setting name="systemClockSourceFreq" value="GetFreq"/>
+                           <setting name="faultMode" value="kFTM_Fault_Disable"/>
+                           <setting name="inputFilterPeriod" value="1"/>
+                           <array name="faultInputs">
+                              <struct name="0">
+                                 <setting name="enableFaultInput" value="false"/>
+                                 <setting name="faultLevelVal" value="low"/>
+                                 <setting name="useFaultFilter" value="false"/>
+                              </struct>
+                              <struct name="1">
+                                 <setting name="enableFaultInput" value="false"/>
+                                 <setting name="faultLevelVal" value="low"/>
+                                 <setting name="useFaultFilter" value="false"/>
+                              </struct>
+                              <struct name="2">
+                                 <setting name="enableFaultInput" value="false"/>
+                                 <setting name="faultLevelVal" value="low"/>
+                                 <setting name="useFaultFilter" value="false"/>
+                              </struct>
+                              <struct name="3">
+                                 <setting name="enableFaultInput" value="false"/>
+                                 <setting name="faultLevelVal" value="low"/>
+                                 <setting name="useFaultFilter" value="false"/>
+                              </struct>
+                           </array>
+                           <setting name="deadTimePrescale" value="kFTM_Deadtime_Prescale_1"/>
+                           <setting name="deadTimePeriod" value="0"/>
+                           <set name="pwmSyncMode">
+                              <selected>
+                                 <id>kFTM_SoftwareTrigger</id>
+                              </selected>
+                           </set>
+                           <set name="reloadPoints">
+                              <selected/>
+                           </set>
+                           <set name="extTriggers">
+                              <selected/>
+                           </set>
+                           <set name="chnlInitState">
+                              <selected/>
+                           </set>
+                           <set name="chnlPolarity">
+                              <selected/>
+                           </set>
+                           <setting name="bdmMode" value="kFTM_BdmMode_0"/>
+                           <setting name="useGlobalTimeBase" value="false"/>
+                        </struct>
+                        <set name="timer_interrupts">
+                           <selected>
+                              <id>kFTM_TimeOverflowInterruptEnable</id>
+                           </selected>
+                        </set>
+                        <setting name="enable_irq" value="true"/>
+                        <struct name="ftm_interrupt">
+                           <setting name="IRQn" value="FTM1_IRQn"/>
+                           <setting name="enable_interrrupt" value="enabled"/>
+                           <setting name="enable_priority" value="false"/>
+                           <setting name="priority" value="0"/>
+                           <setting name="enable_custom_name" value="false"/>
+                        </struct>
+                        <setting name="EnableTimerInInit" value="true"/>
+                     </config_set>
+                     <config_set name="ftm_edge_aligned_mode" quick_selection="default">
+                        <array name="ftm_edge_aligned_channels_config"/>
                      </config_set>
                   </instance>
                </instances>
