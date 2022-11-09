@@ -139,7 +139,7 @@ int16_t error2input(void) {
 
 	// pid
 	pid_compute(drive_pid);
-	return (int16_t)drive_pid_params->out;
+	return (int16_t)drive_pid->out;
 }
 
 int16_t prev_err_check(float err) {

@@ -45,20 +45,9 @@ CameraDat cdat = {
 };
 CameraDat *cam_dat = &cdat;
 //------------------------------------
-Drive_PID dpid= {
-	.kp = 100.0f,
-	.ki = 0.0f,
-	.kd = 0.0f,
-	.dt = (float)CAR_CONTROL_PERIOD,
-	.setpoint = 0.0f,
-	.out = 0.0f,
-	.min = -100.0f,
-	.max = 100.0f
-};
-Drive_PID *drive_pid_params = &dpid;
-//------------------------------------
-pid_ctrl drive_ctrldata;
+struct pid_controller drive_pidctrl;
 pid_ctrl drive_pid;
+pid_values drive_pid_values;
 //------------------------------------
 int16_t CarInitialized = 0;
 //------------------------------------

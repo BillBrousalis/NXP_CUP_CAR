@@ -30,24 +30,24 @@ typedef struct {
 	/* uncertain state */
 	int16_t uncertainty_counter;
 } CameraDat;
-
+//-------------------
 typedef struct {
 	/* params */
 	float kp;
 	float ki;
 	float kd;
 	float dt;
-	/* target - output */
-	float setpoint;
-	float out;
 	/* limits */
 	float min;
 	float max;
-} Drive_PID;
+	/* setpoint - output */
+	float setpoint;
+	float output;
+} pid_values;
 //-------------------
-//extern pid_ctrl drive_ctrldata;
-//extern pid_ctrl drive_pid;
-extern Drive_PID *drive_pid_params;
+extern pid_values drive_pid_values;
+extern pid_ctrl drive_pid;
+extern pid_controller drive_pidctrl;
 //-------------------
 void init_tracking(void);
 //-------------------
@@ -75,5 +75,6 @@ extern int16_t CarInitialized;
 //-------------------
 extern uint8_t data_buf[LINEMAXPIX+4];
 extern uint8_t LineCam_IsInit;
+//-------------------
 
 #endif

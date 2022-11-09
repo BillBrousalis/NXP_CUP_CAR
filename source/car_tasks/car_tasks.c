@@ -47,7 +47,19 @@ void Car_task(void *pvParameters) {
 //		Run controls natively
 //-----------------------------------------------------------------------------------------
 void NativeControl_task(void *pvParameters) {
-	//drive_pid = pid_create(drive_ctrldata, &cam_dat->error, drive_pid_params);
+	drive_pid_values = {
+		.kp = 100.0f,
+		.ki = 0.0f,
+		.kd = 0.0f,
+		.dt = 0.0f, //fixme
+		.min = -100.0f;
+		.max = 100.0f;
+		.setpoint = 0.0f;
+		.output = 0.0f;
+	};
+	drive_pid = pid_create(&drive_pidctrl, &cam_dat->error, &drive_pid_values->output, &drive_pid_values->setpoint,
+							drive_pid_values->kp, drive_pid_values->ki, drive_pid_values->kd, drive_pid_values->dt,
+							drive_pid_values->min, drive_pid_values->max);
 	TickType_t xLastWakeTime = xTaskGetTickCount();
 	const TickType_t xPeriod = CAR_CONTROL_PERIOD;
 	//----------------------------------------
