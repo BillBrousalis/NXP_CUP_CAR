@@ -1,5 +1,6 @@
 #include "includes.h"
 #include "base_drivers/servo.h"
+#include "base_drivers/gpio.h"
 #include "base_drivers/motors.h"
 #include "safety/safety.h"
 #include "globals.h"
@@ -37,6 +38,7 @@ void test_all(void *pvParameters) {
 	TickType_t xLastWakeTime = xTaskGetTickCount();
 	const TickType_t xPeriod = CAR_CONTROL_PERIOD;
 	for (;;) {
+		dbg2_tog();
 		reqstate.req_speed = car_state->pot[0];
 		reqstate.req_steer = car_state->pot[1];
 		xQueueSend(CarControlQueueHandle, &reqstate, (TickType_t)1);

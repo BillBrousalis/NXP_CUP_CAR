@@ -56,7 +56,7 @@ static inline void adc_CamStart(void) {
 //
 //============================================================================================================
 void CamScanStart(void) {
-	dbg2_tog();
+
 	//LineCam_Inntensity = 100 + (uint32_t)(car_state->pot[0] * 10000.0F);
 	LinePixInProgress = 1;											// If == 1 then Line scan is in progress
 	ls_si_set();

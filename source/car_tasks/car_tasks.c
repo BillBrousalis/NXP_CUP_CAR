@@ -9,6 +9,7 @@
 #include "base_drivers/pot_bat.h"
 #include "base_drivers/gpio.h"
 #include "base_drivers/led.h"
+#include "base_drivers/WheelEncoder.h"
 #include "processing/peak_detector.h"
 #include "processing/control.h"
 #include "processing/pid.h"
@@ -16,9 +17,13 @@
 
 #include "car_tasks.h"
 
+
+uint32_t	estop_flag = 0;
+
 //-----------------------------------------
 void Housekeeping_task(void *pvParaments) {
 	/* Initialization */
+	WheelEncoderInit();
 	servo_center();
 	/* Set ready flag */
 	TickType_t xLastWakeTime = xTaskGetTickCount();
@@ -28,6 +33,20 @@ void Housekeeping_task(void *pvParaments) {
 		/* Lights */
 		if(SW1_read() == 1) Led1_ON();
 		else Led1_OFF();
+
+		//--------------------------------------
+		if(ESTOP_read() == 1){							// read remote estop input
+			if(estop_flag == 1){						// toggle state
+				estop_flag = 0;
+				LED4_OFF();
+			}
+			else{
+				estop_flag = 1;
+				LED4_ON();
+			}
+			while(ESTOP_read() == 1)osDelay(50);
+		}
+
 		//---------------------------------------
 		vTaskDelayUntil(&xLastWakeTime, xPeriod);
 	}
@@ -40,12 +59,18 @@ void Car_task(void *pvParameters) {
 	while(CarControlQueueHandle == NULL) osDelay(1);
 	for(;;) {
 		if(PB1_read() == PB_ON) motors_init();
-		else if(xQueueReceive(CarControlQueueHandle, &reqstate, (TickType_t)10) == pdPASS) {
+		else if(xQueueReceive(CarControlQueueHandle, &reqstate, (TickType_t)portMAX_DELAY ) == pdPASS) {
+
 			steer_set(reqstate.req_steer);
-			speed_set(reqstate.req_speed);
+			if(estop_flag == 0){
+				speed_set(reqstate.req_speed);
+			}
+			else{
+				speed_set(0);
+			}
 			//osDelay(20);
 		}
-		vTaskDelayUntil(&xLastWakeTime, xPeriod);
+		//vTaskDelayUntil(&xLastWakeTime, xPeriod);
 	}
 }
 
@@ -113,7 +138,7 @@ void TestCam_task(void *pvParameters) {
 //		Adc task -> Read Pots - Battery
 //-----------------------------------------------------------------------------------------
 void PotsBatUpdate_task(void *pvParameters) {
-	uint32_t delay = 33;
+	uint32_t delay = 20;
 	uint8_t nchnls = 2;
 	uint8_t adc1_chnl = 0;
 	for(;;) {

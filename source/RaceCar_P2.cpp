@@ -34,7 +34,7 @@ int main(void) {
 
     //------------------------------------------------------
     /* Start Initialization / Housekeeping task */
-    xTaskCreate(Car_task, "Car", configMINIMAL_STACK_SIZE * 4, NULL, HIGH_TASK_PRIO, &Car_handle);
+    xTaskCreate(Car_task, "Car", configMINIMAL_STACK_SIZE * 4, NULL, DEFAULT_TASK_PRIO, &Car_handle);
     //------------------------------------------------------
     /* Start Pots Reading Task */
     xTaskCreate(PotsBatUpdate_task, "PotsBatUpdate_task", configMINIMAL_STACK_SIZE * 4, NULL, DEFAULT_TASK_PRIO, &PotsBatUpdate_handle);

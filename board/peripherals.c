@@ -33,7 +33,7 @@ component:
 - type_id: 'uart_cmsis_common_9cb8e302497aa696fdbb5a4fd622c2a8'
 - global_USART_CMSIS_common:
   - quick_selection: 'default'
- * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********
+ * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
 
 /* TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
 component:
@@ -349,10 +349,10 @@ instance:
       - referenceVoltageSource: 'kADC16_ReferenceVoltageSourceVref'
       - clockSource: 'kADC16_ClockSourceAlt2'
       - enableAsynchronousClock: 'true'
-      - clockDivider: 'kADC16_ClockDivider8'
+      - clockDivider: 'kADC16_ClockDivider4'
       - resolution: 'kADC16_ResolutionSE12Bit'
       - longSampleMode: 'kADC16_LongSampleDisabled'
-      - hardwareAverageMode: 'kADC16_HardwareAverageCount8'
+      - hardwareAverageMode: 'kADC16_HardwareAverageCount4'
       - enableHighSpeed: 'false'
       - enableLowPower: 'false'
       - enableContinuousConversion: 'false'
@@ -403,10 +403,10 @@ const adc16_config_t ADC1_config = {
   .referenceVoltageSource = kADC16_ReferenceVoltageSourceVref,
   .clockSource = kADC16_ClockSourceAlt2,
   .enableAsynchronousClock = true,
-  .clockDivider = kADC16_ClockDivider8,
+  .clockDivider = kADC16_ClockDivider4,
   .resolution = kADC16_ResolutionSE12Bit,
   .longSampleMode = kADC16_LongSampleDisabled,
-  .hardwareAverageMode = kADC16_HardwareAverageCount8,
+  .hardwareAverageMode = kADC16_HardwareAverageCount4,
   .enableHighSpeed = false,
   .enableLowPower = false,
   .enableContinuousConversion = false

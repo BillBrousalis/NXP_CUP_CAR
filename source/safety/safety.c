@@ -45,8 +45,20 @@ void steer_control(int16_t *s) {
 	steer_hard_limits(s);
 }
 
-/* Smoother steering transitions */
+//--------------------------------------------------------------------
+// 		MAV based rate limiter
+//--------------------------------------------------------------------
+struct MAV steer_fl;
+
 void steer_rate_limiter(int16_t *s) {
+
+	int32_t a = *s;
+
+	*s = MAVFilter(&steer_fl,a,4,1);
+}
+//--------------------------------------------------------------------
+/* Smoother steering transitions */
+void steer_rate_limiter2(int16_t *s) {
 	if(abs(car_state->steering - *s) > STEER_MAX_STEP) {
 		if(car_state->steering < *s) {
 			*s = car_state->steering + STEER_MAX_STEP;

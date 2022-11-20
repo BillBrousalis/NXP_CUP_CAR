@@ -43,6 +43,7 @@
                <pin_label pin_num="91" pin_signal="PTC17/UART3_TX/ENET0_1588_TMR1/FB_CS4_b/FB_TSIZ0/FB_BE31_24_BLS7_0_b" label="PB2" identifier="PB2"/>
                <pin_label pin_num="42" pin_signal="CMP2_IN0/PTA12/CAN0_TX/FTM1_CH0/RMII0_RXD1/MII0_RXD1/I2C2_SCL/I2S0_TXD0/FTM1_QD_PHA" label="MOTA_ENC" identifier="MOTA;MOTA_ENC"/>
                <pin_label pin_num="43" pin_signal="CMP2_IN1/PTA13/LLWU_P4/CAN0_RX/FTM1_CH1/RMII0_RXD0/MII0_RXD0/I2C2_SDA/I2S0_TX_FS/FTM1_QD_PHB" label="MOTB_ENC" identifier="MOTB;MOTB_ENC"/>
+               <pin_label pin_num="92" pin_signal="PTC18/UART3_RTS_b/ENET0_1588_TMR2/FB_TBST_b/FB_CS2_b/FB_BE15_8_BLS23_16_b" label="E_STOP" identifier="E_STOP"/>
             </pin_labels>
          </pins_profile>
          <functions_list>
@@ -269,6 +270,16 @@
                         <pin_feature name="gpio_interrupt" value="kPORT_InterruptEitherEdge"/>
                         <pin_feature name="slew_rate" value="slow"/>
                         <pin_feature name="pull_select" value="up"/>
+                        <pin_feature name="pull_enable" value="enable"/>
+                        <pin_feature name="passive_filter" value="enable"/>
+                     </pin_features>
+                  </pin>
+                  <pin peripheral="GPIOC" signal="GPIO, 18" pin_num="92" pin_signal="PTC18/UART3_RTS_b/ENET0_1588_TMR2/FB_TBST_b/FB_CS2_b/FB_BE15_8_BLS23_16_b">
+                     <pin_features>
+                        <pin_feature name="direction" value="INPUT"/>
+                        <pin_feature name="gpio_interrupt" value="no_init"/>
+                        <pin_feature name="slew_rate" value="slow"/>
+                        <pin_feature name="pull_select" value="down"/>
                         <pin_feature name="pull_enable" value="enable"/>
                         <pin_feature name="passive_filter" value="enable"/>
                      </pin_features>
@@ -830,10 +841,10 @@
                            <setting name="referenceVoltageSource" value="kADC16_ReferenceVoltageSourceVref"/>
                            <setting name="clockSource" value="kADC16_ClockSourceAlt2"/>
                            <setting name="enableAsynchronousClock" value="true"/>
-                           <setting name="clockDivider" value="kADC16_ClockDivider8"/>
+                           <setting name="clockDivider" value="kADC16_ClockDivider4"/>
                            <setting name="resolution" value="kADC16_ResolutionSE12Bit"/>
                            <setting name="longSampleMode" value="kADC16_LongSampleDisabled"/>
-                           <setting name="hardwareAverageMode" value="kADC16_HardwareAverageCount8"/>
+                           <setting name="hardwareAverageMode" value="kADC16_HardwareAverageCount4"/>
                            <setting name="enableHighSpeed" value="false"/>
                            <setting name="enableLowPower" value="false"/>
                            <setting name="enableContinuousConversion" value="false"/>

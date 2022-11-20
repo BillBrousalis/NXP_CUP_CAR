@@ -16,4 +16,28 @@ void mysrand(uint8_t seed);
 //------------------------------------
 uint8_t myrand(uint8_t threshold);
 
+
+//==============================================================================
+#define         MAX_MAV_LENGTH          16
+//==============================================================================
+struct MAV{
+  uint8_t MaxTaps;
+  uint8_t cnt;
+  int32_t filter[MAX_MAV_LENGTH];
+  uint16_t OVS;                         // oversampling
+  uint16_t id;
+};
+
+struct MAVF{
+  uint8_t MaxTaps;
+  uint8_t cnt;
+  float filter[MAX_MAV_LENGTH];
+  uint16_t OVS;                         // oversampling
+  uint16_t id;
+};
+
+#define MAVINIT   0xDEAD
+
+
+
 #endif
