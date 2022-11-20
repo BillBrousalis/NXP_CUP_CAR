@@ -4,7 +4,7 @@
 extern "C"
 {
 #include "includes.h"
-#include "globah"
+#include "globals.h"
 #include "car_tasks/car_tasks.h"
 #include "tests/pot_testing.h"
 #include "base_drivers/gpio.h"
@@ -44,7 +44,7 @@ int main(void) {
     /* Switch-Based Mode Startup */
     if(SW4_read() == 1) xTaskCreate(NativeControl_task, "Native", configMINIMAL_STACK_SIZE * 12, NULL, DEFAULT_TASK_PRIO, &NativeControl_handle);
     else if(SW2_read() == 1) xTaskCreate(test_all, "Test All", configMINIMAL_STACK_SIZE * 8, NULL, DEFAULT_TASK_PRIO, &TestAll_handle);
-    else if(SW3_read() == 1)	xTaskCreate(Commands_task, "COMMANDS", configMINIMAL_STACK_SIZE * 8, NULL, DEFAULT_TASK_PRIO, &Commands_handle);
+    else if(SW3_read() == 1) xTaskCreate(Commands_task, "COMMANDS", configMINIMAL_STACK_SIZE * 8, NULL, DEFAULT_TASK_PRIO, &Commands_handle);
     //------------------------------------------------------
     /* Start Tasks */
     vTaskStartScheduler();

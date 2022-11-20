@@ -24,31 +24,13 @@ struct pid_controller {
 	// Variables for PID algorithm
 	float iterm; //!< Accumulator for integral term
 	float lastin; //!< Last input value for differential term
-	// Time related
-	uint32_t lasttime; //!< Stores the time when the control loop ran last time
-	uint32_t sampletime; //!< Defines the PID sample time
 	// Operation mode
-	uint8_t automode; //!< Defines if the PID controller is enabled or disabled
 	enum pid_control_directions direction;
 };
 //-----------------------------------
 typedef struct pid_controller *pid_ctrl;
 //-----------------------------------
-typedef struct {
-	/* params */
-	float kp;
-	float ki;
-	float kd;
-	float dt;
-	/* setpoint - output */
-	float setpoint;
-	float out;
-	/* limits */
-	float min;
-	float max;
-} pid_values;
-//-----------------------------------
-pid_ctrl pid_create(pid_ctrl pid, float *in, float *out, float *set, float kp, float ki, float kd, float dt, float min, float max);
+pid_ctrl pid_create(pid_ctrl pid, float *in, float *out, float *set, float kp, float ki, float kd, float min, float max);
 void pid_compute(pid_ctrl pid);
 void pid_tune(pid_ctrl pid, float kp, float ki, float kd, float dt);
 void pid_limits(pid_ctrl pid, float min, float max);

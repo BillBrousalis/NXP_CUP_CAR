@@ -6,9 +6,8 @@
 //--------------------------------
 #define ERR_DIFF_THRESHOLD	0.9f
 //--------------------------------
-float cam_data_process(void);
+void cam_data_process(void);
 void error_calculation(int *peaks, int npeaks);
-int16_t error2input(void);
 int16_t prev_err_check(float err);
 //--------------------------------
 

@@ -12,11 +12,12 @@ TaskHandle_t LineCam_handle;
 TaskHandle_t Commands_handle;
 TaskHandle_t NativeControl_handle;
 TaskHandle_t IMU_handle;
-//------------------------------------
 TaskHandle_t TestAll_handle;
 //------------------------------------
+/* Semaphore Handles */
 SemaphoreHandle_t adc1_Semaphore;
 //------------------------------------
+/* Queue Handles */
 QueueHandle_t CarControlQueueHandle;
 //------------------------------------
 uint32_t adc1_result = 0;
@@ -38,19 +39,13 @@ CameraDat cdat = {
 	.calibration_min = 0,
 	.error = 0.0f,
 	.prev_error = 0.0f,
-	.peak_idx1 = 0,
-	.peak_idx2 = 0,
 	.lane_width = 80,
 	.uncertainty_counter = 0
 };
 CameraDat *cam_dat = &cdat;
 //------------------------------------
-struct pid_controller drive_pidctrl;
-pid_ctrl drive_pid;
-pid_values drive_pid_values;
-//------------------------------------
 int16_t CarInitialized = 0;
 //------------------------------------
-/* 128 pixel values + speed + steer + 2 peaks idx */
+/* 128 pixel values + speed + steer + 2 peaks idx + pid_out */
 uint8_t data_buf[LINEMAXPIX+4];
 uint8_t LineCam_IsInit = 0;

@@ -4,15 +4,20 @@
 
 #include "pid.h"
 
-pid_ctrl pid_create(pid_ctrl pid, float *in, float *out, float *set, float kp, float ki, float kd, float dt, float min, float max) {
+pid_ctrl pid_create(pid_ctrl pid, float *in, float *out, float *set, float kp, float ki, float kd, float min, float max) {
 	pid->input = in;
 	pid->output = out;
 	pid->setpoint = set;
-	pid->automode = true;
 	pid_limits(pid, min, max);
-	pid->sampletime = dt;
 	pid_direction(pid, E_PID_DIRECT);
-	pid_tune(pid, kp, ki, kd, dt);
+	pid->Kp = kp;
+	pid->Ki = ki;
+	pid->Kd = kd;
+	if (pid->direction == E_PID_REVERSE) {
+		pid->Kp = 0 - pid->Kp;
+		pid->Ki = 0 - pid->Ki;
+		pid->Kd = 0 - pid->Kd;
+	}
 	return pid;
 }
 
@@ -59,21 +64,19 @@ void pid_limits(pid_ctrl pid, float min, float max) {
 	pid->omin = min;
 	pid->omax = max;
 	//Adjust output to new limits
-	if (pid->automode) {
-		if (*(pid->output) > pid->omax)
-			*(pid->output) = pid->omax;
-		else if (*(pid->output) < pid->omin)
-			*(pid->output) = pid->omin;
+	if (*(pid->output) > pid->omax)
+		*(pid->output) = pid->omax;
+	else if (*(pid->output) < pid->omin)
+		*(pid->output) = pid->omin;
 
-		if (pid->iterm > pid->omax)
-			pid->iterm = pid->omax;
-		else if (pid->iterm < pid->omin)
-			pid->iterm = pid->omin;
-	}
+	if (pid->iterm > pid->omax)
+		pid->iterm = pid->omax;
+	else if (pid->iterm < pid->omin)
+		pid->iterm = pid->omin;
 }
 
 void pid_direction(pid_ctrl pid, enum pid_control_directions dir) {
-	if (pid->automode && pid->direction != dir) {
+	if (pid->direction != dir) {
 		pid->Kp = (0 - pid->Kp);
 		pid->Ki = (0 - pid->Ki);
 		pid->Kd = (0 - pid->Kd);

@@ -11,6 +11,8 @@
 #include "base_drivers/led.h"
 #include "processing/peak_detector.h"
 #include "processing/control.h"
+#include "processing/pid.h"
+#include <imu.h>
 
 #include "car_tasks.h"
 
@@ -23,6 +25,10 @@ void Housekeeping_task(void *pvParaments) {
 	const TickType_t xPeriod = CAR_CONTROL_PERIOD;
 	CarInitialized = 1;
 	for(;;) {
+		/* Lights */
+		if(SW1_read() == 1) Led1_ON();
+		else Led1_OFF();
+		//---------------------------------------
 		vTaskDelayUntil(&xLastWakeTime, xPeriod);
 	}
 }
@@ -34,12 +40,12 @@ void Car_task(void *pvParameters) {
 	while(CarControlQueueHandle == NULL) osDelay(1);
 	for(;;) {
 		if(PB1_read() == PB_ON) motors_init();
-		else if(xQueueReceive(CarControlQueueHandle, &reqstate, (TickType_t)0) == pdPASS) {
-			speed_set(reqstate.req_speed);
+		else if(xQueueReceive(CarControlQueueHandle, &reqstate, (TickType_t)10) == pdPASS) {
 			steer_set(reqstate.req_steer);
-			osDelay(20);
+			speed_set(reqstate.req_speed);
+			//osDelay(20);
 		}
-		//vTaskDelayUntil(&xLastWakeTime, xPeriod);
+		vTaskDelayUntil(&xLastWakeTime, xPeriod);
 	}
 }
 
@@ -47,47 +53,40 @@ void Car_task(void *pvParameters) {
 //		Run controls natively
 //-----------------------------------------------------------------------------------------
 void NativeControl_task(void *pvParameters) {
-	drive_pid_values = {
-		.kp = 100.0f,
-		.ki = 0.0f,
-		.kd = 0.0f,
-		.dt = 0.0f, //fixme
-		.min = -100.0f;
-		.max = 100.0f;
-		.setpoint = 0.0f;
-		.output = 0.0f;
-	};
-	drive_pid = pid_create(&drive_pidctrl, &cam_dat->error, &drive_pid_values->output, &drive_pid_values->setpoint,
-							drive_pid_values->kp, drive_pid_values->ki, drive_pid_values->kd, drive_pid_values->dt,
-							drive_pid_values->min, drive_pid_values->max);
+	float kp = 100.0f;
+	float ki = 0.0f;
+	float kd = 0.0f;
+	float pid_out = 0.0f;
+	float setpoint = 0.0f;
+	struct pid_controller drive_pid_controller;
+	pid_ctrl drive_pid = pid_create(&drive_pid_controller, &cam_dat->error, &pid_out, &setpoint, kp, ki, kd, -100.0f, 100.0f);
+	//----------------------------------------
 	TickType_t xLastWakeTime = xTaskGetTickCount();
 	const TickType_t xPeriod = CAR_CONTROL_PERIOD;
 	//----------------------------------------
 	while(LineCam_IsInit == 0) osDelay(1);
 	//----------------------------------------
 	for (;;) {
-		//---------------------------------------
-		if(SW1_read() == 1) Led1_ON();
-		else Led1_OFF();
-		//---------------------------------------
-		if(LineCamGetLast(data_buf) == 1) {
-			/* process camera data */
-			cam_data_process();
-			/* pass to drive pid */
-			int16_t target_steer = error2input();
-			int16_t target_speed = (int16_t)(29.0f - (float_abs(target_steer) * 8.0f / 100.0f));
-			/* append state request */
-			RequestedState reqstate = {.req_speed = 0, .req_steer = 0};
-			reqstate.req_steer = target_steer;
-			reqstate.req_speed = target_speed;
-			xQueueSend(CarControlQueueHandle, &reqstate, (TickType_t)1);
+		vTaskDelayUntil(&xLastWakeTime, xPeriod);
+		if(LineCamGetLast(data_buf) == 0) continue;
+		/* process camera data */
+		cam_data_process();
+		/* compute with new cam->error */
+		pid_compute(drive_pid);
+		/* new state */
+		int16_t target_steer = (int16_t)pid_out;
+		int16_t target_speed = (int16_t)(29.0f - (float_abs(target_steer) * 8.0f / 100.0f));
+		/* append state request */
+		RequestedState reqstate = {.req_speed = 0, .req_steer = 0};
+		reqstate.req_steer = target_steer;
+		reqstate.req_speed = target_speed;
+		xQueueSend(CarControlQueueHandle, &reqstate, (TickType_t)1);
+		if(DEBUG) {
 			/* Send to RPI */
 			data_buf[LINEMAXPIX] = car_state->speed;
 			data_buf[LINEMAXPIX+1] = car_state->steering;
 			UartSendPi(data_buf, sizeof(data_buf));
-        }
-		vTaskDelayUntil(&xLastWakeTime, xPeriod);
-
+		}
 	}
 }
 
@@ -128,7 +127,7 @@ void PotsBatUpdate_task(void *pvParameters) {
 					ADC16_SetChannelConfig(ADC1_PERIPHERAL, ADC1_CH1_CONTROL_GROUP, &ADC1_channelsConfig[adc1_chnl]);
 					break;
 				case 2:
-					// TODO: add this
+					// TODO: implemenet
 					//ADC16_SetChannelConfig(ADC1_PERIPHERAL, ADC1_CH2_CONTROL_GROUP, &ADC1_channelsConfig[adc1_chnl]);
 					//break;
 					continue;
@@ -152,8 +151,6 @@ void LineCam_task(void *pvParameters) {
 //-----------------------------------------------------------------------------------------
 //		Commands mode - Run algorithm on RPI
 //-----------------------------------------------------------------------------------------
-// TODO: test this
-int16_t uartrec = 0; //watch
 void Commands_task(void *pvParameters) {
 	static RequestedState reqstate = {.req_speed = 0, .req_steer = 0};
 	while(!CarInitialized) osDelay(1);
@@ -171,24 +168,19 @@ void Commands_task(void *pvParameters) {
 			/* Get Updated Speed - Steer */
 			UartRecvPi(buf, 1*sizeof(buf));
 			//------
-			/* Don't mess with the casting */
+			/* Don't mess with the casting please */
 			reqstate.req_speed = (int16_t)30;
-   		    reqstate.req_steer = (int16_t)((int8_t)buf[0]);
+			reqstate.req_steer = (int16_t)((int8_t)buf[0]);
 			//------
 			xQueueSend(CarControlQueueHandle, &reqstate, (TickType_t)1);
 			vTaskDelayUntil(&xLastWakeTime, xPeriod);
 		}
 	}
 }
-
 //-----------------------------------------------------------------------------------------
 //		IMU Task
 //-----------------------------------------------------------------------------------------
-void IMU_Task(void *pvParameters)
-{
+void IMU_Task(void *pvParameters) {
 	IMU_init();
-	for(;;)
-	{
-		IMU_loop();
-	}
+	for(;;) IMU_loop();
 }

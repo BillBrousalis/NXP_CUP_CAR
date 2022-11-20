@@ -56,7 +56,7 @@ int detect_peak(
             ++ (*num_absop_peaks);
 
             is_detecting_emi = 1;
-            
+
             i = mn_pos - 1;
 
             mx = data[mn_pos];
@@ -65,4 +65,3 @@ int detect_peak(
     }
     return 0;
 }
-

@@ -23,31 +23,11 @@ typedef struct {
 	/* error */
 	float error;
 	float prev_error;
-	/* lines */
-	int16_t peak_idx1;
-	int16_t peak_idx2;
+	/* lane */
 	int16_t lane_width;
 	/* uncertain state */
 	int16_t uncertainty_counter;
 } CameraDat;
-//-------------------
-typedef struct {
-	/* params */
-	float kp;
-	float ki;
-	float kd;
-	float dt;
-	/* limits */
-	float min;
-	float max;
-	/* setpoint - output */
-	float setpoint;
-	float output;
-} pid_values;
-//-------------------
-extern pid_values drive_pid_values;
-extern pid_ctrl drive_pid;
-extern pid_controller drive_pidctrl;
 //-------------------
 void init_tracking(void);
 //-------------------
@@ -60,7 +40,6 @@ extern TaskHandle_t LineCam_handle;
 extern TaskHandle_t Commands_handle;
 extern TaskHandle_t NativeControl_handle;
 extern TaskHandle_t IMU_handle;
-//-------------------
 extern TaskHandle_t TestAll_handle;
 //-------------------
 extern SemaphoreHandle_t adc1_Semaphore;

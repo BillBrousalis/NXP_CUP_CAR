@@ -7,7 +7,7 @@
 //---------------------------------
 #define STEER_MAX 		(int16_t)100
 #define STEER_MIN 		(int16_t)-100
-#define STEER_MAX_STEP 	(uint16_t)30
+#define STEER_MAX_STEP 	(uint16_t)25
 //---------------------------------
 /* Higher -> less slow-down */
 #define THROTTLE_LIMITER_MULT	2.8f

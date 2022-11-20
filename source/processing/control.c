@@ -8,13 +8,13 @@
 
 #include "control.h"
 
-float cam_data_process(void) {
+void cam_data_process(void) {
 	static int emi_peaks[EMI_SZ];
 	static int absop_peaks[ABSOP_SZ];
 	static float data[LINEMAXPIX];
 	int n_emi_peaks = 0;
 	int n_absop_peaks = 0;
-	float delta = 60.0f;
+	float delta = 120.0f;
 	int emi_first = 0;
 	for(int i=0; i<LINEMAXPIX; ++i) {
     	data[i] = (float)data_buf[i];
@@ -25,6 +25,13 @@ float cam_data_process(void) {
 	detect_peak(data, LINEMAXPIX, emi_peaks, &n_emi_peaks, EMI_SZ, absop_peaks, &n_absop_peaks, ABSOP_SZ, delta, emi_first);
 	/* set cam_dat->error / prev_error */
 	error_calculation(absop_peaks, n_absop_peaks);
+
+	/* update data_buf for plotting detected peaks in GUI */
+	data_buf[LINEMAXPIX+2] = (uint8_t)0;
+	data_buf[LINEMAXPIX+3] = (uint8_t)0;
+	for(int i = 0; i < n_absop_peaks; ++i) {
+		data_buf[LINEMAXPIX+2+i] = (uint8_t)absop_peaks[i];
+	}
 
 	/*
 	int16_t target_steer = error2input();
@@ -48,14 +55,6 @@ float cam_data_process(void) {
     xQueueSend(CarControlQueueHandle, &reqstate, (TickType_t)1);
     */
 
-	/* update data_buf for plotting detected peaks in GUI */
-	/*
-	data_buf[LINEMAXPIX+2] = (uint8_t)0;
-	data_buf[LINEMAXPIX+3] = (uint8_t)0;
-	for(int i = 0; i < n_absop_peaks; ++i) {
-		data_buf[LINEMAXPIX+2+i] = (uint8_t)absop_peaks[i];
-	}
-	*/
 }
 
 void error_calculation(int *peaks, int npeaks) {
@@ -125,21 +124,6 @@ void error_calculation(int *peaks, int npeaks) {
 	}
 	cam_dat->prev_error = cam_dat->error;
 	cam_dat->error = err;
-}
-
-extern pid_ctrl drive_pid;
-int16_t error2input(void) {
-	/* convert calculated error to target vector for gyro | steering */
-	/* demo implementation to test*/
-	/*
-	float KP = 100.0f;
-	int16_t servo = (int16_t)(KP * cam_dat->error);
-	return servo;
-	*/
-
-	// pid
-	pid_compute(drive_pid);
-	return (int16_t)drive_pid->out;
 }
 
 int16_t prev_err_check(float err) {

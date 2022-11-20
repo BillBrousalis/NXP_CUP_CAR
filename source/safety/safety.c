@@ -41,7 +41,7 @@ void throttle_hard_limits(int16_t *s) {
 //--------------------------------------------------------------------
 /* Pass calculated steer to this */
 void steer_control(int16_t *s) {
-	//steer_rate_limiter(s);
+	steer_rate_limiter(s);
 	steer_hard_limits(s);
 }
 
