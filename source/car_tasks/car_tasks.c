@@ -14,16 +14,13 @@
 #include "processing/control.h"
 #include "processing/pid.h"
 #include <imu.h>
-
 #include "car_tasks.h"
 
-
 uint32_t	estop_flag = 0;
-
 //-----------------------------------------
 void Housekeeping_task(void *pvParaments) {
 	/* Initialization */
-	WheelEncoderInit();
+	//WheelEncoderInit();
 	servo_center();
 	/* Set ready flag */
 	TickType_t xLastWakeTime = xTaskGetTickCount();
@@ -33,20 +30,18 @@ void Housekeeping_task(void *pvParaments) {
 		/* Lights */
 		if(SW1_read() == 1) Led1_ON();
 		else Led1_OFF();
-
 		//--------------------------------------
-		if(ESTOP_read() == 1){							// read remote estop input
-			if(estop_flag == 1){						// toggle state
+		if(ESTOP_read() == 1) {							// read remote estop input
+			if(estop_flag == 1) {						// toggle state
 				estop_flag = 0;
 				LED4_OFF();
 			}
-			else{
+			else {
 				estop_flag = 1;
 				LED4_ON();
 			}
-			while(ESTOP_read() == 1)osDelay(50);
+			while(ESTOP_read() == 1) osDelay(50);
 		}
-
 		//---------------------------------------
 		vTaskDelayUntil(&xLastWakeTime, xPeriod);
 	}
@@ -58,15 +53,18 @@ void Car_task(void *pvParameters) {
 	const TickType_t xPeriod = CAR_CONTROL_PERIOD;
 	while(CarControlQueueHandle == NULL) osDelay(1);
 	for(;;) {
-		if(PB1_read() == PB_ON) motors_init();
+		if(PB1_read() == PB_ON) {
+			motors_init();
+			osDelay(20);
+		}
 		else if(xQueueReceive(CarControlQueueHandle, &reqstate, (TickType_t)portMAX_DELAY ) == pdPASS) {
-
 			steer_set(reqstate.req_steer);
-			if(estop_flag == 0){
+			if(estop_flag == 0) {
 				speed_set(reqstate.req_speed);
 			}
-			else{
-				speed_set(0);
+			else {
+				motors_stop();
+				osDelay(20);
 			}
 			//osDelay(20);
 		}
@@ -78,9 +76,9 @@ void Car_task(void *pvParameters) {
 //		Run controls natively
 //-----------------------------------------------------------------------------------------
 void NativeControl_task(void *pvParameters) {
-	float kp = 100.0f;
-	float ki = 0.0f;
-	float kd = 0.0f;
+	float kp = 110.0f;
+	float ki = 0.05f;
+	float kd = 0.05f;
 	float pid_out = 0.0f;
 	float setpoint = 0.0f;
 	struct pid_controller drive_pid_controller;
@@ -100,7 +98,7 @@ void NativeControl_task(void *pvParameters) {
 		pid_compute(drive_pid);
 		/* new state */
 		int16_t target_steer = (int16_t)pid_out;
-		int16_t target_speed = (int16_t)(29.0f - (float_abs(target_steer) * 8.0f / 100.0f));
+		int16_t target_speed = (int16_t)(32.0f - (float_abs(target_steer) * 7.0f / 100.0f));
 		/* append state request */
 		RequestedState reqstate = {.req_speed = 0, .req_steer = 0};
 		reqstate.req_steer = target_steer;

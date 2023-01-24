@@ -142,8 +142,7 @@ void WheelEncoderProcess(void)
 void WrapAround(void)
 {
 	EncWrapTimes++;
-	if(EncWrapTimes > 1)
-	{
+	if(EncWrapTimes > 1) {
 		EstSpeedR = 0.0;
 		EstSpeedL = 0.0;
 	}
@@ -153,15 +152,19 @@ void WrapAround(void)
 //================================================================================================
 void WheelEncoderGetSpeed(float *SpeedL, float *SpeedR)
 {
-	if(EstTimeL != 0){												// avoid the possible divison by zero
+	if(EstTimeL != 0) {												// avoid the possible divison by zero
 		*SpeedL = WHEEL_STEP/ (TIME_PER_TICK * (float)EstTimeL);
 	}
-	else EstSpeedL = 0.0;
-
-	if(EstTimeR != 0){
-	*SpeedR = WHEEL_STEP/ (TIME_PER_TICK * (float)EstTimeR);
+	else {
+		EstSpeedL = 0.0;
 	}
-	else EstSpeedR = 0.0;
+
+	if(EstTimeR != 0) {
+		*SpeedR = WHEEL_STEP/ (TIME_PER_TICK * (float)EstTimeR);
+	}
+	else {
+		EstSpeedR = 0.0;
+	}
 }
 
 //================================================================================================

@@ -4,7 +4,8 @@
 
 #include "signals.h"
 
-status_t FTM_SetPpm(FTM_Type *base, ftm_chnl_t chnlNumber, ftm_pwm_mode_t pwm_mode, float perc) {
+status_t FTM_SetPpm(FTM_Type *base, ftm_chnl_t chnlNumber, ftm_pwm_mode_t pwm_mode, float perc)
+{
 	/* range checking */
 	if(perc >= 100.0f || perc <= 0) {
 		return kStatus_OutOfRange;

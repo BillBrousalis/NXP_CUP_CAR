@@ -12,7 +12,8 @@
 //----------------------------------------------------
 /* Initialize both brushless motors
 	- There has to be a better way to do this */
-void motors_init(void) {
+void motors_init(void)
+{
 	float perc = 48.0f;
 	FTM_SetPpm(FTM0_PERIPHERAL, kFTM_Chnl_0, kFTM_EdgeAlignedPwm, perc);
 	FTM_SetPpm(FTM0_PERIPHERAL, kFTM_Chnl_1, kFTM_EdgeAlignedPwm, perc);
@@ -22,12 +23,14 @@ void motors_init(void) {
 }
 
 /* Because writing motors_set(0, 0); is too much work */
-void motors_stop(void) {
+void motors_stop(void)
+{
 	motors_set(MOTORSIDLE, MOTORSIDLE);
 }
 
 /* Set speed - function takes care of the rest */
-void speed_set(int16_t speed) {
+void speed_set(int16_t speed)
+{
 	throttle_control(&speed);
 	int16_t sL = speed, sR = speed;
 	/* Account steering angle with wheel differential */
@@ -40,7 +43,8 @@ void speed_set(int16_t speed) {
 //		DONT USE ON APPLICATION LAYER
 //----------------------------------------------------
 /* Set speeds of L / R motors, ranges (-1, 1) */
-void motors_set(int16_t speedL, int16_t speedR) {
+void motors_set(int16_t speedL, int16_t speedR)
+{
 	float perc;
 	/* Flip speeds to make + forwards / - backwards */
 	/* Map motor speed to PPM percentage --> Set - Set */
@@ -55,7 +59,8 @@ void motors_set(int16_t speedL, int16_t speedR) {
 }
 
 /* Calculate differential -> TODO: implement a more math driven approach */
-void motors_diff(int16_t *speedL, int16_t *speedR) {
+void motors_diff(int16_t *speedL, int16_t *speedR)
+{
 	if(car_state->steering > 0) {
 		*speedR -= (int16_t)((float)car_state->steering * *speedR * WHEEL_DIFF_MULT);
 	}

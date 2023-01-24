@@ -15,7 +15,7 @@ void throttle_control(int16_t *s) {
 }
 
 /* Smoother throttle transitions */
-void throttle_rate_limiter(int16_t *s) {
+static void throttle_rate_limiter(int16_t *s) {
 	if(abs(car_state->speed - *s) > THROTTLE_MAX_STEP) {
 		if(car_state->speed < *s) {
 			*s = car_state->speed + THROTTLE_MAX_STEP;
@@ -50,15 +50,15 @@ void steer_control(int16_t *s) {
 //--------------------------------------------------------------------
 struct MAV steer_fl;
 
-void steer_rate_limiter(int16_t *s) {
-
+static void steer_rate_limiter(int16_t *s)
+{
 	int32_t a = *s;
-
 	*s = MAVFilter(&steer_fl,a,4,1);
 }
+
 //--------------------------------------------------------------------
 /* Smoother steering transitions */
-void steer_rate_limiter2(int16_t *s) {
+static void steer_rate_limiter2(int16_t *s) {
 	if(abs(car_state->steering - *s) > STEER_MAX_STEP) {
 		if(car_state->steering < *s) {
 			*s = car_state->steering + STEER_MAX_STEP;
@@ -70,7 +70,7 @@ void steer_rate_limiter2(int16_t *s) {
 }
 
 /* Hard steer limits for safety */
-void steer_hard_limits(int16_t *s) {
+static void steer_hard_limits(int16_t *s) {
 	if(*s > STEER_MAX && *s > 0) {
 		*s = STEER_MAX;
 	}
@@ -84,6 +84,6 @@ void steer_hard_limits(int16_t *s) {
 //--------------------------------------------------------------------
 /* Cut down speed when turning */
 /* TODO: come up with a better name for this */
-void throttle_limiter(int16_t *s) {
+static void throttle_limiter(int16_t *s) {
 	*s = (int16_t)(*s * (((THROTTLE_LIMITER_MULT * (float)SERVOABSMAX) - (float)abs(car_state->steering)) / (THROTTLE_LIMITER_MULT * (float)SERVOABSMAX)));
 }

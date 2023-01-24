@@ -47,7 +47,8 @@ void LineCamInit(void) {
 //============================================================================================================
 //
 //============================================================================================================
-static inline void adc_CamStart(void) {
+static inline void adc_CamStart(void)
+{
 	uint32_t sc1;
 	sc1 = ADC0_PERIPHERAL->SC1[0];			// Trigger an AD conversion - FixMe
 	ADC0_PERIPHERAL->SC1[0] = sc1;
@@ -55,8 +56,8 @@ static inline void adc_CamStart(void) {
 //============================================================================================================
 //
 //============================================================================================================
-void CamScanStart(void) {
-
+void CamScanStart(void)
+{
 	//LineCam_Inntensity = 100 + (uint32_t)(car_state->pot[0] * 10000.0F);
 	LinePixInProgress = 1;											// If == 1 then Line scan is in progress
 	ls_si_set();
@@ -74,7 +75,8 @@ void CamScanStart(void) {
 //		WARNING: Clock states are inverted since we are using the buffered camera CLK input
 //		for better noise immunity
 //============================================================================================================
-void CamScanPix(void) {
+void CamScanPix(void)
+{
 	if(clk_state == 0) {
 		if(clk_count++ >= LINEMINITER) {
 			stop_timer();
@@ -93,7 +95,8 @@ void CamScanPix(void) {
 //============================================================================================================
 //			Called from ADC complete int to store the next pixel
 //============================================================================================================
-void PixRead(void) {
+void PixRead(void)
+{
 	if(PixCount < LINEMAXPIX) {
 	#ifdef LENS_COSINE_CORRECTION
 		float tmp = (float)(ADC16_GetChannelConversionValue(ADC0_PERIPHERAL, 0U) << 4);		// Convert to 16bit
@@ -114,7 +117,8 @@ void PixRead(void) {
 //============================================================================================================
 //	Main camera process - MUST be called in constant loop
 //============================================================================================================
-void LineCamProcess(void) {
+void LineCamProcess(void)
+{
 	UBaseType_t self_priority;
 	CamScanStart();																			// Scan one line
 	while(LinePixInProgress) osDelay(1);													// wait for the background processes to finish
@@ -135,7 +139,8 @@ void LineCamProcess(void) {
 //============================================================================================================
 //
 //============================================================================================================
-uint32_t LineCamGetLast(uint8_t *buff) {
+uint32_t LineCamGetLast(uint8_t *buff)
+{
 	uint32_t i;
 	if(LCqueue != 0) {															// Check if queue is created
 		if(xQueuePeek(LCqueue, &i, (TickType_t)10) == pdPASS) {					// check if new entry is available but do not remove yet to guarantee atomicity
@@ -156,6 +161,7 @@ uint32_t LineCamGetLast(uint8_t *buff) {
 //============================================================================================================
 //	TBD -
 //============================================================================================================
-uint32_t LineCamAutoCalibrate(void) {
+uint32_t LineCamAutoCalibrate(void)
+{
 	return 0;
 }

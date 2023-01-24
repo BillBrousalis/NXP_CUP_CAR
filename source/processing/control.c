@@ -57,7 +57,7 @@ void cam_data_process(void) {
 
 }
 
-void error_calculation(int *peaks, int npeaks) {
+static void error_calculation(int *peaks, int npeaks) {
 	/* Normalized error [-1.0, 1.0] */
 	float err = 0.0f;
 	switch(npeaks) {
@@ -126,22 +126,9 @@ void error_calculation(int *peaks, int npeaks) {
 	cam_dat->error = err;
 }
 
-int16_t prev_err_check(float err) {
+static int16_t prev_err_check(float err) {
 	/* err jump too large - crossover */
 	if(abs(err - cam_dat->prev_error) >= ERR_DIFF_THRESHOLD) return 0;
 	/* err jump ok */
 	return 1;
 }
-
-/*
- * func():
- 	put state machine here:
-	 state certain:
-		 pass calculated error to pid
-		 update prev error
-		 update outputs with pid_out
-	 state uncertain:
-	 	 pass prev error to pid
-	 	 update outputs with pid_out
-
-*/
